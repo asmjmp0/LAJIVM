@@ -22,5 +22,6 @@ struct vm_register
 	char flag[8];//±êÖ¾¼Ä´æÆ÷
 };
 #pragma pack()
+#define REG_NUM 11
 #endif // !VMREGISTER_H
 

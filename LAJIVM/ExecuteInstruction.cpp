@@ -57,19 +57,33 @@ int get_ins_len(char f, char s) {
 *执行mov指令
 */
 int do_mov() {
-	switch (code_ptr[registe_ptr->IP+1])
+	int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
+	int8_t low= code_ptr[registe_ptr->IP + 2] % 0x10;
+
+	switch (code_ptr[registe_ptr->IP+1])//操作类型
 	{
 	case '\x00': {
 		//
 		break;
 	}
 	case '\x01': {//
-		if (code_ptr[registe_ptr->IP + 2] % 0x10 == 0)//低位运算
+		if (low == 0)//低位运算
 		{
 			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//获得立即数
-			char *R0 = (char *)&registe_ptr->R0;
-			R0[0] = temp;
+			char *R = (char *)register_list[high];
+			*R= temp;
+		}else if (low==1)//高位运算
+		{
+			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//获得立即数
+			short *R = (short *)register_list[high];
+			*R = temp;
+		}else if(low ==2)//全运算
+		{
+			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//获得立即数
+			unsigned *R = (unsigned *)register_list[high];
+			*R = temp;
 		}
+		else throw(LVM_EXECUTE_ERROR);
 			break;
 	}
 	default: {
@@ -77,24 +91,41 @@ int do_mov() {
 		break;
 	}
 	}
+
 	return LVM_SUCCESS;
 }
 /*
 *执行lea指令
 */
 int do_lea() {
-	switch (code_ptr[registe_ptr->IP + 1])
+	int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
+	int8_t low = code_ptr[registe_ptr->IP + 2] % 0x10;
+	switch (code_ptr[registe_ptr->IP + 1])//操作类型
 	{
 	case '\x00': {
 		//
 		break;
 	}
 	case '\x01': {//
-		if (code_ptr[registe_ptr->IP + 2] % 0x10 == 2)//全运算
+		if (low == 0)//低位运算
 		{
 			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//获得立即数
-			registe_ptr->R3 = temp;
+			char *R = (char *)register_list[high];
+			*R = temp;
 		}
+		else if (low == 1)//高位运算
+		{
+			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//获得立即数
+			short *R = (short *)register_list[high];
+			*R = temp;
+		}
+		else if (low == 2)//全运算
+		{
+			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//获得立即数
+			unsigned *R = (unsigned *)register_list[high];
+			*R = temp;
+		}
+		else throw(LVM_EXECUTE_ERROR);
 		break;
 	}
 	default: {
@@ -124,25 +155,9 @@ int do_int() {
 *指令执行选择器
 */
 int do_ins(){
-	switch (code_ptr[registe_ptr->IP])
-	{
-	case INS_MOV: {
-		do_mov();
-		break;
-	}
-	case INS_LEA: {
-		do_lea();
-		break;
-	}
-	case INS_INT: {
-		do_int();
-		break;
-	}
-	default: {
-		throw(LVM_EXECUTE_ERROR);
-		break;
-	}
-	}
+	if(ins_list[code_ptr[registe_ptr->IP]]!=nullptr)
+	ins_list[code_ptr[registe_ptr->IP]]();
+	else throw(LVM_EXECUTE_ERROR);
 	return LVM_SUCCESS;
 }
 int exectue_ins() {

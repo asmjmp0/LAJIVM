@@ -13,7 +13,7 @@ Begin:
 	}
 	printf("初始化完成请输入二进制文件路径,输入ctrl+z退出：\n");
 	if (!(std::cin >> str)) exit(0);
-	try { write_all(str); }
+	try { write_all(); }
 	catch (int){
 		printf("打开二进制文件失败\n");
 		goto End;

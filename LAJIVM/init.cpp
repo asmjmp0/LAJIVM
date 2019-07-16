@@ -4,6 +4,8 @@
 vm_register* registe_ptr;
 char* code_ptr;
 char * data_ptr;
+unsigned* register_list[REG_NUM]{0};//寄存器数组
+int(*ins_list[0xff])() {0};//指令数组
 vm_register* init_register() {
 	int temp{ sizeof(vm_register) };
 	vm_register *ptr{ nullptr };
@@ -36,8 +38,32 @@ char* init_data_segement() {
 	}
 	else throw(LVM_DATA_SEGEMENT_ERROR);
 }
+int init_list() {
+	/*
+	*初始化寄存器的地址指针
+	*/
+	register_list[0] = &registe_ptr->R0;
+	register_list[1] = &registe_ptr->R1;
+	register_list[2] = &registe_ptr->R2;
+	register_list[3] = &registe_ptr->R3;
+	register_list[4] = &registe_ptr->R4;
+	register_list[5] = &registe_ptr->R5;
+	register_list[6] = &registe_ptr->R6;
+	register_list[7] = &registe_ptr->SP;
+	register_list[8] = &registe_ptr->BP;
+	register_list[9] = &registe_ptr->IP;
+
+	/*
+	*初始化指令函数数组
+	*/
+	ins_list[INS_MOV] = do_mov;
+	ins_list[INS_LEA] = do_lea;
+	ins_list[INS_INT] = do_int;
+	return LVM_SUCCESS;
+}
 void init_all() {
 	registe_ptr = init_register();
 	code_ptr = init_code_segment();
 	data_ptr = init_data_segement();
+	init_list();
 }
