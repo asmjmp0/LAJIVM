@@ -13,13 +13,14 @@ Begin:
 	}
 	printf("初始化完成请输入二进制文件路径,输入ctrl+z退出：\n");
 	if (!(std::cin >> str)) exit(0);
-	try { write_all(); }
+	try { write_all(str); }
 	catch (int){
 		printf("打开二进制文件失败\n");
 		goto End;
 	}
 	printf("***************************************************\n");
-	printf("执行二进制文件>>>>>>>>>>\n\n");
+	printf("执行二进制文件>>>>>>>>>>\n");
+	registe_ptr->R6 = 0;//代码段初始地址下断
 	try{
 		while (registe_ptr->IP<m_code_length) exectue_ins();
 		goto Begin;

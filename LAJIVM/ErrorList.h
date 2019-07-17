@@ -9,5 +9,6 @@
 #define LVM_BIN_OPEN_ERROR 0xf4
 #define LVM_BIN_READ_ERROR 0xf5
 #define LVM_EXECUTE_ERROR 0xf6
+#define LVM_FAILD 0xff
 #endif // !ERRORLIST_H
 

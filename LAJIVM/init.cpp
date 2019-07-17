@@ -14,6 +14,7 @@ vm_register* init_register() {
 	{
 		printf("寄存器初始化成功!\n");
 		memset(ptr, 0, temp);//内存清空
+		ptr->R6 = unsigned(-1);//调试寄存器值0xffffffff
 		return ptr;
 	}
 	else throw(LVM_RIGISTER_SEGEMENT_ERROR);
@@ -59,6 +60,14 @@ int init_list() {
 	ins_list[INS_MOV] = do_mov;
 	ins_list[INS_LEA] = do_lea;
 	ins_list[INS_INT] = do_int;
+	ins_list[INS_JMP] = do_jmp;
+	ins_list[INS_JZ] = do_jz;
+	ins_list[INS_JNZ] = do_jnz;
+	ins_list[INS_JH] = do_jh;
+	ins_list[INS_JL] = do_jl;
+	ins_list[INS_INC] = do_inc;
+	ins_list[INS_DEC] = do_dec;
+	ins_list[INS_CMP] = do_cmp;
 	return LVM_SUCCESS;
 }
 void init_all() {

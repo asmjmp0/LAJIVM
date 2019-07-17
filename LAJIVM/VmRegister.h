@@ -19,7 +19,7 @@ struct vm_register
 	unsigned BP;//栈帧
 
 	unsigned IP;//代码执行指针
-	char flag[8];//标志寄存器
+	char flag[16];//标志寄存器
 };
 #pragma pack()
 #define REG_NUM 11
