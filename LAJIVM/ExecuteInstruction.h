@@ -19,6 +19,7 @@
 #define INS_AND 0x23
 #define INS_OR 0x24
 #define INS_NOT 0x25
+#define INS_NOP 0x5f
 int get_ins_len(char, char);
 int _ins_len(char);
 int exectue_ins();
@@ -44,5 +45,6 @@ int do_xor();
 int do_and();
 int do_or();
 int do_not();
+int do_nop();
 #endif // !EXECUTEINSTRUCTION_H
 

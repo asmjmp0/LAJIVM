@@ -69,7 +69,7 @@ int write_to_data() {
 	}else
 	{
 		memcpy(data_ptr, origin_bin + index, data_len);
-		std::cout << "复制到数据段成功！" << std::endl;
+		//std::cout << "复制到数据段成功！" << std::endl;
 	}
 	index += data_len;
 	return LVM_SUCCESS;
@@ -88,7 +88,7 @@ int write_to_code(){
 	}else
 	{
 		memcpy(code_ptr, origin_bin + index, code_len);
-		std::cout << "复制到代码段成功！" << std::endl;
+		//std::cout << "复制到代码段成功！" << std::endl;
 	}
 	return LVM_SUCCESS;
 }

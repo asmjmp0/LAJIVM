@@ -14,6 +14,7 @@ struct vm_register
 	unsigned R5;
 	//R6µ÷ÊÔ¼Ä´æÆ÷
 	unsigned R6;
+	unsigned R7;
 
 	unsigned SP;//Õ»¼Ä´æÆ÷
 	unsigned BP;//Õ»Ö¡
@@ -22,6 +23,6 @@ struct vm_register
 	char flag[16];//±êÖ¾¼Ä´æÆ÷
 };
 #pragma pack()
-#define REG_NUM 11
+#define REG_NUM 12
 #endif // !VMREGISTER_H
 

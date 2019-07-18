@@ -14,6 +14,7 @@ vm_register* init_register() {
 	{
 		memset(ptr, 0, temp);//内存清空
 		ptr->R6 = unsigned(-1);//调试寄存器值0xffffffff
+		ptr->R7 = unsigned(-1);//调试寄存器值0xffffffff
 		return ptr;
 	}
 	else throw(LVM_RIGISTER_SEGEMENT_ERROR);
@@ -47,9 +48,10 @@ int init_list() {
 	register_list[4] = &registe_ptr->R4;
 	register_list[5] = &registe_ptr->R5;
 	register_list[6] = &registe_ptr->R6;
-	register_list[7] = &registe_ptr->SP;
-	register_list[8] = &registe_ptr->BP;
-	register_list[9] = &registe_ptr->IP;
+	register_list[7] = &registe_ptr->R7;
+	register_list[8] = &registe_ptr->SP;
+	register_list[9] = &registe_ptr->BP;
+	register_list[10] = &registe_ptr->IP;
 
 	/*
 	*初始化指令函数数组
@@ -71,6 +73,7 @@ int init_list() {
 	ins_list[INS_AND] = do_and;
 	ins_list[INS_OR] = do_or;
 	ins_list[INS_NOT] = do_not;
+	ins_list[INS_NOP] = do_nop;
 	return LVM_SUCCESS;
 }
 void init_all() {
