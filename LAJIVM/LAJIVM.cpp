@@ -22,7 +22,7 @@ Begin:
 	printf("执行二进制文件>>>>>>>>>>\n");
 	registe_ptr->R6 = 0;//代码段初始地址下断
 	try{
-		while (registe_ptr->IP<m_code_length) exectue_ins();
+		while (registe_ptr->IP<=m_code_length) exectue_ins();
 		goto Begin;
 	}
 	catch (int)

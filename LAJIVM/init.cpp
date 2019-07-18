@@ -12,7 +12,6 @@ vm_register* init_register() {
 	ptr = (vm_register*)malloc(temp);
 	if (ptr!=nullptr)
 	{
-		printf("寄存器初始化成功!\n");
 		memset(ptr, 0, temp);//内存清空
 		ptr->R6 = unsigned(-1);//调试寄存器值0xffffffff
 		return ptr;
@@ -23,7 +22,6 @@ char* init_code_segment() {
 	char *ptr{ nullptr };
 	ptr = (char *)malloc(code_length);
 	if (ptr != nullptr) {
-		printf("代码段初始化成功!\n");
 		memset(ptr, 0, code_length);//内存清空
 		return ptr;
 	}
@@ -33,7 +31,6 @@ char* init_data_segement() {
 	char *ptr{ nullptr };
 	ptr = (char *)malloc(data_length);
 	if (ptr != nullptr) {
-		printf("数据段初始化成功!\n");
 		memset(ptr, 0, data_length);//内存清空
 		return ptr;
 	}
@@ -68,6 +65,12 @@ int init_list() {
 	ins_list[INS_INC] = do_inc;
 	ins_list[INS_DEC] = do_dec;
 	ins_list[INS_CMP] = do_cmp;
+	ins_list[INS_ADD] = do_add;
+	ins_list[INS_SUB] = do_sub;
+	ins_list[INS_XOR] = do_xor;
+	ins_list[INS_AND] = do_and;
+	ins_list[INS_OR] = do_or;
+	ins_list[INS_NOT] = do_not;
 	return LVM_SUCCESS;
 }
 void init_all() {

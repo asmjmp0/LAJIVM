@@ -57,3 +57,13 @@ dex 0x31
 cmp 0x32
 cmp 两种类型 00 cmp R,R
              01 cmp R,i
+====================
+add 0x20
+sub 0x21
+xor 0x22
+and 0x23
+or 0x24
+not 0x25
+全部都有两种类型
+              00 R,R-----
+			  01 R,i
