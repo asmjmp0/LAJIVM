@@ -49,7 +49,8 @@ int _ins_len(char c) {
 *获取指令长度
 */
 int get_ins_len(char f, char s) {
-	switch (f)
+	uint8_t f1 = (uint8_t)f;
+	switch (f1)
 	{
 	case INS_MOV: {
 		if (uasm_flag)printf("50 mov ");
@@ -204,14 +205,14 @@ int set_flag(unsigned pram) {
 *执行mov指令
 */
 int do_mov() {
-	int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
-	int8_t low= code_ptr[registe_ptr->IP + 2] % 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
+	uint8_t low= (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
 
 	switch (code_ptr[registe_ptr->IP+1])//操作类型
 	{
 	case '\x00': {//mov R,R  ---->0
 		//
-		int8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
 			char*Ra= (char *)register_list[high];
 			char*Rb=(char*)register_list[highb];
@@ -262,7 +263,7 @@ int do_mov() {
 			break;
 	}
 	case '\x02': {//R,[R] ----->2
-		int8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0)//低位运算
 		{
 			unsigned value = *(unsigned*)register_list[highb];//获得Rb寄存器中的值
@@ -291,8 +292,8 @@ int do_mov() {
 		break;
 	}
 	case '\x03': {//[R],R----->3
-		int8_t lowb = code_ptr[registe_ptr->IP + 3] % 0x10;
-		int8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t lowb = (uint8_t)code_ptr[registe_ptr->IP + 3] % 0x10;
+		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (lowb == 0)//低位运算
 		{
 			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
@@ -332,13 +333,13 @@ int do_mov() {
 *执行lea指令
 */
 int do_lea() {
-	int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
-	int8_t low = code_ptr[registe_ptr->IP + 2] % 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
+	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
 	switch (code_ptr[registe_ptr->IP + 1])//操作类型
 	{
 	case '\x00': {
 		//
-		int8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
 			char*Ra = (char *)register_list[high];
 			char*Rb = (char*)register_list[highb];
@@ -419,8 +420,8 @@ int do_int() {
 *指令执行选择器
 */
 int do_ins(){
-	if(ins_list[code_ptr[registe_ptr->IP]]!=nullptr)
-	ins_list[code_ptr[registe_ptr->IP]]();
+	if(ins_list[(uint8_t)code_ptr[registe_ptr->IP]]!=nullptr)
+	ins_list[(uint8_t)code_ptr[registe_ptr->IP]]();
 	else throw(LVM_EXECUTE_ERROR);
 	return LVM_SUCCESS;
 }
@@ -429,7 +430,7 @@ int do_ins(){
 */
 int do_jmp() {
 	if (code_ptr[registe_ptr->IP + 1] == 5) {//寄存器跳转
-		int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
+		uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 		unsigned adr = *register_list[high];
 		registe_ptr->IP = adr;
 	}else if (code_ptr[registe_ptr->IP + 1] == 6){//立即数跳转
@@ -445,7 +446,7 @@ int do_jmp() {
 int do_jz() {
 	if (registe_ptr->flag[0] == 0){
 		if (code_ptr[registe_ptr->IP + 1] == 5) {//寄存器跳转
-			int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
+			uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 			unsigned adr = *register_list[high];
 			registe_ptr->IP = adr;
 		}
@@ -464,7 +465,7 @@ int do_jz() {
 int do_jnz() {
 	if (registe_ptr->flag[0] == 1) {//判断发生跳转条件
 		if (code_ptr[registe_ptr->IP + 1] == 5) {//寄存器跳转
-			int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
+			uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 			unsigned adr = *register_list[high];
 			registe_ptr->IP = adr;
 		}
@@ -482,7 +483,7 @@ int do_jnz() {
 int do_jh() {
 	if (registe_ptr->flag[1] == 1) {
 		if (code_ptr[registe_ptr->IP + 1] == 5) {//寄存器跳转
-			int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
+			uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 			unsigned adr = *register_list[high];
 			registe_ptr->IP = adr;
 		}
@@ -501,7 +502,7 @@ int do_jh() {
 int do_jl() {
 	if (registe_ptr->flag[1] == 0) {
 		if (code_ptr[registe_ptr->IP + 1] == 5) {//寄存器跳转
-			int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
+			uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 			unsigned adr = *register_list[high];
 			registe_ptr->IP = adr;
 		}
@@ -518,8 +519,8 @@ int do_jl() {
 *执行INC
 */
 int do_inc(){
-	int8_t high = code_ptr[registe_ptr->IP + 1] / 0x10;
-	int8_t low = code_ptr[registe_ptr->IP + 1] % 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 1] / 0x10;
+	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 1] % 0x10;
 	switch (low)
 	{
 	case 0: {
@@ -552,8 +553,8 @@ int do_inc(){
 *执行DEC
 */
 int do_dec() {
-	int8_t high = code_ptr[registe_ptr->IP + 1] / 0x10;
-	int8_t low = code_ptr[registe_ptr->IP + 1] % 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 1] / 0x10;
+	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 1] % 0x10;
 	switch (low)
 	{
 	case 0: {
@@ -586,7 +587,7 @@ int do_dec() {
 *执行CMP
 */
 int do_cmp() {
-	int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 	if (code_ptr[registe_ptr->IP + 1] == '\x00') {
 	}
 	else if (code_ptr[registe_ptr->IP + 1] == '\x01') {
@@ -600,11 +601,11 @@ int do_cmp() {
 *执行ADD
 */
 int do_add() {
-	int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
-	int8_t low = code_ptr[registe_ptr->IP + 2] % 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
+	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
 	if (code_ptr[registe_ptr->IP + 1]==0)//0型命令
 	{
-		int8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
 			char*Ra = (char *)register_list[high];
 			char*Rb = (char*)register_list[highb];
@@ -658,11 +659,11 @@ int do_add() {
 *执行SUB
 */
 int do_sub() {
-	int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
-	int8_t low = code_ptr[registe_ptr->IP + 2] % 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
+	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
 	if (code_ptr[registe_ptr->IP + 1] == 0)//0型命令
 	{
-		int8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
 			char*Ra = (char *)register_list[high];
 			char*Rb = (char*)register_list[highb];
@@ -717,11 +718,11 @@ int do_sub() {
 *执行XOR
 */
 int do_xor() {
-	int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
-	int8_t low = code_ptr[registe_ptr->IP + 2] % 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
+	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
 	if (code_ptr[registe_ptr->IP + 1] == 0)//0型命令
 	{
-		int8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
 			char*Ra = (char *)register_list[high];
 			char*Rb = (char*)register_list[highb];
@@ -776,11 +777,11 @@ int do_xor() {
 *执行AND
 */
 int do_and() {
-	int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
-	int8_t low = code_ptr[registe_ptr->IP + 2] % 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
+	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
 	if (code_ptr[registe_ptr->IP + 1] == 0)//0型命令
 	{
-		int8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
 			char*Ra = (char *)register_list[high];
 			char*Rb = (char*)register_list[highb];
@@ -835,11 +836,11 @@ int do_and() {
 *执行OR
 */
 int do_or() {
-	int8_t high = code_ptr[registe_ptr->IP + 2] / 0x10;
-	int8_t low = code_ptr[registe_ptr->IP + 2] % 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
+	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
 	if (code_ptr[registe_ptr->IP + 1] == 0)//0型命令
 	{
-		int8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
 			char*Ra = (char *)register_list[high];
 			char*Rb = (char*)register_list[highb];
@@ -894,8 +895,8 @@ int do_or() {
 *执行NOT
 */
 int do_not(){
-	int8_t high = code_ptr[registe_ptr->IP + 1] / 0x10;
-	int8_t low = code_ptr[registe_ptr->IP + 1] % 0x10;
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 1] / 0x10;
+	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 1] % 0x10;
 	if (low == 0) {
 		char*Ra = (char *)register_list[high];
 		*Ra = ~*Ra;
@@ -985,6 +986,8 @@ YC:
 			}
 		}
 		printf("IP--------->%08X\n", registe_ptr->IP);
+		printf("SP--------->%08X	", registe_ptr->SP);
+		printf("BP--------->%08X\n", registe_ptr->BP);
 		printf("flag[0]--------->%02x	", registe_ptr->flag[0]);
 		printf("flag[1]--------->%02x\n", registe_ptr->flag[1]);
 		goto FI;//返回顶端

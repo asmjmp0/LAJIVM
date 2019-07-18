@@ -1,10 +1,12 @@
 #ifndef EXECUTEINSTRUCTION_H
 #define EXECUTEINSTRUCTION_H
+/******************FUNCTION_NUM******************/
+#define LVM_PRINT 0x10
+#define LVM_EXIT 0x40
+/**********************INS*********************/
 #define INS_MOV 0x50
 #define INS_LEA 0x51
-#define INS_INT '\xe0'
-#define LVM_PRINT '\x10'
-#define LVM_EXIT '\x40'
+#define INS_INT 0xe0
 #define INS_JMP 0x40
 #define INS_JZ 0x41
 #define INS_JNZ 0x42
