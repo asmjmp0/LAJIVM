@@ -9,6 +9,5 @@ int write_to_code();
 bool bincmp(int8_t *, int8_t *, int);
 int find_str(int8_t*, int8_t*,int ,int);
 void write_all(std::string str = bin_path);
-#define BIN_LENGTH 200
 #endif // !BIN_READ_H
 

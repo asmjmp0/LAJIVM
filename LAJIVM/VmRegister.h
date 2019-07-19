@@ -21,6 +21,12 @@ struct vm_register
 
 	unsigned IP;//代码执行指针		//0xA
 	char flag[16];//标志寄存器		//0xB
+	/*
+	*操作类型 0位为0标志位 
+	*         1位为有符号大小标志位
+	*         15位为单步标志位 
+	*		  14位为段标志位
+	*/
 };
 #pragma pack()
 #define REG_NUM 12

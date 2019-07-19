@@ -4,6 +4,8 @@
 #define LVM_PRINT 0x10
 #define LVM_EXIT 0x40
 /**********************INS*********************/
+#define INS_PUSH 0x10
+#define INS_POP 0x11
 #define INS_MOV 0x50
 #define INS_LEA 0x51
 #define INS_INT 0xe0
@@ -22,6 +24,8 @@
 #define INS_OR 0x24
 #define INS_NOT 0x25
 #define INS_NOP 0x5f
+extern bool debug_flag;
+extern bool uasm_flag;
 int get_ins_len(char, char);
 int _ins_len(char);
 int exectue_ins();
@@ -48,5 +52,7 @@ int do_and();
 int do_or();
 int do_not();
 int do_nop();
+int do_push();
+int do_pop();
 #endif // !EXECUTEINSTRUCTION_H
 

@@ -1,0 +1,11 @@
+mov ROL,0X30
+inc R0L
+inc R1L
+mov [R1],R0L
+CMP ROL,0X39
+JNZ 7
+mov r4l,0x0a
+mov[r1+1],r4l
+mov rol,0x10
+lea r3,1
+int 21

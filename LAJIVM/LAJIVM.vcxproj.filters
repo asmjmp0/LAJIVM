@@ -27,6 +27,12 @@
     <ClCompile Include="ExecuteInstruction.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="lvm_debug.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ins_stack.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="VmRegister.h">

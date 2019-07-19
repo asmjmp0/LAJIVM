@@ -4,6 +4,7 @@
 vm_register* registe_ptr;
 char* code_ptr;
 char * data_ptr;
+char * stack_ptr;
 unsigned* register_list[REG_NUM]{0};//寄存器数组
 int(*ins_list[0xff])() {0};//指令数组
 vm_register* init_register() {
@@ -36,6 +37,15 @@ char* init_data_segement() {
 		return ptr;
 	}
 	else throw(LVM_DATA_SEGEMENT_ERROR);
+}
+char* init_stack_segement() {
+	char *ptr{ nullptr };
+	ptr = (char *)malloc(stack_length);
+	if (ptr != nullptr) {
+		memset(ptr, 0, stack_length);//内存清空
+		return ptr;
+	}
+	else throw(LVM_STACK_SEGEMENT_ERROR);
 }
 int init_list() {
 	/*
@@ -74,11 +84,14 @@ int init_list() {
 	ins_list[INS_OR] = do_or;
 	ins_list[INS_NOT] = do_not;
 	ins_list[INS_NOP] = do_nop;
+	ins_list[INS_PUSH] = do_push;
+	ins_list[INS_POP] = do_pop;
 	return LVM_SUCCESS;
 }
 void init_all() {
 	registe_ptr = init_register();
 	code_ptr = init_code_segment();
 	data_ptr = init_data_segement();
+	stack_ptr = init_stack_segement();
 	init_list();
 }

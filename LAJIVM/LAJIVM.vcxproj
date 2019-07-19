@@ -113,7 +113,9 @@
     <ClCompile Include="bin_read.cpp" />
     <ClCompile Include="ExecuteInstruction.cpp" />
     <ClCompile Include="init.cpp" />
+    <ClCompile Include="ins_stack.cpp" />
     <ClCompile Include="LAJIVM.cpp" />
+    <ClCompile Include="lvm_debug.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinType.h" />
