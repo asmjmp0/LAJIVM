@@ -110,9 +110,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnalyseCode.cpp" />
     <ClCompile Include="LJasm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnalyseCode.h" />
     <ClInclude Include="LJasm.h" />
   </ItemGroup>
   <ItemGroup>

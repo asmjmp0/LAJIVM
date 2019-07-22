@@ -1,4 +1,5 @@
 #include"LJasm.h"
+#include"AnalyseCode.h"
 #include<iostream>
 #include<string>
 #include<sstream>
@@ -114,9 +115,17 @@ int read_code() {
 		std::cout << "找不到DATA尾" << std::endl;
 		return (0 - now_index);
 	}
-	for (int i = now_index; i < end_flag; i++)
+	++now_index;//指向第一行代码
+	for (; now_index < end_flag; now_index++)
 	{
-	std:;
+		try
+		{
+			Analyse_code(origin_str[now_index]);
+		}
+		catch (int exception)
+		{
+			return (0 - now_index);
+		}
 	}
 	return 0;
 }
