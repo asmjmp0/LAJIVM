@@ -16,7 +16,8 @@ int _ins_len(char c) {
 		registe_ptr->flag[14] = 0;
 	}else if(high==1){//操纵栈段
 		registe_ptr->flag[14] = 1;
-	}
+	}else if (high == 2);
+	else throw(LVM_EXECUTE_ERROR);
 	switch (low)
 	{
 	case '\x00': {
@@ -69,7 +70,8 @@ int _ins_len(char c) {
 		return 5;
 	}
 	}
-	return -100;
+	throw(LVM_EXECUTE_ERROR);
+	return -1;
 }
 /*
 *获取指令长度
@@ -176,6 +178,7 @@ int get_ins_len(char f, char s) {
 	}
 		
 	}
+	throw(LVM_EXECUTE_ERROR);
 	return -1;
 }
 /*
