@@ -28,7 +28,7 @@ bool bincmp(char * a, char *b, int len) {
 *因为没有时间 所以采用垃圾算法
 */
 int find_str(char* a, char* b,int lena,int lenb) {
-	for (int i = 0; i < lena - lenb; i++)
+	for (int i = 0; i < lena - lenb+1; i++)
 	{
 		if (bincmp(a + i, b, lenb))
 			return i;

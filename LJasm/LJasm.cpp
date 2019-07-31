@@ -4,12 +4,21 @@
 #include<string>
 #include<sstream>
 #include<fstream>
+#include<regex>
+#include<ios>
 std::vector<std::string>  origin_str{};
 int bin_length{ 0 };
 int asm_length{ 0 };
 int now_index{ 0 };
 int blank_row{ 0 };
 uint8_t* out_ptr{ nullptr };
+/*测试函数*/
+void test_out_ptr(int num) {
+	for (int i = 0; i < num; i++)
+	{
+		printf("%02X ", out_ptr[i]);
+	}
+}
 /*
 把16进制字符串转换成数字
 */
@@ -129,6 +138,20 @@ int read_code() {
 	}
 	return 0;
 }
+bool write_end_out(std::string str) {
+	long long bin_end_code = 0x010101010101;//bin end
+	*(long long *)(out_ptr+bin_length) = bin_end_code;
+	bin_length += 6;
+	std::regex reg("(.*\\\\)?(.*)\\..*$");//获取文件名字
+	std::smatch match;
+	if (std::regex_match(str, match, reg)) {
+		std::ofstream out_file(match[2], std::ios::out | std::ios::binary);
+		out_file.write((char*)out_ptr, bin_length);
+		out_file.close();
+		return true;
+	}
+	else return false;
+}
 int main(int argc, char **argv) {
 	char *path{nullptr};
 	int wrong_data{0};
@@ -165,6 +188,9 @@ int main(int argc, char **argv) {
 		std::cout << "读取代码段失败\n" << "错误第" << (blank_row + 1 - wrong_code) << "行" << std::endl;
 		exit(-1);
 	}
-	printf("%s\n", out_ptr);
+	if (!write_end_out(std::string(path))) {
+		std::cout << "输出到文件失败" << std::endl;
+		exit(-1);
+	}
 	return 0;
 }

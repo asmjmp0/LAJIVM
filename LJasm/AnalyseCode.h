@@ -1,6 +1,7 @@
 #ifndef ANALYSECODE_H
 #define ANALYSECODE_H
 #include<string>
+#include<regex>
 #define INS_PUSH 0x10
 #define INS_POP 0x11
 #define INS_MOV 0x50
@@ -21,6 +22,9 @@
 #define INS_OR 0x24
 #define INS_NOT 0x25
 #define INS_NOP 0x5f
+uint8_t registernum_to_num(std::string);
+uint8_t lowhigh_to_num(std::string);
+unsigned immed_to_unsgned(std::string, std::string);
 int Analyse_code(std::string);
 int Analyse_mov(std::string);
 int Analyse_add(std::string);
