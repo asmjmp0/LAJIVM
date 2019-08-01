@@ -1,0 +1,10 @@
+DATA:
+printf("hello world")\x0a\x00
+DATA END;
+CODE:
+mov r0L,0x10;调用print函数
+lea r3,0;指向0
+int 0x21;系统调用号
+mov r0l,0x40;调用0x40
+int 0x21
+CODE END;

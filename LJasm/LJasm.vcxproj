@@ -111,10 +111,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnalyseCode.cpp" />
+    <ClCompile Include="labelstruct.cpp" />
     <ClCompile Include="LJasm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalyseCode.h" />
+    <ClInclude Include="labelstruct.h" />
     <ClInclude Include="LJasm.h" />
   </ItemGroup>
   <ItemGroup>

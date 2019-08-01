@@ -21,12 +21,18 @@
     <ClCompile Include="AnalyseCode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="labelstruct.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LJasm.h">
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="AnalyseCode.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="labelstruct.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,6 +11,11 @@ int bin_length{ 0 };
 int asm_length{ 0 };
 int now_index{ 0 };
 int blank_row{ 0 };
+int data_long{ 0 };
+label_struct *label_s;
+write_label_data *write_label_d;
+int label_index{ 0 };
+int write_label_index{ 0 };
 uint8_t* out_ptr{ nullptr };
 /*测试函数*/
 void test_out_ptr(int num) {
@@ -102,6 +107,7 @@ int read_data(){
 		}
 		++now_index;//当前执行行数递增
 	}
+	data_long = bin_length + 5;
 	return 0;
 }
 int read_code() {
@@ -178,6 +184,12 @@ int main(int argc, char **argv) {
 	*(unsigned*)(out_ptr + 8) = 0x3a415441;
 	bin_length = 12;
 	
+	label_s = (label_struct*)malloc(100*(sizeof(label_struct)));
+	memset(label_s, 0, 100 * (sizeof(label_struct)));//初始化符号表结构体
+
+	write_label_d=(write_label_data*)malloc(100 * (sizeof(write_label_data)));
+	memset(write_label_d, 0, 100 * (sizeof(write_label_data)));
+
 	wrong_data = read_data();
 	if (wrong_data<0) {
 		std::cout << "读取数据段失败\n" <<"错误第"<<(blank_row+1-wrong_data)<<"行"<< std::endl;
@@ -188,6 +200,7 @@ int main(int argc, char **argv) {
 		std::cout << "读取代码段失败\n" << "错误第" << (blank_row + 1 - wrong_code) << "行" << std::endl;
 		exit(-1);
 	}
+	write_all_to_jmp();
 	if (!write_end_out(std::string(path))) {
 		std::cout << "输出到文件失败" << std::endl;
 		exit(-1);

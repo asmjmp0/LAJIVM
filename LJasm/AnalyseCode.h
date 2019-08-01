@@ -31,4 +31,7 @@ int Analyse_mov(std::string);
 int Analyse_add(std::string);
 int Analyse_lea(std::string);
 int Analyse_int(std::string);
+int Analyse_cmp(std::string);
+int Analyse_jmp(std::string);
+int Analyse_jnz(std::string);
 #endif // !ANALYSECODE_H

@@ -26,7 +26,7 @@ int _ins_len(char c) {
 	switch (low)
 	{
 	case '\x00': {
-		if (uasm_flag )printf("R,R\n");
+		if (uasm_flag)printf("R,R\n");
 		return 2;
 	}
 	case '\x01': {
@@ -35,7 +35,7 @@ int _ins_len(char c) {
 	}
 	case '\x02': {
 		if (uasm_flag) {
-			if (registe_ptr->flag[14]) {
+			if (high == 1) {
 				printf("R,s[R]\n");
 			}
 			else {
@@ -46,7 +46,7 @@ int _ins_len(char c) {
 	}
 	case '\x03': {
 		if (uasm_flag) {
-			if (registe_ptr->flag[14])
+			if (high == 1)
 				printf("s[R],R\n");
 			else {
 				printf("[R],R\n");
@@ -73,6 +73,17 @@ int _ins_len(char c) {
 	case '\x08': {
 		if (uasm_flag)printf("[R+i],R\n");
 		return 5;
+	}
+	case '\x09': {
+		if (uasm_flag) {
+			if (high == 1)
+				printf("s[R+R],R\n");
+			else {
+				printf("[R+R],R\n");
+			}
+		}
+			
+		return 3;
 	}
 	}
 	throw(LVM_EXECUTE_ERROR);
@@ -449,6 +460,46 @@ int do_mov() {
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
 			break;
 		}
+		break;
+	}
+	case'\x09': {
+		uint8_t lowb1 = (uint8_t)code_ptr[registe_ptr->IP + 3] % 0x10;
+		uint8_t highb1 = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t lowb = (uint8_t)code_ptr[registe_ptr->IP + 4] % 0x10;
+		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 4] / 0x10;
+		char *data_temp_p = data_ptr;
+		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//操控栈段
+		if (lowb == 0)//低位运算
+		{
+			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
+			unsigned value1 = *(unsigned*)register_list[highb1];//获得Ra1寄存器中的值
+			char *temp = data_ptr + value+value1;//获取数据指针
+			char *R = (char *)register_list[highb];//获得Rb寄存器中的值
+			*temp = *R;//写入
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
+			break;
+		}
+		else if (lowb == 1)//高位运算
+		{
+			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
+			unsigned value1 = *(unsigned*)register_list[highb1];//获得Ra1寄存器中的值
+			int16_t *temp = (int16_t*)(data_ptr + value+value1);//获取数据指针
+			int16_t *R = (int16_t*)register_list[highb];//获得Rb寄存器中的值
+			*temp = *R;//写入
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
+			break;
+		}
+		else if (lowb == 2)//全运算
+		{
+			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
+			unsigned value1 = *(unsigned*)register_list[highb1];//获得Ra1寄存器中的值
+			unsigned *temp = (unsigned*)(data_ptr + value+value1);//获取数据指针
+			unsigned *R = (unsigned*)register_list[highb];//获得Rb寄存器中的值
+			*temp = *R;//写入
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
+			break;
+		}
+		else throw(LVM_EXECUTE_ERROR);
 		break;
 	}
 	default: {

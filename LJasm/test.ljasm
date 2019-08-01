@@ -1,13 +1,11 @@
 ;’‚ «≤‚ ‘ª„±‡¥˙¬Î
 DATA:
-123456789a\x301bc
+hello world\x0a\x00
 DATA END;
 CODE:
-mov r0,0x30
-mov [r0],r0l
-add r0l,0x30
-nop
-nop
-mov r0L,0x40
+re:
+mov r0l,0x10
+lea r3,0
 int 0x21
+jmp re
 CODE END;
