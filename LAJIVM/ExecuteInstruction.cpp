@@ -12,12 +12,17 @@
 int _ins_len(char c) {
 	uint8_t high = (uint8_t)c / 0x10;//获取操作类型高位
 	uint8_t low = (uint8_t)c % 0x10;
-	if (high == 0) {//操纵数据段
-		registe_ptr->flag[14] = 0;
-	}else if(high==1){//操纵栈段
-		registe_ptr->flag[14] = 1;
-	}else if (high == 2);
-	else throw(LVM_EXECUTE_ERROR);
+	if (!uasm_flag) {
+		if (high == 0) {//操纵数据段
+			registe_ptr->flag[14] = 0;
+		}
+		else if (high == 1) {//操纵栈段
+			registe_ptr->flag[14] = 1;
+		}
+		else if (high == 2);
+		else throw(LVM_EXECUTE_ERROR);
+
+	}
 	switch (low)
 	{
 	case '\x00': {

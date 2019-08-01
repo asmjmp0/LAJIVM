@@ -121,7 +121,7 @@ int read_code() {
 		}
 	}
 	if (end_flag == -1) {
-		std::cout << "找不到DATA尾" << std::endl;
+		std::cout << "找不到CODE尾" << std::endl;
 		return (0 - now_index);
 	}
 	++now_index;//指向第一行代码

@@ -1,11 +1,13 @@
 ;’‚ «≤‚ ‘ª„±‡¥˙¬Î
 DATA:
-123456789\\a\x301bc
-5465546546
+123456789a\x301bc
 DATA END;
 CODE:
-mov R0,0x12345678;123456789
-add R0,R0
+mov r0,0x30
+mov [r0],r0l
+add r0l,0x30
 nop
 nop
+mov r0L,0x40
+int 0x21
 CODE END;

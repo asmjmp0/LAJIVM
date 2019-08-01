@@ -25,7 +25,10 @@
 uint8_t registernum_to_num(std::string);
 uint8_t lowhigh_to_num(std::string);
 unsigned immed_to_unsgned(std::string, std::string);
+std::string& trim(std::string &s);
 int Analyse_code(std::string);
 int Analyse_mov(std::string);
 int Analyse_add(std::string);
+int Analyse_lea(std::string);
+int Analyse_int(std::string);
 #endif // !ANALYSECODE_H
