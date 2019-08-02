@@ -85,6 +85,17 @@ int _ins_len(char c) {
 			
 		return 3;
 	}
+	case '\x0a': {
+		if (uasm_flag) {
+			if (high == 1)
+				printf("R,s[R+R]\n");
+			else {
+				printf("R,[R+R]\n");
+			}
+		}
+
+		return 3;
+	}
 	}
 	throw(LVM_EXECUTE_ERROR);
 	return -1;
@@ -203,16 +214,16 @@ int get_ins_len(char f, char s) {
 int set_flag(char pram) {
 	char * ptr = registe_ptr->flag;//获取flag指针
 	if(pram== 0){
-		ptr[0] = 1;
+		ptr[0] = 0;
 		return LVM_SUCCESS;
 	}
 	else if (pram > 0) {
-		ptr[0] = 0;
+		ptr[0] = 1;
 		ptr[1] = 1;
 		return LVM_SUCCESS;
 	}else if(pram<0)
 	{
-		ptr[0] = 0;
+		ptr[0] = 1;
 		ptr[1] = 0;
 		return LVM_SUCCESS;
 	}
@@ -273,26 +284,29 @@ int do_mov() {
 		//
 		uint8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
-			char*Ra= (char *)register_list[high];
-			char*Rb=(char*)register_list[highb];
+			char*Ra = (char *)register_list[high];
+			char*Rb = (char*)register_list[highb];
 			*Ra = *Rb;
 			set_flag(*Ra);
 			break;
-		}else if (low==1)
+		}
+		else if (low == 1)
 		{
 			int16_t*Ra = (int16_t *)register_list[high];
 			int16_t*Rb = (int16_t *)register_list[highb];
 			*Ra = *Rb;
 			set_flag(*Ra);
 			break;
-		}else if(low == 2)
+		}
+		else if (low == 2)
 		{
 			unsigned*Ra = (unsigned *)register_list[high];
 			unsigned*Rb = (unsigned*)register_list[highb];
 			*Ra = *Rb;
 			set_flag(*Ra);
 			break;
-		}else throw(LVM_EXECUTE_ERROR);
+		}
+		else throw(LVM_EXECUTE_ERROR);
 		break;
 	}
 	case '\x01': {//mov R,i   ----->1
@@ -300,31 +314,33 @@ int do_mov() {
 		{
 			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//获得立即数
 			char *R = (char *)register_list[high];
-			*R= temp;
+			*R = temp;
 			set_flag(*R);
 			break;
-		}else if (low==1)//高位运算
+		}
+		else if (low == 1)//高位运算
 		{
-			unsigned temp = *(short*)(code_ptr+registe_ptr->IP + 2 + 1);//获得立即数
+			unsigned temp = *(short*)(code_ptr + registe_ptr->IP + 2 + 1);//获得立即数
 			int16_t *R = (int16_t *)register_list[high];
 			*R = temp;
 			set_flag(*R);
 			break;
-		}else if(low ==2)//全运算
+		}
+		else if (low == 2)//全运算
 		{
-			unsigned temp = *(unsigned*)(code_ptr+registe_ptr->IP + 2 + 1);//获得立即数
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//获得立即数
 			unsigned *R = (unsigned *)register_list[high];
 			*R = temp;
 			set_flag(*R);
 			break;
 		}
 		else throw(LVM_EXECUTE_ERROR);
-			break;
+		break;
 	}
 	case '\x02': {//R,[R] ----->2
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		char *data_temp_p = data_ptr;
-		if (registe_ptr->flag[14]==1) data_ptr = stack_ptr;//操控栈段
+		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//操控栈段
 		if (low == 0)//低位运算
 		{
 			unsigned value = *(unsigned*)register_list[highb];//获得Rb寄存器中的值
@@ -337,7 +353,7 @@ int do_mov() {
 		else if (low == 1)//高位运算
 		{
 			unsigned value = *(unsigned*)register_list[highb];//获得Rb寄存器中的值
-			int16_t temp = *(int16_t*)(data_ptr+value);//获取数据段的内容
+			int16_t temp = *(int16_t*)(data_ptr + value);//获取数据段的内容
 			int16_t *R = (int16_t *)register_list[high];
 			*R = temp;
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -346,7 +362,7 @@ int do_mov() {
 		else if (low == 2)//全运算
 		{
 			unsigned value = *(unsigned*)register_list[highb];//获得Rb寄存器中的值
-			unsigned temp = *(unsigned*)(data_ptr+value);//获取数据段的内容
+			unsigned temp = *(unsigned*)(data_ptr + value);//获取数据段的内容
 			unsigned *R = (unsigned *)register_list[high];
 			*R = temp;
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -363,9 +379,9 @@ int do_mov() {
 		if (lowb == 0)//低位运算
 		{
 			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
-			char *temp = data_ptr+value;//获取数据指针
+			char *temp = data_ptr + value;//获取数据指针
 			char *R = (char *)register_list[highb];//获得Rb寄存器中的值
-			*temp=*R;//写入
+			*temp = *R;//写入
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
 			break;
 		}
@@ -390,7 +406,7 @@ int do_mov() {
 		else throw(LVM_EXECUTE_ERROR);
 		break;
 	}
-	case '\x07':{//R, [R + i]----->07
+	case '\x07': {//R, [R + i]----->07
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		short i = *(short*)(code_ptr + registe_ptr->IP + 5);//获取立即数
 
@@ -399,7 +415,7 @@ int do_mov() {
 		if (low == 0)//低位运算
 		{
 			unsigned value = *(unsigned*)register_list[highb];//获得Rb寄存器中的值
-			char temp = data_ptr[i+value];//获取数据段的内容
+			char temp = data_ptr[i + value];//获取数据段的内容
 			char *R = (char *)register_list[high];
 			*R = temp;
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -408,7 +424,7 @@ int do_mov() {
 		else if (low == 1)//高位运算
 		{
 			unsigned value = *(unsigned*)register_list[highb];//获得Rb寄存器中的值
-			int16_t temp = *(int16_t*)(data_ptr + i+value);//获取数据段的内容
+			int16_t temp = *(int16_t*)(data_ptr + i + value);//获取数据段的内容
 			int16_t *R = (int16_t *)register_list[high];
 			*R = temp;
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -417,7 +433,7 @@ int do_mov() {
 		else if (low == 2)//全运算
 		{
 			unsigned value = *(unsigned*)register_list[highb];//获得Rb寄存器中的值
-			unsigned temp = *(unsigned*)(data_ptr + i+value);//获取数据段的内容
+			unsigned temp = *(unsigned*)(data_ptr + i + value);//获取数据段的内容
 			unsigned *R = (unsigned *)register_list[high];
 			*R = temp;
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -436,7 +452,7 @@ int do_mov() {
 		if (lowb == 0)//低位运算
 		{
 			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
-			char *temp = data_ptr + i+value;//获取数据指针
+			char *temp = data_ptr + i + value;//获取数据指针
 			char *R = (char *)register_list[highb];//获得Rb寄存器中的值
 			*temp = *R;//写入
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -445,7 +461,7 @@ int do_mov() {
 		else if (lowb == 1)//高位运算
 		{
 			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
-			int16_t *temp = (int16_t*)(data_ptr + i+value);//获取数据指针
+			int16_t *temp = (int16_t*)(data_ptr + i + value);//获取数据指针
 			int16_t *R = (int16_t*)register_list[highb];//获得Rb寄存器中的值
 			*temp = *R;//写入
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -454,7 +470,7 @@ int do_mov() {
 		else if (lowb == 2)//全运算
 		{
 			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
-			unsigned *temp = (unsigned*)(data_ptr + i+value);//获取数据指针
+			unsigned *temp = (unsigned*)(data_ptr + i + value);//获取数据指针
 			unsigned *R = (unsigned*)register_list[highb];//获得Rb寄存器中的值
 			*temp = *R;//写入
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -462,7 +478,7 @@ int do_mov() {
 		}
 		break;
 	}
-	case'\x09': {
+	case'\x09': {//mov [R+R],R----->09
 		uint8_t lowb1 = (uint8_t)code_ptr[registe_ptr->IP + 3] % 0x10;
 		uint8_t highb1 = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		uint8_t lowb = (uint8_t)code_ptr[registe_ptr->IP + 4] % 0x10;
@@ -473,7 +489,7 @@ int do_mov() {
 		{
 			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
 			unsigned value1 = *(unsigned*)register_list[highb1];//获得Ra1寄存器中的值
-			char *temp = data_ptr + value+value1;//获取数据指针
+			char *temp = data_ptr + value + value1;//获取数据指针
 			char *R = (char *)register_list[highb];//获得Rb寄存器中的值
 			*temp = *R;//写入
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -483,7 +499,7 @@ int do_mov() {
 		{
 			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
 			unsigned value1 = *(unsigned*)register_list[highb1];//获得Ra1寄存器中的值
-			int16_t *temp = (int16_t*)(data_ptr + value+value1);//获取数据指针
+			int16_t *temp = (int16_t*)(data_ptr + value + value1);//获取数据指针
 			int16_t *R = (int16_t*)register_list[highb];//获得Rb寄存器中的值
 			*temp = *R;//写入
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -493,7 +509,7 @@ int do_mov() {
 		{
 			unsigned value = *(unsigned*)register_list[high];//获得Ra寄存器中的值
 			unsigned value1 = *(unsigned*)register_list[highb1];//获得Ra1寄存器中的值
-			unsigned *temp = (unsigned*)(data_ptr + value+value1);//获取数据指针
+			unsigned *temp = (unsigned*)(data_ptr + value + value1);//获取数据指针
 			unsigned *R = (unsigned*)register_list[highb];//获得Rb寄存器中的值
 			*temp = *R;//写入
 			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
@@ -502,13 +518,52 @@ int do_mov() {
 		else throw(LVM_EXECUTE_ERROR);
 		break;
 	}
+	case '\x0a': {//mov R,[R+R]----->0a
+		uint8_t lowb1 = (uint8_t)code_ptr[registe_ptr->IP + 3] % 0x10;
+		uint8_t highb1 = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t lowb = (uint8_t)code_ptr[registe_ptr->IP + 4] % 0x10;
+		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 4] / 0x10;
+		char *data_temp_p = data_ptr;
+		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//操控栈段
+		if (low == 0)//低位运算
+		{
+			unsigned value = *(unsigned*)register_list[highb];//获得Ra寄存器中的值
+			unsigned value1 = *(unsigned*)register_list[highb1];//获得Ra1寄存器中的值
+			char *temp = data_ptr + value + value1;//获取数据指针
+			char *R = (char *)register_list[high];//获得Rb寄存器中的值
+			*R = *temp;//写入
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
+			break;
+		}
+		else if (low == 1)//高位运算
+		{
+			unsigned value = *(unsigned*)register_list[highb];//获得Ra寄存器中的值
+			unsigned value1 = *(unsigned*)register_list[highb1];//获得Ra1寄存器中的值
+			int16_t *temp = (int16_t*)(data_ptr + value + value1);//获取数据指针
+			int16_t *R = (int16_t*)register_list[high];//获得Rb寄存器中的值
+			*R = *temp;//写入
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
+			break;
+		}
+		else if (low == 2)//全运算
+		{
+			unsigned value = *(unsigned*)register_list[highb];//获得Ra寄存器中的值
+			unsigned value1 = *(unsigned*)register_list[highb1];//获得Ra1寄存器中的值
+			unsigned *temp = (unsigned*)(data_ptr + value + value1);//获取数据指针
+			unsigned *R = (unsigned*)register_list[high];//获得Rb寄存器中的值
+			*R = *temp;//写入
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//还原操作
+			break;
+		}
+
+	}
 	default: {
 		throw(LVM_EXECUTE_ERROR);
 		break;
 	}
 	}
-
 	return LVM_SUCCESS;
+
 }
 /*
 *执行lea指令
@@ -584,15 +639,19 @@ int do_lea() {
 int do_int() {
 	switch ((char)registe_ptr->R0){
 	case LVM_PRINT: {
-		//
 		int temp{ 0 };
-		temp=printf("%s", data_ptr + registe_ptr->R3);
+		temp=printf_s("%s", data_ptr + registe_ptr->R3);
 		registe_ptr->R0 = temp;
 		break;
 	}
 	case LVM_EXIT: {
-		//printf("\n虚拟机成功退出");
 		exit(0);
+	}
+	case LVM_SCAN: {
+		int temp{ 0 };
+		temp=scanf_s("%s", data_ptr + registe_ptr->R3,registe_ptr->R4);
+		registe_ptr->R0 = temp;
+		break;
 	}
 	}
 	return LVM_SUCCESS;
@@ -769,9 +828,32 @@ int do_dec() {
 */
 int do_cmp() {
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
-	if (code_ptr[registe_ptr->IP + 1] == '\x00') {
+	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
+	if (code_ptr[registe_ptr->IP + 1] == '\x00') {//寄存器比较
+			uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
+			if (low == 0) {
+				char*Ra = (char *)register_list[high];
+				char*Rb = (char*)register_list[highb];
+				char temp = *Ra - *Rb;
+				set_flag(temp);
+			}
+			else if (low == 1)
+			{
+				int16_t*Ra = (int16_t *)register_list[high];
+				int16_t*Rb = (int16_t *)register_list[highb];
+				int16_t temp = *Ra - *Rb;
+				set_flag(temp);
+			}
+			else if (low == 2)
+			{
+				unsigned*Ra = (unsigned *)register_list[high];
+				unsigned*Rb = (unsigned*)register_list[highb];
+				unsigned temp = *Ra - *Rb;
+				set_flag(temp);
+			}
+			else throw(LVM_EXECUTE_ERROR);
 	}
-	else if (code_ptr[registe_ptr->IP + 1] == '\x01') {
+	else if (code_ptr[registe_ptr->IP + 1] == '\x01') {//立即数比较
 		unsigned i = code_ptr[registe_ptr->IP + 3];
 		set_flag(*register_list[high] - i);
 	}

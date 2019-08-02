@@ -2,12 +2,12 @@
 #define LABELSTRUCT_H
 #include<string>
 #pragma pack(1)
-struct label_struct
+struct label_struct //标签结构体
 {
 	std::string name;
 	int now_bin_length;
 };
-struct write_label_data
+struct write_label_data //跳转中写入标签结构体
 {
 	std::string name;
 	uint8_t op;

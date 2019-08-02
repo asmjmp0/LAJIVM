@@ -2,6 +2,7 @@
 #define EXECUTEINSTRUCTION_H
 /******************FUNCTION_NUM******************/
 #define LVM_PRINT 0x10
+#define LVM_SCAN 0x11
 #define LVM_EXIT 0x40
 /**********************INS*********************/
 #define INS_PUSH 0x10

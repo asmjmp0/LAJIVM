@@ -1,11 +1,5 @@
-;这是测试汇编代码
+;这是一个垃圾逆向程序
 DATA:
-hello world\x0a\x00
 DATA END;
 CODE:
-re:
-mov r0l,0x10
-lea r3,0
-int 0x21
-jmp re
 CODE END;
