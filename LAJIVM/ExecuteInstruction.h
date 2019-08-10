@@ -25,6 +25,8 @@
 #define INS_OR 0x24
 #define INS_NOT 0x25
 #define INS_NOP 0x5f
+#define INS_CALL 0x60
+#define INS_RET 0x61
 extern bool debug_flag;
 extern bool uasm_flag;
 int get_ins_len(char, char);
@@ -55,5 +57,7 @@ int do_not();
 int do_nop();
 int do_push();
 int do_pop();
+int do_call();
+int do_ret();
 #endif // !EXECUTEINSTRUCTION_H
 

@@ -35,23 +35,23 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VmRegister.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="init.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ErrorList.h">
+    <ClInclude Include="ExecuteInstruction.h">
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="bin_read.h">
-      <Filter>源文件</Filter>
+      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="BinType.h">
-      <Filter>源文件</Filter>
+      <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ExecuteInstruction.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="ErrorList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="init.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VmRegister.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

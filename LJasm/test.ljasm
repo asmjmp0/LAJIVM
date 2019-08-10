@@ -1,5 +1,14 @@
 ;这是一个垃圾逆向程序
 DATA:
+1234
 DATA END;
 CODE:
+call function
+nop
+nop
+function:
+push 0x30
+nop
+nop
+ret 4
 CODE END;

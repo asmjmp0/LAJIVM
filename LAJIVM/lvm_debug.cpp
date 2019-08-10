@@ -82,7 +82,7 @@ void lvm_debug_d_s(char * ptr,std::string str,size_t temp) {
 		printf("%08X	", data_num + m);
 		for (int h = 0; h< 16; h++)
 		{
-			printf("%02X ", ptr[data_num + m]);
+			printf_s("%02X ", ptr[data_num + m]);
 			++m;
 		}
 		int p = m - 16;

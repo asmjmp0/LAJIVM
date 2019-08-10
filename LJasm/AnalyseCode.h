@@ -22,6 +22,8 @@
 #define INS_OR 0x24
 #define INS_NOT 0x25
 #define INS_NOP 0x5f
+#define INS_CALL 0x60
+#define INS_RET 0x61
 uint8_t registernum_to_num(std::string);
 uint8_t lowhigh_to_num(std::string);
 unsigned immed_to_unsgned(std::string, std::string);
@@ -48,4 +50,6 @@ int Analyse_and(std::string);
 int Analyse_or(std::string);
 int Analyse_push(std::string);
 int Analyse_pop(std::string);
+int Analyse_call(std::string);
+int Analyse_ret(std::string);
 #endif // !ANALYSECODE_H

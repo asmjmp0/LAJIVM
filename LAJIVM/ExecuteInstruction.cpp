@@ -67,11 +67,11 @@ int _ins_len(char c) {
 		return 4;
 	}
 	case '\x07': {
-		if (uasm_flag)printf("R,[R+i]\n");
+		if (uasm_flag)printf("R,[R-+i]\n");
 		return 5;
 	}
 	case '\x08': {
-		if (uasm_flag)printf("[R+i],R\n");
+		if (uasm_flag)printf("[R-+i],R\n");
 		return 5;
 	}
 	case '\x09': {
@@ -199,6 +199,20 @@ int get_ins_len(char f, char s) {
 			printf("11 pop R\n");
 		}
 		return 2;
+	}
+	case INS_CALL: {
+		if (uasm_flag) {
+			printf("60 call ");
+		}
+		return 2 + _ins_len(s);
+		break;
+	}
+	case INS_RET: {
+		if (uasm_flag) {
+			printf("61 ret ");
+		}
+		return 2 + _ins_len(s);
+		break;
 	}
     default: {
 		break;
@@ -1184,6 +1198,48 @@ int do_not(){
 *执行NOP
 */
 int do_nop() {
+	return LVM_SUCCESS;
+}
+/*
+*执行CALL
+*/
+int do_call() {
+	int ins_len;
+	ins_len = get_ins_len(code_ptr[registe_ptr->IP], code_ptr[registe_ptr->IP + 1]);
+	if (code_ptr[registe_ptr->IP + 1] == 5) {//寄存器压栈
+		uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
+		unsigned num = *register_list[high];
+		*(unsigned*)(stack_ptr + registe_ptr->SP) = registe_ptr->IP+ins_len;//返回地址压栈
+		registe_ptr->IP = num;//修改
+	}
+	else if (code_ptr[registe_ptr->IP + 1] == 6) {//立即数压栈
+		unsigned num = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
+		*(unsigned*)(stack_ptr + registe_ptr->SP) = registe_ptr->IP + ins_len;
+		registe_ptr->IP = num;//修改
+	}
+	else throw(LVM_EXECUTE_ERROR);
+	registe_ptr->SP += 4;//栈指针增加
+	return LVM_SUCCESS;
+}
+/*
+*执行RET
+*/
+int do_ret() {
+	if (code_ptr[registe_ptr->IP + 1] == 5) {//寄存器读数
+		uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
+		unsigned num = *register_list[high];
+		registe_ptr->SP = registe_ptr->SP-(num+4);
+		num = (unsigned)stack_ptr[registe_ptr->SP];
+		registe_ptr->IP = num;//修改
+	}
+	else if (code_ptr[registe_ptr->IP + 1] == 6) {//立即数读数
+		unsigned num = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
+		registe_ptr->SP = registe_ptr->SP - (num + 4);
+		num = (unsigned)stack_ptr[registe_ptr->SP];
+		registe_ptr->IP = num;//修改
+	}
+	else throw(LVM_EXECUTE_ERROR);
+
 	return LVM_SUCCESS;
 }
 int exectue_ins() {

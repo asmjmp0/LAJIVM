@@ -6,8 +6,8 @@ std::regex reg0("^R([0-9]{1,2})([LH]?)$");//匹配0 1 2 12 13 型式命令
 std::regex reg1("^(0X)?([0-9a-fA-F]*)$");//匹配立即数
 std::regex reg2("^\\[R([0-9]{1,2})\\]$");//匹配[R]
 std::regex reg1x("^S\\[R([0-9]{1,2})\\]$");//匹配S[R]
-std::regex reg7("^\\[R([0-9]{1,2})\\+(0X)?([0-9]*)\\]$");//匹配[R+i]
-std::regex reg17("^S\\[R([0-9]{1,2})\\+(0X)?([0-9]*)\\]$");//匹配s[R+i]
+std::regex reg7("^\\[R([0-9]{1,2})([\\+-])(0X)?([0-9]*)\\]$");//匹配[R+i]
+std::regex reg17("^S\\[R([0-9]{1,2})([\\+-])(0X)?([0-9]*)\\]$");//匹配s[R+i]
 std::regex reg9("^\\[R([0-9]{1,2})\\+R([0-9]{1,2})\\]$");//匹配[R+R]
 std::regex reg19("^S\\[R([0-9]{1,2})\\+R([0-9]{1,2})\\]$");//匹配s[R+R]
 std::regex reglabel("^([a-zA-Z_][a-zA-Z0-9_]+):$");//匹配标签
@@ -102,6 +102,8 @@ int Analyse_code(std::string str) {//mov R0L,0 ;123456789
 	else if (op_str == "OR") Analyse_or(ins_str);
 	else if (op_str == "PUSH") Analyse_push(ins_str);
 	else if (op_str == "POP") Analyse_pop(ins_str);
+	else if (op_str == "CALL") Analyse_call(ins_str);
+	else if (op_str == "RET") Analyse_ret(ins_str);
 	else if (std::regex_match(trim(op_str),opmatch,reglabel) ) {//匹配标签
 		if (is_label_define(trim(op_str), label_index) == -1)
 		{
@@ -206,7 +208,7 @@ int Analyse_mov(std::string str) {
 				uint8_t a = a0 * 0x10 | a1;
 				uint8_t b0 = registernum_to_num(bmatch[1]);
 				uint8_t b = b0 * 0x10 | 0x2;
-				unsigned i = immed_to_unsgned(bmatch[2], bmatch[3]);
+				unsigned i = immed_to_unsgned(bmatch[3], bmatch[4]);
 				out_ptr[bin_length] = INS_MOV;
 				++bin_length;
 				out_ptr[bin_length] = 0x7;
@@ -217,7 +219,8 @@ int Analyse_mov(std::string str) {
 				++bin_length;
 				out_ptr[bin_length] = 0;
 				++bin_length;
-				*(uint16_t*)(out_ptr + bin_length) = (uint16_t)i;
+				if (bmatch[2] == '-') *(int16_t*)(out_ptr + bin_length) = (int16_t)(0-i);
+				else *(int16_t*)(out_ptr + bin_length) = (int16_t)i;
 				bin_length += 2;
 		}
 		else if (std::regex_match(b_str, bmatch, reg17)) {//匹配17型成功 mov R,s[R+i] ----->7
@@ -226,7 +229,7 @@ int Analyse_mov(std::string str) {
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b = b0 * 0x10 | 0x2;
-			unsigned i = immed_to_unsgned(bmatch[2], bmatch[3]);
+			unsigned i = immed_to_unsgned(bmatch[3], bmatch[4]);
 			out_ptr[bin_length] = INS_MOV;
 			++bin_length;
 			out_ptr[bin_length] = 0x17;
@@ -237,7 +240,8 @@ int Analyse_mov(std::string str) {
 			++bin_length;
 			out_ptr[bin_length] = 0;
 			++bin_length;
-			*(uint16_t*)(out_ptr + bin_length) = (uint16_t)i;
+			if (bmatch[2] == '-') *(int16_t*)(out_ptr + bin_length) = (int16_t)(0 - i);
+			else *(int16_t*)(out_ptr + bin_length) = (int16_t)i;
 			bin_length += 2;
 		}
 		else if (std::regex_match(b_str, bmatch, reg9)) {//匹配0xA型成功 mov R,[R+R] ----->0xa
@@ -286,7 +290,7 @@ int Analyse_mov(std::string str) {
 		if (std::regex_match(b_str, bmatch, reg0)) {//匹配8型成功 [R+i],R----->08
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a = a0 * 0x10 | 0x2;
-			unsigned i = immed_to_unsgned(amatch[2], amatch[3]);
+			unsigned i = immed_to_unsgned(amatch[3], amatch[4]);
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
@@ -298,7 +302,8 @@ int Analyse_mov(std::string str) {
 			++bin_length;
 			out_ptr[bin_length] = 0;
 			++bin_length;
-			*(uint16_t*)(out_ptr + bin_length) = (uint16_t)i;
+			if (amatch[2] == '-') *(int16_t*)(out_ptr + bin_length) = (int16_t)(0 - i);
+			else *(int16_t*)(out_ptr + bin_length) = (int16_t)i;
 			bin_length += 2;
 			out_ptr[bin_length] = b;
 			++bin_length;
@@ -310,7 +315,7 @@ int Analyse_mov(std::string str) {
 		if (std::regex_match(b_str, bmatch, reg0)) {//匹配18型成功 s[R+i],R----->18
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a = a0 * 0x10 | 0x2;
-			unsigned i = immed_to_unsgned(amatch[2], amatch[3]);
+			unsigned i = immed_to_unsgned(amatch[3], amatch[4]);
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
@@ -322,7 +327,8 @@ int Analyse_mov(std::string str) {
 			++bin_length;
 			out_ptr[bin_length] = 0;
 			++bin_length;
-			*(uint16_t*)(out_ptr + bin_length) = (uint16_t)i;
+			if (amatch[2] == '-') *(int16_t*)(out_ptr + bin_length) = (int16_t)(0 - i);
+			else *(int16_t*)(out_ptr + bin_length) = (int16_t)i;
 			bin_length += 2;
 			out_ptr[bin_length] = b;
 			++bin_length;
@@ -543,14 +549,6 @@ int Analyse_cmp(std::string str) {
 int Analyse_jmp(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reglabel2)) {//匹配为标签
-		write_label_d[write_label_index].name = str;
-		write_label_d[write_label_index].op = INS_JMP;
-		write_label_d[write_label_index].bin_to_write = bin_length;
-		bin_length += 6;
-		++write_label_index;
-		return 0;
-	}
 	if (std::regex_match(str, match, reg1))//匹配6型成功 06型 跟立即数
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
@@ -572,21 +570,19 @@ int Analyse_jmp(std::string str) {
 		out_ptr[bin_length] = a;
 		++bin_length;
 		return 0;
-	}
-	else throw (now_index);
+	}else if (std::regex_match(str, match, reglabel2)) {//匹配为标签
+	    write_label_d[write_label_index].name = str;
+		write_label_d[write_label_index].op = INS_JMP;
+		write_label_d[write_label_index].bin_to_write = bin_length;
+		bin_length += 6;
+		++write_label_index;
+		return 0;
+	}else throw (now_index);
 	return 0;
 }
 int Analyse_jnz(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reglabel2)) {//匹配为标签
-		write_label_d[write_label_index].name = str;
-		write_label_d[write_label_index].op = INS_JNZ;
-		write_label_d[write_label_index].bin_to_write = bin_length;
-		bin_length += 6;
-		++write_label_index;
-		return 0;
-	}
 	if (std::regex_match(str, match, reg1))//匹配6型成功 06型 跟立即数
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
@@ -608,21 +604,19 @@ int Analyse_jnz(std::string str) {
 		out_ptr[bin_length] = a;
 		++bin_length;
 		return 0;
-	}
-	else throw (now_index);
+	}else if (std::regex_match(str, match, reglabel2)) {//匹配为标签
+		write_label_d[write_label_index].name = str;
+		write_label_d[write_label_index].op = INS_JNZ;
+		write_label_d[write_label_index].bin_to_write = bin_length;
+		bin_length += 6;
+		++write_label_index;
+		return 0;
+	}else throw (now_index);
 	return 0;
 }
 int Analyse_jz(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reglabel2)) {//匹配为标签
-		write_label_d[write_label_index].name = str;
-		write_label_d[write_label_index].op = INS_JZ;
-		write_label_d[write_label_index].bin_to_write = bin_length;
-		bin_length += 6;
-		++write_label_index;
-		return 0;
-	}
 	if (std::regex_match(str, match, reg1))//匹配6型成功 06型 跟立即数
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
@@ -644,21 +638,19 @@ int Analyse_jz(std::string str) {
 		out_ptr[bin_length] = a;
 		++bin_length;
 		return 0;
-	}
-	else throw (now_index);
+	}else if (std::regex_match(str, match, reglabel2)) {//匹配为标签
+		write_label_d[write_label_index].name = str;
+		write_label_d[write_label_index].op = INS_JZ;
+		write_label_d[write_label_index].bin_to_write = bin_length;
+		bin_length += 6;
+		++write_label_index;
+		return 0;
+	}else throw (now_index);
 	return 0;
 }
 int Analyse_jl(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reglabel2)) {//匹配为标签
-		write_label_d[write_label_index].name = str;
-		write_label_d[write_label_index].op = INS_JL;
-		write_label_d[write_label_index].bin_to_write = bin_length;
-		bin_length += 6;
-		++write_label_index;
-		return 0;
-	}
 	if (std::regex_match(str, match, reg1))//匹配6型成功 06型 跟立即数
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
@@ -680,21 +672,19 @@ int Analyse_jl(std::string str) {
 		out_ptr[bin_length] = a;
 		++bin_length;
 		return 0;
-	}
-	else throw (now_index);
+	}else if (std::regex_match(str, match, reglabel2)) {//匹配为标签
+		write_label_d[write_label_index].name = str;
+		write_label_d[write_label_index].op = INS_JL;
+		write_label_d[write_label_index].bin_to_write = bin_length;
+		bin_length += 6;
+		++write_label_index;
+		return 0;
+	}else throw (now_index);
 	return 0;
 }
 int Analyse_jh(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reglabel2)) {//匹配为标签
-		write_label_d[write_label_index].name = str;
-		write_label_d[write_label_index].op = INS_JH;
-		write_label_d[write_label_index].bin_to_write = bin_length;
-		bin_length += 6;
-		++write_label_index;
-		return 0;
-	}
 	if (std::regex_match(str, match, reg1))//匹配6型成功 06型 跟立即数
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
@@ -716,8 +706,14 @@ int Analyse_jh(std::string str) {
 		out_ptr[bin_length] = a;
 		++bin_length;
 		return 0;
-	}
-	else throw (now_index);
+	}else if (std::regex_match(str, match, reglabel2)) {//匹配为标签
+		write_label_d[write_label_index].name = str;
+		write_label_d[write_label_index].op = INS_JH;
+		write_label_d[write_label_index].bin_to_write = bin_length;
+		bin_length += 6;
+		++write_label_index;
+		return 0;
+	}else throw (now_index);
 	return 0;
 }
 int Analyse_inc(std::string str) {
@@ -1005,4 +1001,77 @@ int Analyse_pop(std::string str) {
 	else throw (now_index);
 	return 0;
 
+}
+int Analyse_call(std::string str) {
+	trim(str);
+	std::smatch match;
+	if (std::regex_match(str, match, reg1))//匹配6型成功 06型 跟立即数
+	{
+		unsigned i = immed_to_unsgned(match[1], match[2]);
+		out_ptr[bin_length] = INS_CALL;
+		++bin_length;
+		out_ptr[bin_length] = 0x6;
+		++bin_length;
+		*(unsigned *)(out_ptr + bin_length) = i;
+		bin_length += 4;
+		return 0;
+	}
+	else if (std::regex_match(str, match, reg0)) {//匹配5型成功 05型 跟寄存器
+		uint8_t a0 = registernum_to_num(match[1]);
+		uint8_t a = a0 * 0x10 | 0x2;
+		out_ptr[bin_length] = INS_CALL;
+		++bin_length;
+		out_ptr[bin_length] = 0x5;
+		++bin_length;
+		out_ptr[bin_length] = a;
+		++bin_length;
+		return 0;
+	}
+	else if (std::regex_match(str, match, reglabel2)) {//匹配为标签
+		write_label_d[write_label_index].name = str;
+		write_label_d[write_label_index].op = INS_CALL;
+		write_label_d[write_label_index].bin_to_write = bin_length;
+		bin_length += 6;
+		++write_label_index;
+		return 0;
+	}
+	else throw (now_index);
+	return 0;
+}
+int Analyse_ret(std::string str) {
+	trim(str);
+	std::smatch match;
+	if (std::regex_match(str, match, reg1))//匹配6型成功 06型 跟立即数
+	{
+		unsigned i = immed_to_unsgned(match[1], match[2]);
+		out_ptr[bin_length] = INS_RET;
+		++bin_length;
+		out_ptr[bin_length] = 0x6;
+		++bin_length;
+		*(unsigned *)(out_ptr + bin_length) = i;
+		bin_length += 4;
+		return 0;
+	}
+	else if (std::regex_match(str, match, reg0)) {//匹配5型成功 05型 跟寄存器
+		uint8_t a0 = registernum_to_num(match[1]);
+		uint8_t a = a0 * 0x10 | 0x2;
+		out_ptr[bin_length] = INS_RET;
+		++bin_length;
+		out_ptr[bin_length] = 0x5;
+		++bin_length;
+		out_ptr[bin_length] = a;
+		++bin_length;
+		return 0;
+	}
+	else if (std::regex_match(str, match, reglabel2)) {//匹配为标签
+		write_label_d[write_label_index].name = str;
+		write_label_d[write_label_index].op = INS_RET;
+		write_label_d[write_label_index].bin_to_write = bin_length;
+		bin_length += 6;
+		++write_label_index;
+		return 0;
+	}
+	else throw (now_index);
+	return 0;
+	return 0;
 }
