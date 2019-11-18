@@ -4,6 +4,7 @@
 #include"ErrorList.h"
 #include"bin_read.h"
 #include"ExecuteInstruction.h"
+bool is_debug = false;
 int main(int argc, char **argv) {
 Begin:
 	std::string str;
@@ -20,7 +21,7 @@ Begin:
 	{
 		std::string temp = argv[1];
 		if (temp == "d") {
-			registe_ptr->R6 = 0;
+			is_debug = true;
 			r_str = argv[2];
 			goto DOIT;
 		}else{
@@ -30,22 +31,6 @@ Begin:
 	}
 	int path_len = strlen(argv[0]);
 	int stack_offset{ 0 };
-	memcpy(stack_ptr, argv[0], path_len + 1);//先写再加
-	if ((path_len + 1) > 4) {
-		if ((path_len + 1) % 4 == 0) {//实际路径为取得长度+\x00
-			stack_offset = path_len + 1;
-			registe_ptr->SP += stack_offset;
-		}
-		else
-		{
-			stack_offset = 4 * ((path_len+1) / 4) + 4;
-			registe_ptr->SP += stack_offset;
-		}
-	}
-	else
-	{
-		registe_ptr->SP += 4;
-	}
 
 	printf("虚拟机初始化完成请输入二进制文件路径,输入ctrl+z退出：\n");
 	if (!std::getline(std::cin,str)) exit(0);
@@ -53,9 +38,11 @@ Begin:
 		auto temp = str.find(' ', 1);
 		if (temp != std::string::npos) {
 			r_str = str.substr(temp + 1);
-			registe_ptr->R6 = 0;
-		}else r_str = str;
-	}else r_str = str;
+			is_debug = true;
+		}
+		else r_str = str;
+	}
+	else r_str = str;
 	DOIT:
 	try { write_all(r_str); }
 	catch (int e){
@@ -64,7 +51,10 @@ Begin:
 	}
 	printf("执行二进制文件>>>>>>>>>>\n");
 	try{
-		while (registe_ptr->IP<=m_code_length) exectue_ins();
+		if(is_debug)registe_ptr->R6 = registe_ptr->CS;
+		registe_ptr->IP = registe_ptr->IP + registe_ptr->CS;
+		while (registe_ptr->IP<=m_code_length+registe_ptr->CS) 
+			exectue_ins();
 		goto Begin;
 	}
 	catch (int e)

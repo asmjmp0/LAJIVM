@@ -33,11 +33,17 @@
     <ClCompile Include="ins_stack.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryManage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleManage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LenInstruction.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ExecuteInstruction.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="bin_read.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -51,6 +57,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="VmRegister.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecuteInstruction.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryManage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleManage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LenInstruction.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

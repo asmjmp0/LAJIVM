@@ -1,9 +1,12 @@
 #include<iostream>
 #include<sstream>
 #include"ExecuteInstruction.h"
+#include"ErrorList.h"
+#include"LenInstruction.h"
 #include"init.h"
 bool debug_flag{ false };
 bool uasm_flag{ false };
+void lvm_debug_u_print(char a, char b);
 /*
 *调试选项
 */
@@ -28,11 +31,12 @@ void lvm_debug_c() {
 void lvm_debug_u() {
 	uasm_flag = true;
 	unsigned temp = registe_ptr->IP;//保存当前IP 为反汇编做准备
-	while (registe_ptr->IP != m_code_length)
+	while (registe_ptr->IP != m_code_length+registe_ptr->CS)
 	{
 		printf("%08X   ", registe_ptr->IP);
 		int ins_len;
 		ins_len = get_ins_len(code_ptr[registe_ptr->IP], code_ptr[registe_ptr->IP + 1]);//获取指令长度 为地址指针递增做准备
+		lvm_debug_u_print(code_ptr[registe_ptr->IP], code_ptr[registe_ptr->IP + 1]);
 		registe_ptr->IP += ins_len;
 	}
 	registe_ptr->IP = temp;
@@ -53,6 +57,8 @@ void lvm_debug_p() {
 	printf("IP--------->%08X\n", registe_ptr->IP);
 	printf("SP--------->%08X	", registe_ptr->SP);
 	printf("BP--------->%08X\n", registe_ptr->BP);
+	printf("CS--------->%08X\n", registe_ptr->CS);
+	printf("DS--------->%08X\n", registe_ptr->DS);
 	printf("flag[0]--------->%02x	", registe_ptr->flag[0]);
 	printf("flag[1]--------->%02x	", registe_ptr->flag[1]);
 	printf("flag[14]--------->%02x\n", registe_ptr->flag[14]);
@@ -82,7 +88,7 @@ void lvm_debug_d_s(char * ptr,std::string str,size_t temp) {
 		printf("%08X	", data_num + m);
 		for (int h = 0; h< 16; h++)
 		{
-			printf_s("%02X ", ptr[data_num + m]);
+			printf_s("%02X ", (unsigned char *)ptr[data_num + m]);
 			++m;
 		}
 		int p = m - 16;
@@ -188,4 +194,161 @@ YC:
 		goto FI;
 	}
 
+}
+void lvm_debug_u_print(char a, char b) {
+	switch ((unsigned char)a)
+	{
+	case INS_PUSH: {
+		printf("push ");
+		break;
+	}
+	case INS_MOV: {
+		printf("mov ");
+		break;
+	}
+	case INS_LEA: {
+		printf("lea ");
+	}
+	case INS_INT: {
+		printf("int i\n");
+		return;
+		break;
+	}
+	case INS_JMP:case INS_JZ:case INS_JNZ:case INS_JH:case INS_JL: {
+			if (a == INS_JMP)
+				printf("jmp ");
+			else if (a == INS_JZ)
+				printf("jz ");
+			else if (a == INS_JNZ)
+				printf("jnz ");
+			else if (a == INS_JH)
+				printf("jh ");
+			else if (a == INS_JH)
+				printf("jl ");
+		break;
+	}
+	case INS_INC:case INS_DEC: {
+			if (a == INS_INC)
+				printf("inc R\n");
+			else if (a == INS_DEC)
+				printf("dec R\n ");
+		break;
+	}
+	case INS_CMP: {
+		printf("cmp ");
+		break;
+	}
+	case INS_ADD: case INS_SUB:case INS_XOR:case INS_AND:case INS_OR: {
+		if (a == INS_ADD)
+			printf("add ");
+		else if (a == INS_SUB)
+			printf("sub ");
+		else if (a == INS_XOR)
+			printf("xor ");
+		else if (a == INS_AND)
+			printf("and ");
+		else if (a == INS_OR)
+			printf("or ");
+		break;
+	}
+	case INS_NOT: {
+		printf("not R\n");
+		break;
+	}
+	case INS_NOP: {
+		printf("nop\n");
+		break;
+	}
+	case INS_POP: {
+		printf("pop R\n");
+		return;
+	}
+	case INS_CALL: {
+		printf("call ");
+		break;
+	}
+	case INS_RET: {
+		printf("ret ");
+		break;
+	}
+	default: {
+		throw(LVM_EXECUTE_ERROR);
+	}
+	}
+	uint8_t high = (uint8_t)b / 0x10;//获取操作类型高位
+	uint8_t low = (uint8_t)b % 0x10;
+	switch (low)
+	{
+	case '\x00': {
+		printf("R,R\n");
+		break;
+	}
+	case '\x01': {
+		printf("R,i\n");
+		break;
+	}
+	case '\x02': {
+		if (high == 1) {
+			printf("R,s[R]\n");
+		}
+		else {
+			printf("R,[R]\n");
+		}
+		break;
+	}
+	case '\x03': {
+		if (high == 1)
+			printf("s[R],R\n");
+		else {
+			printf("[R],R\n");
+		}
+		break;
+	}
+	case '\x04': {
+		printf("[R],[R]\n");
+		break;
+	}
+	case '\x05': {
+		printf("R\n");
+		break;
+	}
+	case '\x06': {
+		printf("i\n");
+		break;
+	}
+	case '\x07': {
+		if (high == 1)
+			printf("R,s[R+i]\n");
+		else {
+			printf("R,[R+i]\n");
+		}
+		break;
+	}
+	case '\x08': {
+		if (high == 1)
+			printf("s[R+i],R\n");
+		else {
+			printf("[R+i],R\n");
+		}
+		break;
+	}
+	case '\x09': {
+		if (high == 1)
+			printf("s[R+R],R\n");
+		else {
+			printf("[R+R],R\n");
+		}
+		break;
+	}
+	case '\x0a': {
+		if (high == 1)
+			printf("R,s[R+R]\n");
+		else {
+			printf("R,[R+R]\n");
+		}
+		break;
+	}
+	default:
+		throw(LVM_EXECUTE_ERROR);
+	}
 }

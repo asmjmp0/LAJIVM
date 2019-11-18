@@ -21,6 +21,9 @@ struct vm_register
 
 	unsigned IP;//代码执行指针		//0xA
 	char flag[16];//标志寄存器		//0xB
+
+	unsigned CS;                 //0xC
+	unsigned DS;               //0xd
 	/*
 	*操作类型 0位为0标志位 
 	*         1位为有符号大小标志位
@@ -29,6 +32,6 @@ struct vm_register
 	*/
 };
 #pragma pack()
-#define REG_NUM 12
+#define REG_NUM 14
 #endif // !VMREGISTER_H
 

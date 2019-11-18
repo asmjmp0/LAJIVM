@@ -1,5 +1,7 @@
 #include "ErrorList.h"
 #include "init.h"
+#include"MemoryManage.h"
+#include"ModuleManage.h"
 #include<iostream>
 vm_register* registe_ptr;
 char* code_ptr;
@@ -62,6 +64,9 @@ int init_list() {
 	register_list[8] = &registe_ptr->SP;
 	register_list[9] = &registe_ptr->BP;
 	register_list[10] = &registe_ptr->IP;
+	register_list[11] = (unsigned*)&registe_ptr->flag;
+	register_list[12] = &registe_ptr->CS;
+	register_list[13] = &registe_ptr->DS;
 
 	/*
 	*初始化指令函数数组
@@ -96,4 +101,6 @@ void init_all() {
 	data_ptr = init_data_segement();
 	stack_ptr = init_stack_segement();
 	init_list();
+	init_memory_manager();
+	init_module_manager();
 }

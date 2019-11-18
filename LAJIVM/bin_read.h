@@ -3,6 +3,8 @@
 #include"init.h"
 #include<string>
 extern char origin_bin[0xffff];
+extern unsigned char file_chara;
+extern std::string FileName;
 int read_bin(std::string str);
 int write_to_data();
 int write_to_code();

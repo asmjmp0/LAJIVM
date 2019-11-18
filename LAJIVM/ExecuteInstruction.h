@@ -1,7 +1,9 @@
 #ifndef EXECUTEINSTRUCTION_H
 #define EXECUTEINSTRUCTION_H
 /******************FUNCTION_NUM******************/
+#define LVM_CLOCK 0x2
 #define LVM_PRINT 0x10
+#define LVM_PRINTD 0x12
 #define LVM_SCAN 0x11
 #define LVM_EXIT 0x40
 /**********************INS*********************/
@@ -29,8 +31,7 @@
 #define INS_RET 0x61
 extern bool debug_flag;
 extern bool uasm_flag;
-int get_ins_len(char, char);
-int _ins_len(char);
+
 int exectue_ins();
 void lvm_debug(int ins_len);
 int set_flag(char);

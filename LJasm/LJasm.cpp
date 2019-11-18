@@ -184,11 +184,9 @@ int main(int argc, char **argv) {
 	*(unsigned*)(out_ptr + 8) = 0x3a415441;
 	bin_length = 12;
 	
-	label_s = (label_struct*)malloc(100*(sizeof(label_struct)));
-	memset(label_s, 0, 100 * (sizeof(label_struct)));//初始化符号表结构体
+	label_s = new label_struct[100];
 
-	write_label_d=(write_label_data*)malloc(100 * (sizeof(write_label_data)));
-	memset(write_label_d, 0, 100 * (sizeof(write_label_data)));
+	write_label_d = new write_label_data[100];
 
 	wrong_data = read_data();
 	if (wrong_data<0) {

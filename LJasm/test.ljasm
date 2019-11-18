@@ -1,14 +1,22 @@
-;这是一个垃圾逆向程序
 DATA:
 1234
 DATA END;
 CODE:
+push 10
+push 20
 call function
-nop
-nop
+mov r0l,0x40
+int 21
 function:
-push 0x30
-nop
-nop
-ret 4
+push bp
+mov bp,sp
+mov r3,s[bp-8]
+mov r2,s[bp-12]
+add r3,r2
+mov [r0],r3
+xor r3,r3
+mov r0l,0x12
+int 0x21
+pop bp
+ret 8
 CODE END;

@@ -1,227 +1,21 @@
 #include"ExecuteInstruction.h"
 #include"ErrorList.h"
 #include"init.h"
+#include"LenInstruction.h"
+#include"MemoryManage.h"
+#include"ModuleManage.h"
 #include<iostream>
 #include<string>
 #include<ios>
 #include<sstream>
+#include<time.h>
 /*
 *高位表示寄存器类型
 *地位表示操作寄存器的长度
 */
-int _ins_len(char c) {
-	uint8_t high = (uint8_t)c / 0x10;//获取操作类型高位
-	uint8_t low = (uint8_t)c % 0x10;
-	if (!uasm_flag) {
-		if (high == 0) {//操纵数据段
-			registe_ptr->flag[14] = 0;
-		}
-		else if (high == 1) {//操纵栈段
-			registe_ptr->flag[14] = 1;
-		}
-		else if (high == 2);
-		else throw(LVM_EXECUTE_ERROR);
-
-	}
-	switch (low)
-	{
-	case '\x00': {
-		if (uasm_flag)printf("R,R\n");
-		return 2;
-	}
-	case '\x01': {
-		if (uasm_flag)printf("R,i\n");
-		return 5;
-	}
-	case '\x02': {
-		if (uasm_flag) {
-			if (high == 1) {
-				printf("R,s[R]\n");
-			}
-			else {
-				printf("R,[R]\n");
-			}
-		}
-		return 2;
-	}
-	case '\x03': {
-		if (uasm_flag) {
-			if (high == 1)
-				printf("s[R],R\n");
-			else {
-				printf("[R],R\n");
-			}
-		}
-		return 2;
-	}
-	case '\x04': {
-		if (uasm_flag)printf("[R],[R]\n");
-		return 2;
-	}
-	case '\x05': {
-		if (uasm_flag)printf("R\n");
-		return 1;
-	}
-	case '\x06': {
-		if (uasm_flag)printf("i\n");
-		return 4;
-	}
-	case '\x07': {
-		if (uasm_flag)printf("R,[R-+i]\n");
-		return 5;
-	}
-	case '\x08': {
-		if (uasm_flag)printf("[R-+i],R\n");
-		return 5;
-	}
-	case '\x09': {
-		if (uasm_flag) {
-			if (high == 1)
-				printf("s[R+R],R\n");
-			else {
-				printf("[R+R],R\n");
-			}
-		}
-			
-		return 3;
-	}
-	case '\x0a': {
-		if (uasm_flag) {
-			if (high == 1)
-				printf("R,s[R+R]\n");
-			else {
-				printf("R,[R+R]\n");
-			}
-		}
-
-		return 3;
-	}
-	}
-	throw(LVM_EXECUTE_ERROR);
-	return -1;
-}
-/*
-*获取指令长度
-*/
-int get_ins_len(char f, char s) {
-	uint8_t f1 = (uint8_t)f;
-	switch (f1)
-	{
-	case INS_MOV: {
-		if (uasm_flag)printf("50 mov ");
-		if (s <= '\x44')
-		return	2+_ins_len(s);
-		else throw(LVM_EXECUTE_ERROR);
-		break;
-	}
-	case INS_LEA: {
-		if (uasm_flag)printf("51 lea ");
-		if (s <= '\x44')
-			return	2 + _ins_len(s);
-		else throw(LVM_EXECUTE_ERROR);
-		break;
-	}
-	case INS_INT: {
-		//
-		if (uasm_flag)printf("E0 int i\n");
-		return 2;
-		break;
-	}
-	case INS_JMP:case INS_JZ:case INS_JNZ:case INS_JH:case INS_JL: {
-		if (uasm_flag) {
-			if (f == INS_JMP) 
-				printf("40 jmp ");
-			else if(f == INS_JZ)
-				printf("41 jz ");
-			else if (f == INS_JNZ)
-				printf("42 jnz ");
-			else if (f == INS_JH)
-				printf("43 jh ");
-			else if (f == INS_JH)
-				printf("44 jl ");
-		}
-		return 2+_ins_len(s);
-		break;
-	}
-	case INS_INC:case INS_DEC: {
-		if (uasm_flag) {
-			if (f == INS_INC)
-				printf("30 inc R\n");
-			else if (f == INS_DEC)
-				printf("31 dec R\n ");
-		}
-		return 2;
-		break;
-	}
-	case INS_CMP: {
-		if (s <= '\x42')
-		{
-			if (uasm_flag) printf("32 cmp ");
-			return	2 + _ins_len(s);
-		}
-		else throw(LVM_EXECUTE_ERROR);
-		break;
-	}
-	case INS_ADD: case INS_SUB:case INS_XOR:case INS_AND:case INS_OR: {
-		if (s <= '\x42')
-		{
-			if (uasm_flag) {
-				if (f == INS_ADD)
-					printf("20 add ");
-				else if (f == INS_SUB)
-					printf("21 sub ");
-				else if (f == INS_XOR)
-					printf("22 xor ");
-				else if (f == INS_AND)
-					printf("23 and ");
-				else if (f == INS_OR)
-					printf("24 or ");
-			}
-			return	2 + _ins_len(s);
-		}
-	}
-	case INS_NOT: {
-		if (uasm_flag) printf("25 not R\n");
-		return 2;
-	}
-	case INS_NOP: {
-		if (uasm_flag) printf("5F nop\n");
-		return 1;
-	}
-	case INS_PUSH: {
-		if (uasm_flag) {
-			printf("10 push ");
-		}
-		return 2 + _ins_len(s);
-	}
-	case INS_POP: {
-		if (uasm_flag) {
-			printf("11 pop R\n");
-		}
-		return 2;
-	}
-	case INS_CALL: {
-		if (uasm_flag) {
-			printf("60 call ");
-		}
-		return 2 + _ins_len(s);
-		break;
-	}
-	case INS_RET: {
-		if (uasm_flag) {
-			printf("61 ret ");
-		}
-		return 2 + _ins_len(s);
-		break;
-	}
-    default: {
-		break;
-	}
-		
-	}
-	throw(LVM_EXECUTE_ERROR);
-	return -1;
-}
+bool is_clock{false};
+int clock_begin{ 0 };
+int clock_end{ 0 };
 /*
 *设置标志寄存器 三次重载
 */
@@ -296,7 +90,7 @@ int do_mov() {
 	{
 	case '\x00': {//mov R,R  ---->0
 		//
-		uint8_t highb = code_ptr[registe_ptr->IP + 3] / 0x10;
+		uint8_t highb = (uint8_t)(code_ptr[registe_ptr->IP + 3]) / 0x10;
 		if (low == 0) {
 			char*Ra = (char *)register_list[high];
 			char*Rb = (char*)register_list[highb];
@@ -652,13 +446,27 @@ int do_lea() {
 */
 int do_int() {
 	switch ((char)registe_ptr->R0){
+	case LVM_CLOCK: {
+		is_clock = true;
+		clock_begin = clock();
+	}
 	case LVM_PRINT: {
 		int temp{ 0 };
 		temp=printf_s("%s", data_ptr + registe_ptr->R3);
 		registe_ptr->R0 = temp;
 		break;
 	}
+	case LVM_PRINTD: {
+		int temp{ 0 };
+		temp = printf_s("%d", *(unsigned*)(data_ptr + registe_ptr->R3));
+		registe_ptr->R0 = temp;
+		break;
+	}
 	case LVM_EXIT: {
+		if (is_clock) {
+			clock_end = clock();
+			printf("\nRunning Time：%dms\n", clock_end-clock_begin);
+		}
 		exit(0);
 	}
 	case LVM_SCAN: {
@@ -689,7 +497,7 @@ int do_jmp() {
 		registe_ptr->IP = adr;
 	}else if (code_ptr[registe_ptr->IP + 1] == 6){//立即数跳转
 		unsigned adr = *(unsigned*)(code_ptr+registe_ptr->IP + 2);
-		registe_ptr->IP = adr;
+		registe_ptr->IP = adr + registe_ptr->CS;
 		
 	}else throw(LVM_EXECUTE_ERROR);
 	return LVM_SUCCESS;
@@ -706,7 +514,7 @@ int do_jz() {
 		}
 		else if (code_ptr[registe_ptr->IP + 1] == 6) {//立即数跳转
 			unsigned adr = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
-			registe_ptr->IP = adr;
+			registe_ptr->IP = adr + registe_ptr->CS;
 
 		}
 		else throw(LVM_EXECUTE_ERROR);
@@ -725,7 +533,7 @@ int do_jnz() {
 		}
 		else if (code_ptr[registe_ptr->IP + 1] == 6) {//立即数跳转
 			unsigned adr = *(unsigned*)(code_ptr+registe_ptr->IP + 2);
-			registe_ptr->IP = adr;
+			registe_ptr->IP = adr + registe_ptr->CS;
 
 		}else throw(LVM_EXECUTE_ERROR);
 	}
@@ -743,7 +551,7 @@ int do_jh() {
 		}
 		else if (code_ptr[registe_ptr->IP + 1] == 6) {//立即数跳转
 			unsigned adr = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
-			registe_ptr->IP = adr;
+			registe_ptr->IP = adr + registe_ptr->CS;
 
 		}
 		else throw(LVM_EXECUTE_ERROR);
@@ -762,7 +570,7 @@ int do_jl() {
 		}
 		else if (code_ptr[registe_ptr->IP + 1] == 6) {//立即数跳转
 			unsigned adr = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
-			registe_ptr->IP = adr;
+			registe_ptr->IP = adr + registe_ptr->CS;
 
 		}
 		else throw(LVM_EXECUTE_ERROR);
@@ -1206,6 +1014,7 @@ int do_nop() {
 int do_call() {
 	int ins_len;
 	ins_len = get_ins_len(code_ptr[registe_ptr->IP], code_ptr[registe_ptr->IP + 1]);
+	registe_ptr->SP += 4;//栈指针增加
 	if (code_ptr[registe_ptr->IP + 1] == 5) {//寄存器压栈
 		uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 		unsigned num = *register_list[high];
@@ -1214,11 +1023,12 @@ int do_call() {
 	}
 	else if (code_ptr[registe_ptr->IP + 1] == 6) {//立即数压栈
 		unsigned num = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
-		*(unsigned*)(stack_ptr + registe_ptr->SP) = registe_ptr->IP + ins_len;
-		registe_ptr->IP = num;//修改
+		unsigned temp = registe_ptr->IP + ins_len;
+		*(unsigned*)((unsigned char*)stack_ptr + registe_ptr->SP) = temp;
+		registe_ptr->IP = num + registe_ptr->CS;//修改
 	}
 	else throw(LVM_EXECUTE_ERROR);
-	registe_ptr->SP += 4;//栈指针增加
+	
 	return LVM_SUCCESS;
 }
 /*
@@ -1228,15 +1038,15 @@ int do_ret() {
 	if (code_ptr[registe_ptr->IP + 1] == 5) {//寄存器读数
 		uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 		unsigned num = *register_list[high];
-		registe_ptr->SP = registe_ptr->SP-(num+4);
-		num = (unsigned)stack_ptr[registe_ptr->SP];
-		registe_ptr->IP = num;//修改
+		unsigned ret = *(unsigned*)(stack_ptr+registe_ptr->SP);
+		registe_ptr->SP = registe_ptr->SP-4;
+		registe_ptr->IP = ret; // 修改
 	}
 	else if (code_ptr[registe_ptr->IP + 1] == 6) {//立即数读数
 		unsigned num = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
-		registe_ptr->SP = registe_ptr->SP - (num + 4);
-		num = (unsigned)stack_ptr[registe_ptr->SP];
-		registe_ptr->IP = num;//修改
+		unsigned ret = *(unsigned*)(stack_ptr+registe_ptr->SP-num);
+		registe_ptr->SP = registe_ptr->SP- (num+4);
+		registe_ptr->IP = ret ;//修改
 	}
 	else throw(LVM_EXECUTE_ERROR);
 
