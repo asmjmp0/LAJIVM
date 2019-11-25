@@ -257,6 +257,12 @@ void lvm_debug_u_print(char a, char b) {
 	}
 	case INS_NOP: {
 		printf("nop\n");
+		return;
+		break;
+	}
+	case INS_JIT_IN: {
+		printf("jit\n");
+		return;
 		break;
 	}
 	case INS_POP: {

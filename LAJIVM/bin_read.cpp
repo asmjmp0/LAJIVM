@@ -13,6 +13,7 @@ unsigned char new_mid;
 unsigned d_adr;
 unsigned c_adr;
 std::string FileName;
+std::string Directory;
 char origin_bin[0xffff];
 int index{0};
 int file_size{ 0 };
@@ -76,6 +77,11 @@ int read_bin(std::string str) {
 	
 	if (bin) {
 		FileName = GetPathOrURLShortName(str);
+		const size_t last_slash_idx = str.rfind('\\');
+		if (std::string::npos != last_slash_idx)
+		{
+			Directory = str.substr(0, last_slash_idx);
+		}
 		std::cout << "打开文件成功！" << std::endl;
 		bin.seekg(0, ios::end);//移到文件尾部
 		file_size = bin.tellg();//获取文件大小

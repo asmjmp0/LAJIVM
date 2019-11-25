@@ -7,6 +7,7 @@
 #include<regex>
 #include<ios>
 std::vector<std::string>  origin_str{};
+std::string file_name;
 int bin_length{ 0 };
 int asm_length{ 0 };
 int now_index{ 0 };
@@ -188,6 +189,7 @@ int main(int argc, char **argv) {
 
 	write_label_d = new write_label_data[100];
 
+	file_name = path;
 	wrong_data = read_data();
 	if (wrong_data<0) {
 		std::cout << "读取数据段失败\n" <<"错误第"<<(blank_row+1-wrong_data)<<"行"<< std::endl;

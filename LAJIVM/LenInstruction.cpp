@@ -118,6 +118,10 @@ int get_ins_len(char f, char s) {
 		return 2 + _ins_len(s);
 		break;
 	}
+	case INS_JIT_IN: {
+		return 1;
+		break;
+	}
 	default: {
 		break;
 	}

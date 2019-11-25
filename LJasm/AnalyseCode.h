@@ -24,6 +24,8 @@
 #define INS_NOP 0x5f
 #define INS_CALL 0x60
 #define INS_RET 0x61
+#define INS_JIT_IN 0x70
+#define INS_JIT_OUT 0x71
 uint8_t registernum_to_num(std::string);
 uint8_t lowhigh_to_num(std::string);
 unsigned immed_to_unsgned(std::string, std::string);

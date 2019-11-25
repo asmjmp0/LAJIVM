@@ -114,6 +114,7 @@
     <ClCompile Include="ExecuteInstruction.cpp" />
     <ClCompile Include="init.cpp" />
     <ClCompile Include="ins_stack.cpp" />
+    <ClCompile Include="JITexec.cpp" />
     <ClCompile Include="LAJIVM.cpp" />
     <ClCompile Include="LenInstruction.cpp" />
     <ClCompile Include="lvm_debug.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="ErrorList.h" />
     <ClInclude Include="ExecuteInstruction.h" />
     <ClInclude Include="init.h" />
+    <ClInclude Include="JITexec.h" />
     <ClInclude Include="LenInstruction.h" />
     <ClInclude Include="MemoryManage.h" />
     <ClInclude Include="ModuleManage.h" />

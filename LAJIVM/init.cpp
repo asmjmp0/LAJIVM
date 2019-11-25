@@ -93,6 +93,7 @@ int init_list() {
 	ins_list[INS_POP] = do_pop;
 	ins_list[INS_CALL] = do_call;
 	ins_list[INS_RET] = do_ret;
+	ins_list[INS_JIT_IN] = do_jit_in;
 	return LVM_SUCCESS;
 }
 void init_all() {

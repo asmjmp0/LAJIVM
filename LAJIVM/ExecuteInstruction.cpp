@@ -4,6 +4,7 @@
 #include"LenInstruction.h"
 #include"MemoryManage.h"
 #include"ModuleManage.h"
+#include"JITexec.h"
 #include<iostream>
 #include<string>
 #include<ios>
@@ -449,6 +450,7 @@ int do_int() {
 	case LVM_CLOCK: {
 		is_clock = true;
 		clock_begin = clock();
+		break;
 	}
 	case LVM_PRINT: {
 		int temp{ 0 };
@@ -1050,6 +1052,18 @@ int do_ret() {
 	}
 	else throw(LVM_EXECUTE_ERROR);
 
+	return LVM_SUCCESS;
+}
+int do_jit_in(){
+#ifdef _WIN32
+	if (get_jit_file()) {
+		do_jit();
+	}
+	else return LVM_SUCCESS;
+#else
+	printf("不是windows系统暂不支持jit")
+	return;
+#endif // _WIN32
 	return LVM_SUCCESS;
 }
 int exectue_ins() {

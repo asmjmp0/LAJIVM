@@ -24,6 +24,9 @@
     <ClCompile Include="labelstruct.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="JITcomp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnalyseCode.h">
@@ -33,6 +36,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="LJasm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="JITcomp.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

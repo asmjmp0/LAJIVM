@@ -1,5 +1,6 @@
 #include"LJasm.h"
 #include"AnalyseCode.h"
+#include"JITcomp.h"
 #include<cctype>
 #include<sstream>
 std::regex reg0("^R([0-9]{1,2})([LH]?)$");//∆•≈‰0 1 2 12 13 –Õ Ω√¸¡Ó
@@ -104,6 +105,8 @@ int Analyse_code(std::string str) {//mov R0L,0 ;123456789
 	else if (op_str == "POP") Analyse_pop(ins_str);
 	else if (op_str == "CALL") Analyse_call(ins_str);
 	else if (op_str == "RET") Analyse_ret(ins_str);
+	else if (op_str == "JITIN") Analyse_jit_in();
+	else if (op_str == "JITOUT") Analyse_jit_out();
 	else if (std::regex_match(trim(op_str),opmatch,reglabel) ) {//∆•≈‰±Í«©
 		if (is_label_define(trim(op_str), label_index) == -1)
 		{

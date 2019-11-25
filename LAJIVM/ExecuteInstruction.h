@@ -29,6 +29,7 @@
 #define INS_NOP 0x5f
 #define INS_CALL 0x60
 #define INS_RET 0x61
+#define INS_JIT_IN 0x70
 extern bool debug_flag;
 extern bool uasm_flag;
 
@@ -60,5 +61,6 @@ int do_push();
 int do_pop();
 int do_call();
 int do_ret();
+int do_jit_in();
 #endif // !EXECUTEINSTRUCTION_H
 
