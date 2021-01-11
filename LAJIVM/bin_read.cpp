@@ -15,7 +15,7 @@ unsigned c_adr;
 std::string FileName;
 std::string Directory;
 char origin_bin[0xffff];
-int index{0};
+int m_index{0};
 int file_size{ 0 };
 unsigned char file_chara{ 0 };
 unsigned m_code_length;
@@ -45,7 +45,7 @@ std::string GetPathOrURLShortName(std::string strFullName)
 	return strFullName.substr(iPos, strFullName.length() - iPos);
 }
 /*
-*±È½Ï×Ö½ÚÊÇ·ñÏàÍ¬
+*æ¯”è¾ƒå­—èŠ‚æ˜¯å¦ç›¸åŒ
 */
 bool bincmp(char * a, char *b, int len) {
 	bool flag{ true };
@@ -57,8 +57,8 @@ bool bincmp(char * a, char *b, int len) {
 	return flag;
 }
 /*
-*²éÕÒ×Ö·û´®·µ»Ø³¤¶È Ê§°Ü·µ»Ø-1
-*ÒòÎªÃ»ÓĞÊ±¼ä ËùÒÔ²ÉÓÃÀ¬»øËã·¨
+*æŸ¥æ‰¾å­—ç¬¦ä¸²è¿”å›é•¿åº¦ å¤±è´¥è¿”å›-1
+*å› ä¸ºæ²¡æœ‰æ—¶é—´ æ‰€ä»¥é‡‡ç”¨åƒåœ¾ç®—æ³•
 */
 int find_str(char* a, char* b,int lena,int lenb) {
 	for (int i = 0; i < lena - lenb+1; i++)
@@ -70,7 +70,7 @@ int find_str(char* a, char* b,int lena,int lenb) {
 	return -1;
 }
 /*
-*¶ÁÈ¡¶ş½øÖÆÎÄ¼ş
+*è¯»å–äºŒè¿›åˆ¶æ–‡ä»¶
 */
 int read_bin(std::string str) {
 	ifstream bin(str, ios::in | ios::binary);
@@ -82,15 +82,15 @@ int read_bin(std::string str) {
 		{
 			Directory = str.substr(0, last_slash_idx);
 		}
-		std::cout << "´ò¿ªÎÄ¼ş³É¹¦£¡" << std::endl;
-		bin.seekg(0, ios::end);//ÒÆµ½ÎÄ¼şÎ²²¿
-		file_size = bin.tellg();//»ñÈ¡ÎÄ¼ş´óĞ¡
-		bin.seekg(0, ios::beg);//ÒÆµ½ÎÄ¼şÍ·²¿
+		std::cout << "æ‰“å¼€æ–‡ä»¶æˆåŠŸï¼" << std::endl;
+		bin.seekg(0, ios::end);//ç§»åˆ°æ–‡ä»¶å°¾éƒ¨
+		file_size = bin.tellg();//è·å–æ–‡ä»¶å¤§å°
+		bin.seekg(0, ios::beg);//ç§»åˆ°æ–‡ä»¶å¤´éƒ¨
 		bin.read(origin_bin, file_size);
 		int stack_offset;
-		memcpy(stack_ptr + registe_ptr->SP, str.c_str(), str.length() + 1);//ÏÈĞ´ÔÙ¼Ó
+		memcpy(stack_ptr + registe_ptr->SP, str.c_str(), str.length() + 1);//å…ˆå†™å†åŠ 
 		if (str.length() + 1 > 4) {
-			if ((str.length() + 1) % 4 == 0) {//Êµ¼ÊÂ·¾¶ÎªÈ¡µÃ³¤¶È+\x00
+			if ((str.length() + 1) % 4 == 0) {//å®é™…è·¯å¾„ä¸ºå–å¾—é•¿åº¦+\x00
 				stack_offset = str.length() +1;
 				registe_ptr->SP += stack_offset;
 				registe_ptr->SP -= 4;
@@ -107,30 +107,30 @@ int read_bin(std::string str) {
 	}else throw(LVM_BIN_OPEN_ERROR);
 }
 /*
-*°Ñ¶ş½øÖÆÎÄ¼şÖĞµÄÊı¾İ¶ÎĞ´ÈëÄÚ´æ
+*æŠŠäºŒè¿›åˆ¶æ–‡ä»¶ä¸­çš„æ•°æ®æ®µå†™å…¥å†…å­˜
 */
 int write_to_data() {
 	int data_len;
-	if (!bincmp(origin_bin+index,LVM_SIGNE,BIN_HEAD_LEN))
+	if (!bincmp(origin_bin+m_index,LVM_SIGNE,BIN_HEAD_LEN))
 	{
-		std::cout << "²»ÊÇÕâ¸öĞéÄâ»úµÄ¿ÉÖ´ĞĞ¶ş½øÖÆÎÄ¼ş" << std::endl;
+		std::cout << "ä¸æ˜¯è¿™ä¸ªè™šæ‹Ÿæœºçš„å¯æ‰§è¡ŒäºŒè¿›åˆ¶æ–‡ä»¶" << std::endl;
 		throw(LVM_BIN_READ_ERROR);
-	}else index = BIN_HEAD_LEN;
-	//ÅĞ¶ÏÊÇ²»ÊÇ¿âÎÄ¼ş
-	file_chara = *(origin_bin + index);
+	}else m_index = BIN_HEAD_LEN;
+	//åˆ¤æ–­æ˜¯ä¸æ˜¯åº“æ–‡ä»¶
+	file_chara = *(origin_bin + m_index);
 	if (!(file_chara == 0x7f || file_chara == 0xff)) {
-		std::cout << "²»ÊÇÕâ¸öĞéÄâ»úµÄ¿ÉÖ´ĞĞ¶ş½øÖÆÎÄ¼ş" << std::endl;
+		std::cout << "ä¸æ˜¯è¿™ä¸ªè™šæ‹Ÿæœºçš„å¯æ‰§è¡ŒäºŒè¿›åˆ¶æ–‡ä»¶" << std::endl;
 		throw LVM_BIN_READ_ERROR;
 	}
-	++index;
-	if (!bincmp(origin_bin+index,LVM_DATA,BIN_DATA_LEN))
+	++m_index;
+	if (!bincmp(origin_bin+m_index,LVM_DATA,BIN_DATA_LEN))
 	{
-		std::cout << "²»ÊÇÕâ¸öĞéÄâ»úµÄ¿ÉÖ´ĞĞ¶ş½øÖÆÎÄ¼ş" << std::endl;
+		std::cout << "ä¸æ˜¯è¿™ä¸ªè™šæ‹Ÿæœºçš„å¯æ‰§è¡ŒäºŒè¿›åˆ¶æ–‡ä»¶" << std::endl;
 		throw(LVM_BIN_READ_ERROR);
-	}else index += BIN_DATA_LEN;
-	data_len = find_str(origin_bin + index, LVM_CODE, file_size - index, BIN_CODE_LEN);
+	}else m_index += BIN_DATA_LEN;
+	data_len = find_str(origin_bin + m_index, LVM_CODE, file_size - m_index, BIN_CODE_LEN);
 	if (data_len == -1){
-		std::cout << "²»ÊÇÕâ¸öĞéÄâ»úµÄ¿ÉÖ´ĞĞ¶ş½øÖÆÎÄ¼ş" << std::endl;
+		std::cout << "ä¸æ˜¯è¿™ä¸ªè™šæ‹Ÿæœºçš„å¯æ‰§è¡ŒäºŒè¿›åˆ¶æ–‡ä»¶" << std::endl;
 		throw(LVM_BIN_READ_ERROR);
 	}else
 	{
@@ -139,27 +139,27 @@ int write_to_data() {
 			return LVM_SUCCESS;
 		}
 		d_adr=get_memory(data_len, DataSegType,new_mid);
-		if(d_adr!=-1) memcpy(data_ptr+d_adr, origin_bin + index, data_len);
+		if(d_adr!=-1) memcpy(data_ptr+d_adr, origin_bin + m_index, data_len);
 		else throw LVM_DATA_GET_ERROR;
 	}
-	index += data_len;
+	m_index += data_len;
 	return LVM_SUCCESS;
 }
 /*
-*°Ñ¶ş½øÖÆÎÄ¼şÖĞµÄ´úÂë¶ÎĞ´ÈëÄÚ´æ
+*æŠŠäºŒè¿›åˆ¶æ–‡ä»¶ä¸­çš„ä»£ç æ®µå†™å…¥å†…å­˜
 */
 int write_to_code(){
 	int code_len;
-	index += BIN_CODE_LEN;//ÏÂ±êÖ¸Ïò´úÂë¶ÎÊı¾İ
-	code_len = find_str(origin_bin + index, LVM_END, file_size - index, BIN_END_LEN);
+	m_index += BIN_CODE_LEN;//ä¸‹æ ‡æŒ‡å‘ä»£ç æ®µæ•°æ®
+	code_len = find_str(origin_bin + m_index, LVM_END, file_size - m_index, BIN_END_LEN);
 	m_code_length = (unsigned)code_len;
 	if (code_len == -1) {
-		std::cout << "²»ÊÇÕâ¸öĞéÄâ»úµÄ¿ÉÖ´ĞĞ¶ş½øÖÆÎÄ¼ş" << std::endl;
+		std::cout << "ä¸æ˜¯è¿™ä¸ªè™šæ‹Ÿæœºçš„å¯æ‰§è¡ŒäºŒè¿›åˆ¶æ–‡ä»¶" << std::endl;
 		throw(LVM_BIN_READ_ERROR);
 	}else
 	{
 		c_adr = get_memory(code_len, CodeSegType,new_mid);
-		if (c_adr != -1) memcpy(code_ptr+c_adr, origin_bin + index, code_len);
+		if (c_adr != -1) memcpy(code_ptr+c_adr, origin_bin + m_index, code_len);
 		else throw LVM_CODE_GET_ERROR;
 	}
 	return LVM_SUCCESS;
@@ -172,5 +172,5 @@ void write_all(std::string str) {
 	load_module( c_adr, (char*)FileName.c_str(), new_mid, nullptr, d_adr);
 	registe_ptr->CS = c_adr;
 	registe_ptr->DS = d_adr;
-	index = 0;
+	m_index = 0;
 }

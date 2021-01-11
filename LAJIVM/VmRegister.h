@@ -4,7 +4,7 @@
 struct vm_register
 {
 	/*
-	*R0-R5Í¨ÓÃ¼Ä´æÆ÷
+	*R0-R5é€šç”¨å¯„å­˜å™¨
 	*/
 	unsigned R0;                    //0
 	unsigned R1;                    //1
@@ -12,23 +12,23 @@ struct vm_register
 	unsigned R3;					//3
 	unsigned R4;					//4
 	unsigned R5;					//5
-	//R6µ÷ÊÔ¼Ä´æÆ÷
+	//R6è°ƒè¯•å¯„å­˜å™¨
 	unsigned R6;					//6
 	unsigned R7;					//7
 
-	unsigned SP;//Õ»¼Ä´æÆ÷			//8
-	unsigned BP;//Õ»Ö¡				//9
+	unsigned SP;//æ ˆå¯„å­˜å™¨			//8
+	unsigned BP;//æ ˆå¸§				//9
 
-	unsigned IP;//´úÂëÖ´ĞĞÖ¸Õë		//0xA
-	char flag[16];//±êÖ¾¼Ä´æÆ÷		//0xB
+	unsigned IP;//ä»£ç æ‰§è¡ŒæŒ‡é’ˆ		//0xA
+	char flag[16];//æ ‡å¿—å¯„å­˜å™¨		//0xB
 
 	unsigned CS;                 //0xC
 	unsigned DS;               //0xd
 	/*
-	*²Ù×÷ÀàĞÍ 0Î»Îª0±êÖ¾Î» 
-	*         1Î»ÎªÓĞ·ûºÅ´óĞ¡±êÖ¾Î»
-	*         15Î»Îªµ¥²½±êÖ¾Î» 
-	*		  14Î»Îª¶Î±êÖ¾Î»
+	*æ“ä½œç±»å‹ 0ä½ä¸º0æ ‡å¿—ä½ 
+	*         1ä½ä¸ºæœ‰ç¬¦å·å¤§å°æ ‡å¿—ä½
+	*         15ä½ä¸ºå•æ­¥æ ‡å¿—ä½ 
+	*		  14ä½ä¸ºæ®µæ ‡å¿—ä½
 	*/
 };
 #pragma pack()

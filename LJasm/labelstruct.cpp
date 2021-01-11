@@ -27,7 +27,7 @@ int write_all_to_jmp() {
 			}
 		}
 		if (!findflag) {
-			std::cout << "δʶ���ǩ:  " <<write_label_d[m].name<<std::endl;
+			std::cout << "未识别标签:  " <<write_label_d[m].name<<std::endl;
 			exit(-1);
 		}
 		else findflag = false;

@@ -18,7 +18,7 @@ write_label_data *write_label_d;
 int label_index{ 0 };
 int write_label_index{ 0 };
 uint8_t* out_ptr{ nullptr };
-/*²âÊÔº¯Êý*/
+/*æµ‹è¯•å‡½æ•°*/
 void test_out_ptr(int num) {
 	for (int i = 0; i < num; i++)
 	{
@@ -26,7 +26,7 @@ void test_out_ptr(int num) {
 	}
 }
 /*
-°Ñ16½øÖÆ×Ö·û´®×ª»»³ÉÊý×Ö
+æŠŠ16è¿›åˆ¶å­—ç¬¦ä¸²è½¬æ¢æˆæ•°å­—
 */
 int string_to_hex(std::string str) {
 	int data_num{ -1 };
@@ -44,7 +44,7 @@ bool read_file(char *path) {
 	else{
 		while (std::getline(in, temp_str)) {
 			++asm_length;
-			if (temp_str != "" && temp_str[0] != ';') {//ÅÐ¶ÏÊÇ·ñÊÇ¿ÕÐÐ»òÕß×¢ÊÍ
+			if (temp_str != "" && temp_str[0] != ';') {//åˆ¤æ–­æ˜¯å¦æ˜¯ç©ºè¡Œæˆ–è€…æ³¨é‡Š
 				origin_str.push_back(temp_str);
 			}else ++blank_row;
 		}
@@ -57,7 +57,7 @@ int read_data(){
 	int end_flag{ -1 };
 	++now_index;
 	if (origin_str[0] != "DATA:") {
-		std::cout << "ÕÒ²»µ½DATAÍ·" << std::endl;
+		std::cout << "æ‰¾ä¸åˆ°DATAå¤´" << std::endl;
 		return (0 - now_index);
 	}
 	for (int i = 1; i < origin_str.size();i++)
@@ -69,28 +69,28 @@ int read_data(){
 
 	}
 	if (end_flag == -1) {
-		std::cout << "ÕÒ²»µ½DATAÎ²" << std::endl;
+		std::cout << "æ‰¾ä¸åˆ°DATAå°¾" << std::endl;
 		return (0 - now_index);
 	}
-	for (int i = 1; i < end_flag; i++)//»ñÈ¡Êý¾Ý¶ÎÃ¿ÐÐµÄÄÚÈÝ
+	for (int i = 1; i < end_flag; i++)//èŽ·å–æ•°æ®æ®µæ¯è¡Œçš„å†…å®¹
 	{
-		for (int index = 0; index < origin_str[i].length();++index) {//·ÖÎöÊý¾Ý¶ÎÃ¿ÐÐµÄÃ¿¸ö×Ö·û
+		for (int index = 0; index < origin_str[i].length();++index) {//åˆ†æžæ•°æ®æ®µæ¯è¡Œçš„æ¯ä¸ªå­—ç¬¦
 			{
 				if (origin_str[i][index] == '\\') {
-					if (origin_str[i][index + 1] == '\\') {//×ªÒå×Ö·û
+					if (origin_str[i][index + 1] == '\\') {//è½¬ä¹‰å­—ç¬¦
 						out_ptr[bin_length] = '\\';
 						++bin_length;
 						++index;
 					}
-					else if (origin_str[i][index + 1] == 'x')//16½øÖÆÊý
+					else if (origin_str[i][index + 1] == 'x')//16è¿›åˆ¶æ•°
 					{
 
 						int num = string_to_hex(origin_str[i].substr(index + 2, 2));
-						if ((unsigned)num == -1) {//×ª»»´íÎó±¨´í
-							std::cout << "Êý¾Ý¶Î°üº¬ÎÞ·¨½âÎöµÄÓï·¨" << std::endl;
+						if ((unsigned)num == -1) {//è½¬æ¢é”™è¯¯æŠ¥é”™
+							std::cout << "æ•°æ®æ®µåŒ…å«æ— æ³•è§£æžçš„è¯­æ³•" << std::endl;
 							return (0 - now_index);
 						}
-						else {//Ð´Èë×ª»»ºóµÄÊý×Ö
+						else {//å†™å…¥è½¬æ¢åŽçš„æ•°å­—
 							uint8_t w_code = (uint8_t) num;
 							out_ptr[bin_length] = w_code;
 							index += 3;
@@ -106,18 +106,18 @@ int read_data(){
 				}
 			}
 		}
-		++now_index;//µ±Ç°Ö´ÐÐÐÐÊýµÝÔö
+		++now_index;//å½“å‰æ‰§è¡Œè¡Œæ•°é€’å¢ž
 	}
 	data_long = bin_length + 5;
 	return 0;
 }
 int read_code() {
 	int end_flag{ -1 };
-	*(long long*)(out_ptr + bin_length) = 0x3a45444f43;//Ð´ÈëÓ²±àÂëCODE:
-	bin_length += 5;//bin_lengthµÝÔö
+	*(long long*)(out_ptr + bin_length) = 0x3a45444f43;//å†™å…¥ç¡¬ç¼–ç CODE:
+	bin_length += 5;//bin_lengthé€’å¢ž
 	++now_index;
 	if (origin_str[now_index] != "CODE:") {
-		std::cout << "ÕÒ²»µ½CODEÍ·" << std::endl;
+		std::cout << "æ‰¾ä¸åˆ°CODEå¤´" << std::endl;
 		return (0 - now_index);
 	}
 	for (int i = now_index+1; i < origin_str.size(); i++)
@@ -128,10 +128,10 @@ int read_code() {
 		}
 	}
 	if (end_flag == -1) {
-		std::cout << "ÕÒ²»µ½CODEÎ²" << std::endl;
+		std::cout << "æ‰¾ä¸åˆ°CODEå°¾" << std::endl;
 		return (0 - now_index);
 	}
-	++now_index;//Ö¸ÏòµÚÒ»ÐÐ´úÂë
+	++now_index;//æŒ‡å‘ç¬¬ä¸€è¡Œä»£ç 
 	for (; now_index < end_flag; now_index++)
 	{
 		try
@@ -149,7 +149,7 @@ bool write_end_out(std::string str) {
 	long long bin_end_code = 0x010101010101;//bin end
 	*(long long *)(out_ptr+bin_length) = bin_end_code;
 	bin_length += 6;
-	std::regex reg("(.*\\\\)?(.*)\\..*$");//»ñÈ¡ÎÄ¼þÃû×Ö
+	std::regex reg("(.*\\\\)?(.*)\\..*$");//èŽ·å–æ–‡ä»¶åå­—
 	std::smatch match;
 	if (std::regex_match(str, match, reg)) {
 		std::ofstream out_file(match[2], std::ios::out | std::ios::binary);
@@ -165,21 +165,21 @@ int main(int argc, char **argv) {
 	int wrong_code{ 0 };
 	if (argc > 1) path = argv[1];
 	else {
-		std::cout << "ÇëÔÚÃüÁîÐÐÖÐ¼ÓÈëÎÄ¼þÂ·¾¶" << std::endl;
+		std::cout << "è¯·åœ¨å‘½ä»¤è¡Œä¸­åŠ å…¥æ–‡ä»¶è·¯å¾„" << std::endl;
 		exit(-1);
 	}
 	if (!read_file(path)){
-		std::cout << "´ò¿ªÎÄ¼þÊ§°Ü" << std::endl;
+		std::cout << "æ‰“å¼€æ–‡ä»¶å¤±è´¥" << std::endl;
 		exit(-1);
 	}
 	out_ptr = (uint8_t*)malloc(BIN_MAX_SIZE_ * 1024 * 1024);
 	memset(out_ptr, 0, BIN_MAX_SIZE_ * 1024 * 1024);
 	if (out_ptr == nullptr) {
-		std::cout << "·ÖÅäÊä³öÄÚ´æÊ§°Ü" << std::endl;
+		std::cout << "åˆ†é…è¾“å‡ºå†…å­˜å¤±è´¥" << std::endl;
 		exit(-1);
 	}
 	/*
-	*Ð´Èë LAJICM\XffDATA:Ó²±àÂë
+	*å†™å…¥ LAJICM\XffDATA:ç¡¬ç¼–ç 
 	*/
 	*(long long*)out_ptr = 0x44ff4d56494a414c;
 	*(unsigned*)(out_ptr + 8) = 0x3a415441;
@@ -192,17 +192,17 @@ int main(int argc, char **argv) {
 	file_name = path;
 	wrong_data = read_data();
 	if (wrong_data<0) {
-		std::cout << "¶ÁÈ¡Êý¾Ý¶ÎÊ§°Ü\n" <<"´íÎóµÚ"<<(blank_row+1-wrong_data)<<"ÐÐ"<< std::endl;
+		std::cout << "è¯»å–æ•°æ®æ®µå¤±è´¥\n" <<"é”™è¯¯ç¬¬"<<(blank_row+1-wrong_data)<<"è¡Œ"<< std::endl;
 		exit(-1);
 	}
 	wrong_code = read_code();
 	if (wrong_code < 0) {
-		std::cout << "¶ÁÈ¡´úÂë¶ÎÊ§°Ü\n" << "´íÎóµÚ" << (blank_row + 1 - wrong_code) << "ÐÐ" << std::endl;
+		std::cout << "è¯»å–ä»£ç æ®µå¤±è´¥\n" << "é”™è¯¯ç¬¬" << (blank_row + 1 - wrong_code) << "è¡Œ" << std::endl;
 		exit(-1);
 	}
 	write_all_to_jmp();
 	if (!write_end_out(std::string(path))) {
-		std::cout << "Êä³öµ½ÎÄ¼þÊ§°Ü" << std::endl;
+		std::cout << "è¾“å‡ºåˆ°æ–‡ä»¶å¤±è´¥" << std::endl;
 		exit(-1);
 	}
 	return 0;

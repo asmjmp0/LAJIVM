@@ -7,17 +7,17 @@ vm_register* registe_ptr;
 char* code_ptr;
 char * data_ptr;
 char * stack_ptr;
-unsigned* register_list[REG_NUM]{0};//¼Ä´æÆ÷Êı×é
-int(*ins_list[0xff])() {0};//Ö¸ÁîÊı×é
+unsigned* register_list[REG_NUM]{0};//å¯„å­˜å™¨æ•°ç»„
+int(*ins_list[0xff])() {0};//æŒ‡ä»¤æ•°ç»„
 vm_register* init_register() {
 	int temp{ sizeof(vm_register) };
 	vm_register *ptr{ nullptr };
 	ptr = (vm_register*)malloc(temp);
 	if (ptr!=nullptr)
 	{
-		memset(ptr, 0, temp);//ÄÚ´æÇå¿Õ
-		ptr->R6 = unsigned(-1);//µ÷ÊÔ¼Ä´æÆ÷Öµ0xffffffff
-		ptr->R7 = unsigned(-1);//µ÷ÊÔ¼Ä´æÆ÷Öµ0xffffffff
+		memset(ptr, 0, temp);//å†…å­˜æ¸…ç©º
+		ptr->R6 = unsigned(-1);//è°ƒè¯•å¯„å­˜å™¨å€¼0xffffffff
+		ptr->R7 = unsigned(-1);//è°ƒè¯•å¯„å­˜å™¨å€¼0xffffffff
 		return ptr;
 	}
 	else throw(LVM_RIGISTER_SEGEMENT_ERROR);
@@ -26,7 +26,7 @@ char* init_code_segment() {
 	char *ptr{ nullptr };
 	ptr = (char *)malloc(code_length);
 	if (ptr != nullptr) {
-		memset(ptr, 0, code_length);//ÄÚ´æÇå¿Õ
+		memset(ptr, 0, code_length);//å†…å­˜æ¸…ç©º
 		return ptr;
 	}
 	else throw(LVM_CODE_SEGEMENT_ERROR);
@@ -35,7 +35,7 @@ char* init_data_segement() {
 	char *ptr{ nullptr };
 	ptr = (char *)malloc(data_length);
 	if (ptr != nullptr) {
-		memset(ptr, 0, data_length);//ÄÚ´æÇå¿Õ
+		memset(ptr, 0, data_length);//å†…å­˜æ¸…ç©º
 		return ptr;
 	}
 	else throw(LVM_DATA_SEGEMENT_ERROR);
@@ -44,14 +44,14 @@ char* init_stack_segement() {
 	char *ptr{ nullptr };
 	ptr = (char *)malloc(stack_length);
 	if (ptr != nullptr) {
-		memset(ptr, 0, stack_length);//ÄÚ´æÇå¿Õ
+		memset(ptr, 0, stack_length);//å†…å­˜æ¸…ç©º
 		return ptr;
 	}
 	else throw(LVM_STACK_SEGEMENT_ERROR);
 }
 int init_list() {
 	/*
-	*³õÊ¼»¯¼Ä´æÆ÷µÄµØÖ·Ö¸Õë
+	*åˆå§‹åŒ–å¯„å­˜å™¨çš„åœ°å€æŒ‡é’ˆ
 	*/
 	register_list[0] = &registe_ptr->R0;
 	register_list[1] = &registe_ptr->R1;
@@ -69,7 +69,7 @@ int init_list() {
 	register_list[13] = &registe_ptr->DS;
 
 	/*
-	*³õÊ¼»¯Ö¸Áîº¯ÊıÊı×é
+	*åˆå§‹åŒ–æŒ‡ä»¤å‡½æ•°æ•°ç»„
 	*/
 	ins_list[INS_MOV] = do_mov;
 	ins_list[INS_LEA] = do_lea;

@@ -11,17 +11,17 @@
 #include<sstream>
 #include<time.h>
 /*
-*¸ßÎ»±íÊ¾¼Ä´æÆ÷ÀàÐÍ
-*µØÎ»±íÊ¾²Ù×÷¼Ä´æÆ÷µÄ³¤¶È
+*é«˜ä½è¡¨ç¤ºå¯„å­˜å™¨ç±»åž‹
+*åœ°ä½è¡¨ç¤ºæ“ä½œå¯„å­˜å™¨çš„é•¿åº¦
 */
 bool is_clock{false};
 int clock_begin{ 0 };
 int clock_end{ 0 };
 /*
-*ÉèÖÃ±êÖ¾¼Ä´æÆ÷ Èý´ÎÖØÔØ
+*è®¾ç½®æ ‡å¿—å¯„å­˜å™¨ ä¸‰æ¬¡é‡è½½
 */
 int set_flag(char pram) {
-	char * ptr = registe_ptr->flag;//»ñÈ¡flagÖ¸Õë
+	char * ptr = registe_ptr->flag;//èŽ·å–flagæŒ‡é’ˆ
 	if(pram== 0){
 		ptr[0] = 0;
 		return LVM_SUCCESS;
@@ -39,7 +39,7 @@ int set_flag(char pram) {
 	return LVM_FAILD;
 }
 int set_flag(int16_t pram) {
-	char * ptr = registe_ptr->flag;//»ñÈ¡flagÖ¸Õë
+	char * ptr = registe_ptr->flag;//èŽ·å–flagæŒ‡é’ˆ
 	if (pram == 0) {
 		ptr[0] = 0;
 		return LVM_SUCCESS;
@@ -59,12 +59,12 @@ int set_flag(int16_t pram) {
 }
 int set_flag(unsigned pram) {
 	int temp = (int) pram;
-	char * ptr = registe_ptr->flag;//»ñÈ¡flagÖ¸Õë
-	if (temp == 0) {//²Ù×÷½á¹ûµÈÓÚ0Î»ÖÃ0
+	char * ptr = registe_ptr->flag;//èŽ·å–flagæŒ‡é’ˆ
+	if (temp == 0) {//æ“ä½œç»“æžœç­‰äºŽ0ä½ç½®0
 		ptr[0] = 0;
 		return LVM_SUCCESS;
 	}
-	else if (temp > 0) {//²»µÈÓÚ0 0Î»ÖÃ1
+	else if (temp > 0) {//ä¸ç­‰äºŽ0 0ä½ç½®1
 		ptr[0] = 1;
 		ptr[1] = 1;
 		return LVM_SUCCESS;
@@ -79,7 +79,7 @@ int set_flag(unsigned pram) {
 	return LVM_FAILD;
 }
 /*
-*Ö´ÐÐmovÖ¸Áî
+*æ‰§è¡ŒmovæŒ‡ä»¤
 */
 int do_mov() {
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
@@ -87,7 +87,7 @@ int do_mov() {
 
 	uint8_t o_low = (uint8_t)code_ptr[registe_ptr->IP + 1] % 0x10;
 
-	switch (o_low)//²Ù×÷ÀàÐÍ
+	switch (o_low)//æ“ä½œç±»åž‹
 	{
 	case '\x00': {//mov R,R  ---->0
 		//
@@ -119,25 +119,25 @@ int do_mov() {
 		break;
 	}
 	case '\x01': {//mov R,i   ----->1
-		if (low == 0)//µÍÎ»ÔËËã
+		if (low == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//»ñµÃÁ¢¼´Êý
+			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//èŽ·å¾—ç«‹å³æ•°
 			char *R = (char *)register_list[high];
 			*R = temp;
 			set_flag(*R);
 			break;
 		}
-		else if (low == 1)//¸ßÎ»ÔËËã
+		else if (low == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned temp = *(short*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(short*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			int16_t *R = (int16_t *)register_list[high];
 			*R = temp;
 			set_flag(*R);
 			break;
 		}
-		else if (low == 2)//È«ÔËËã
+		else if (low == 2)//å…¨è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			unsigned *R = (unsigned *)register_list[high];
 			*R = temp;
 			set_flag(*R);
@@ -149,32 +149,32 @@ int do_mov() {
 	case '\x02': {//R,[R] ----->2
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		char *data_temp_p = data_ptr;
-		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//²Ù¿ØÕ»¶Î
-		if (low == 0)//µÍÎ»ÔËËã
+		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//æ“æŽ§æ ˆæ®µ
+		if (low == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			char temp = data_ptr[value];//»ñÈ¡Êý¾Ý¶ÎµÄÄÚÈÝ
+			unsigned value = *(unsigned*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			char temp = data_ptr[value];//èŽ·å–æ•°æ®æ®µçš„å†…å®¹
 			char *R = (char *)register_list[high];
 			*R = temp;
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (low == 1)//¸ßÎ»ÔËËã
+		else if (low == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			int16_t temp = *(int16_t*)(data_ptr + value);//»ñÈ¡Êý¾Ý¶ÎµÄÄÚÈÝ
+			unsigned value = *(unsigned*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			int16_t temp = *(int16_t*)(data_ptr + value);//èŽ·å–æ•°æ®æ®µçš„å†…å®¹
 			int16_t *R = (int16_t *)register_list[high];
 			*R = temp;
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (low == 2)//È«ÔËËã
+		else if (low == 2)//å…¨è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned temp = *(unsigned*)(data_ptr + value);//»ñÈ¡Êý¾Ý¶ÎµÄÄÚÈÝ
+			unsigned value = *(unsigned*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned temp = *(unsigned*)(data_ptr + value);//èŽ·å–æ•°æ®æ®µçš„å†…å®¹
 			unsigned *R = (unsigned *)register_list[high];
 			*R = temp;
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
 		else throw(LVM_EXECUTE_ERROR);
@@ -184,32 +184,32 @@ int do_mov() {
 		uint8_t lowb = (uint8_t)code_ptr[registe_ptr->IP + 3] % 0x10;
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		char *data_temp_p = data_ptr;
-		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//²Ù¿ØÕ»¶Î
-		if (lowb == 0)//µÍÎ»ÔËËã
+		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//æ“æŽ§æ ˆæ®µ
+		if (lowb == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[high];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			char *temp = data_ptr + value;//»ñÈ¡Êý¾ÝÖ¸Õë
-			char *R = (char *)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*temp = *R;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[high];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			char *temp = data_ptr + value;//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			char *R = (char *)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*temp = *R;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (lowb == 1)//¸ßÎ»ÔËËã
+		else if (lowb == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[high];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			int16_t *temp = (int16_t*)(data_ptr + value);//»ñÈ¡Êý¾ÝÖ¸Õë
-			int16_t *R = (int16_t*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*temp = *R;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[high];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			int16_t *temp = (int16_t*)(data_ptr + value);//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			int16_t *R = (int16_t*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*temp = *R;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (lowb == 2)//È«ÔËËã
+		else if (lowb == 2)//å…¨è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[high];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned *temp = (unsigned*)(data_ptr + value);//»ñÈ¡Êý¾ÝÖ¸Õë
-			unsigned *R = (unsigned*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*temp = *R;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[high];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned *temp = (unsigned*)(data_ptr + value);//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			unsigned *R = (unsigned*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*temp = *R;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
 		else throw(LVM_EXECUTE_ERROR);
@@ -217,35 +217,35 @@ int do_mov() {
 	}
 	case '\x07': {//R, [R + i]----->07
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
-		short i = *(short*)(code_ptr + registe_ptr->IP + 5);//»ñÈ¡Á¢¼´Êý
+		short i = *(short*)(code_ptr + registe_ptr->IP + 5);//èŽ·å–ç«‹å³æ•°
 
 		char *data_temp_p = data_ptr;
-		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//²Ù¿ØÕ»¶Î
-		if (low == 0)//µÍÎ»ÔËËã
+		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//æ“æŽ§æ ˆæ®µ
+		if (low == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			char temp = data_ptr[i + value];//»ñÈ¡Êý¾Ý¶ÎµÄÄÚÈÝ
+			unsigned value = *(unsigned*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			char temp = data_ptr[i + value];//èŽ·å–æ•°æ®æ®µçš„å†…å®¹
 			char *R = (char *)register_list[high];
 			*R = temp;
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (low == 1)//¸ßÎ»ÔËËã
+		else if (low == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			int16_t temp = *(int16_t*)(data_ptr + i + value);//»ñÈ¡Êý¾Ý¶ÎµÄÄÚÈÝ
+			unsigned value = *(unsigned*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			int16_t temp = *(int16_t*)(data_ptr + i + value);//èŽ·å–æ•°æ®æ®µçš„å†…å®¹
 			int16_t *R = (int16_t *)register_list[high];
 			*R = temp;
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (low == 2)//È«ÔËËã
+		else if (low == 2)//å…¨è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned temp = *(unsigned*)(data_ptr + i + value);//»ñÈ¡Êý¾Ý¶ÎµÄÄÚÈÝ
+			unsigned value = *(unsigned*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned temp = *(unsigned*)(data_ptr + i + value);//èŽ·å–æ•°æ®æ®µçš„å†…å®¹
 			unsigned *R = (unsigned *)register_list[high];
 			*R = temp;
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
 		else throw(LVM_EXECUTE_ERROR);
@@ -254,35 +254,35 @@ int do_mov() {
 	case '\x08': {//[R+i],R----->08
 		uint8_t lowb = (uint8_t)code_ptr[registe_ptr->IP + 6] % 0x10;
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 6] / 0x10;
-		short i = *(short*)(code_ptr + registe_ptr->IP + 4);//»ñÈ¡Á¢¼´Êý
+		short i = *(short*)(code_ptr + registe_ptr->IP + 4);//èŽ·å–ç«‹å³æ•°
 
 		char *data_temp_p = data_ptr;
-		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//²Ù¿ØÕ»¶Î
-		if (lowb == 0)//µÍÎ»ÔËËã
+		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//æ“æŽ§æ ˆæ®µ
+		if (lowb == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[high];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			char *temp = data_ptr + i + value;//»ñÈ¡Êý¾ÝÖ¸Õë
-			char *R = (char *)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*temp = *R;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[high];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			char *temp = data_ptr + i + value;//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			char *R = (char *)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*temp = *R;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (lowb == 1)//¸ßÎ»ÔËËã
+		else if (lowb == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[high];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			int16_t *temp = (int16_t*)(data_ptr + i + value);//»ñÈ¡Êý¾ÝÖ¸Õë
-			int16_t *R = (int16_t*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*temp = *R;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[high];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			int16_t *temp = (int16_t*)(data_ptr + i + value);//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			int16_t *R = (int16_t*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*temp = *R;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (lowb == 2)//È«ÔËËã
+		else if (lowb == 2)//å…¨è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[high];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned *temp = (unsigned*)(data_ptr + i + value);//»ñÈ¡Êý¾ÝÖ¸Õë
-			unsigned *R = (unsigned*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*temp = *R;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[high];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned *temp = (unsigned*)(data_ptr + i + value);//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			unsigned *R = (unsigned*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*temp = *R;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
 		break;
@@ -293,35 +293,35 @@ int do_mov() {
 		uint8_t lowb = (uint8_t)code_ptr[registe_ptr->IP + 4] % 0x10;
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 4] / 0x10;
 		char *data_temp_p = data_ptr;
-		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//²Ù¿ØÕ»¶Î
-		if (lowb == 0)//µÍÎ»ÔËËã
+		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//æ“æŽ§æ ˆæ®µ
+		if (lowb == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[high];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned value1 = *(unsigned*)register_list[highb1];//»ñµÃRa1¼Ä´æÆ÷ÖÐµÄÖµ
-			char *temp = data_ptr + value + value1;//»ñÈ¡Êý¾ÝÖ¸Õë
-			char *R = (char *)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*temp = *R;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[high];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned value1 = *(unsigned*)register_list[highb1];//èŽ·å¾—Ra1å¯„å­˜å™¨ä¸­çš„å€¼
+			char *temp = data_ptr + value + value1;//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			char *R = (char *)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*temp = *R;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (lowb == 1)//¸ßÎ»ÔËËã
+		else if (lowb == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[high];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned value1 = *(unsigned*)register_list[highb1];//»ñµÃRa1¼Ä´æÆ÷ÖÐµÄÖµ
-			int16_t *temp = (int16_t*)(data_ptr + value + value1);//»ñÈ¡Êý¾ÝÖ¸Õë
-			int16_t *R = (int16_t*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*temp = *R;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[high];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned value1 = *(unsigned*)register_list[highb1];//èŽ·å¾—Ra1å¯„å­˜å™¨ä¸­çš„å€¼
+			int16_t *temp = (int16_t*)(data_ptr + value + value1);//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			int16_t *R = (int16_t*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*temp = *R;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (lowb == 2)//È«ÔËËã
+		else if (lowb == 2)//å…¨è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[high];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned value1 = *(unsigned*)register_list[highb1];//»ñµÃRa1¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned *temp = (unsigned*)(data_ptr + value + value1);//»ñÈ¡Êý¾ÝÖ¸Õë
-			unsigned *R = (unsigned*)register_list[highb];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*temp = *R;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[high];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned value1 = *(unsigned*)register_list[highb1];//èŽ·å¾—Ra1å¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned *temp = (unsigned*)(data_ptr + value + value1);//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			unsigned *R = (unsigned*)register_list[highb];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*temp = *R;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
 		else throw(LVM_EXECUTE_ERROR);
@@ -333,35 +333,35 @@ int do_mov() {
 		uint8_t lowb = (uint8_t)code_ptr[registe_ptr->IP + 4] % 0x10;
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 4] / 0x10;
 		char *data_temp_p = data_ptr;
-		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//²Ù¿ØÕ»¶Î
-		if (low == 0)//µÍÎ»ÔËËã
+		if (registe_ptr->flag[14] == 1) data_ptr = stack_ptr;//æ“æŽ§æ ˆæ®µ
+		if (low == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[highb];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned value1 = *(unsigned*)register_list[highb1];//»ñµÃRa1¼Ä´æÆ÷ÖÐµÄÖµ
-			char *temp = data_ptr + value + value1;//»ñÈ¡Êý¾ÝÖ¸Õë
-			char *R = (char *)register_list[high];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*R = *temp;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[highb];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned value1 = *(unsigned*)register_list[highb1];//èŽ·å¾—Ra1å¯„å­˜å™¨ä¸­çš„å€¼
+			char *temp = data_ptr + value + value1;//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			char *R = (char *)register_list[high];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*R = *temp;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (low == 1)//¸ßÎ»ÔËËã
+		else if (low == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[highb];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned value1 = *(unsigned*)register_list[highb1];//»ñµÃRa1¼Ä´æÆ÷ÖÐµÄÖµ
-			int16_t *temp = (int16_t*)(data_ptr + value + value1);//»ñÈ¡Êý¾ÝÖ¸Õë
-			int16_t *R = (int16_t*)register_list[high];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*R = *temp;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[highb];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned value1 = *(unsigned*)register_list[highb1];//èŽ·å¾—Ra1å¯„å­˜å™¨ä¸­çš„å€¼
+			int16_t *temp = (int16_t*)(data_ptr + value + value1);//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			int16_t *R = (int16_t*)register_list[high];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*R = *temp;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
-		else if (low == 2)//È«ÔËËã
+		else if (low == 2)//å…¨è¿ç®—
 		{
-			unsigned value = *(unsigned*)register_list[highb];//»ñµÃRa¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned value1 = *(unsigned*)register_list[highb1];//»ñµÃRa1¼Ä´æÆ÷ÖÐµÄÖµ
-			unsigned *temp = (unsigned*)(data_ptr + value + value1);//»ñÈ¡Êý¾ÝÖ¸Õë
-			unsigned *R = (unsigned*)register_list[high];//»ñµÃRb¼Ä´æÆ÷ÖÐµÄÖµ
-			*R = *temp;//Ð´Èë
-			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//»¹Ô­²Ù×÷
+			unsigned value = *(unsigned*)register_list[highb];//èŽ·å¾—Raå¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned value1 = *(unsigned*)register_list[highb1];//èŽ·å¾—Ra1å¯„å­˜å™¨ä¸­çš„å€¼
+			unsigned *temp = (unsigned*)(data_ptr + value + value1);//èŽ·å–æ•°æ®æŒ‡é’ˆ
+			unsigned *R = (unsigned*)register_list[high];//èŽ·å¾—Rbå¯„å­˜å™¨ä¸­çš„å€¼
+			*R = *temp;//å†™å…¥
+			if (registe_ptr->flag[14] == 1) data_ptr = data_temp_p;//è¿˜åŽŸæ“ä½œ
 			break;
 		}
 
@@ -375,12 +375,12 @@ int do_mov() {
 
 }
 /*
-*Ö´ÐÐleaÖ¸Áî
+*æ‰§è¡ŒleaæŒ‡ä»¤
 */
 int do_lea() {
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
-	switch (code_ptr[registe_ptr->IP + 1])//²Ù×÷ÀàÐÍ
+	switch (code_ptr[registe_ptr->IP + 1])//æ“ä½œç±»åž‹
 	{
 	case '\x00': {
 		//
@@ -408,25 +408,25 @@ int do_lea() {
 		break;
 	}
 	case '\x01': {//
-		if (low == 0)//µÍÎ»ÔËËã
+		if (low == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//»ñµÃÁ¢¼´Êý
+			unsigned temp = code_ptr[registe_ptr->IP + 2 + 1];//èŽ·å¾—ç«‹å³æ•°
 			char *R = (char *)register_list[high];
 			*R = temp;
 			set_flag(*R);
 			break;
 		}
-		else if (low == 1)//¸ßÎ»ÔËËã
+		else if (low == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned temp = *(short*)(code_ptr+registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(short*)(code_ptr+registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			int16_t *R = (int16_t *)register_list[high];
 			*R = temp;
 			set_flag(*R);
 			break;
 		}
-		else if (low == 2)//È«ÔËËã
+		else if (low == 2)//å…¨è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr+registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr+registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			unsigned *R = (unsigned *)register_list[high];
 			*R = temp;
 			set_flag(*R);
@@ -443,7 +443,7 @@ int do_lea() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐintÖ¸Áî
+*æ‰§è¡ŒintæŒ‡ä»¤
 */
 int do_int() {
 	switch ((char)registe_ptr->R0){
@@ -454,26 +454,26 @@ int do_int() {
 	}
 	case LVM_PRINT: {
 		int temp{ 0 };
-		temp=printf_s("%s", data_ptr + registe_ptr->R3);
+		temp=printf("%s", data_ptr + registe_ptr->R3);
 		registe_ptr->R0 = temp;
 		break;
 	}
 	case LVM_PRINTD: {
 		int temp{ 0 };
-		temp = printf_s("%d", *(unsigned*)(data_ptr + registe_ptr->R3));
+		temp = printf("%d", *(unsigned*)(data_ptr + registe_ptr->R3));
 		registe_ptr->R0 = temp;
 		break;
 	}
 	case LVM_EXIT: {
 		if (is_clock) {
 			clock_end = clock();
-			printf("\nRunning Time£º%dms\n", clock_end-clock_begin);
+			printf("\nRunning Timeï¼š%dms\n", clock_end-clock_begin);
 		}
 		exit(0);
 	}
 	case LVM_SCAN: {
 		int temp{ 0 };
-		temp=scanf_s("%s", data_ptr + registe_ptr->R3,registe_ptr->R4);
+		temp=scanf("%s", data_ptr + registe_ptr->R3,registe_ptr->R4);
 		registe_ptr->R0 = temp;
 		break;
 	}
@@ -481,7 +481,7 @@ int do_int() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö¸ÁîÖ´ÐÐÑ¡ÔñÆ÷
+*æŒ‡ä»¤æ‰§è¡Œé€‰æ‹©å™¨
 */
 int do_ins(){
 	if(ins_list[(uint8_t)code_ptr[registe_ptr->IP]]!=nullptr)
@@ -490,14 +490,14 @@ int do_ins(){
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐJMP
+*æ‰§è¡ŒJMP
 */
 int do_jmp() {
-	if (code_ptr[registe_ptr->IP + 1] == 5) {//¼Ä´æÆ÷Ìø×ª
+	if (code_ptr[registe_ptr->IP + 1] == 5) {//å¯„å­˜å™¨è·³è½¬
 		uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 		unsigned adr = *register_list[high];
 		registe_ptr->IP = adr;
-	}else if (code_ptr[registe_ptr->IP + 1] == 6){//Á¢¼´ÊýÌø×ª
+	}else if (code_ptr[registe_ptr->IP + 1] == 6){//ç«‹å³æ•°è·³è½¬
 		unsigned adr = *(unsigned*)(code_ptr+registe_ptr->IP + 2);
 		registe_ptr->IP = adr + registe_ptr->CS;
 		
@@ -505,16 +505,16 @@ int do_jmp() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐJZ
+*æ‰§è¡ŒJZ
 */
 int do_jz() {
 	if (registe_ptr->flag[0] == 0){
-		if (code_ptr[registe_ptr->IP + 1] == 5) {//¼Ä´æÆ÷Ìø×ª
+		if (code_ptr[registe_ptr->IP + 1] == 5) {//å¯„å­˜å™¨è·³è½¬
 			uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 			unsigned adr = *register_list[high];
 			registe_ptr->IP = adr;
 		}
-		else if (code_ptr[registe_ptr->IP + 1] == 6) {//Á¢¼´ÊýÌø×ª
+		else if (code_ptr[registe_ptr->IP + 1] == 6) {//ç«‹å³æ•°è·³è½¬
 			unsigned adr = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
 			registe_ptr->IP = adr + registe_ptr->CS;
 
@@ -524,16 +524,16 @@ int do_jz() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐJNZ
+*æ‰§è¡ŒJNZ
 */
 int do_jnz() {
-	if (registe_ptr->flag[0] == 1) {//ÅÐ¶Ï·¢ÉúÌø×ªÌõ¼þ
-		if (code_ptr[registe_ptr->IP + 1] == 5) {//¼Ä´æÆ÷Ìø×ª
+	if (registe_ptr->flag[0] == 1) {//åˆ¤æ–­å‘ç”Ÿè·³è½¬æ¡ä»¶
+		if (code_ptr[registe_ptr->IP + 1] == 5) {//å¯„å­˜å™¨è·³è½¬
 			uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 			unsigned adr = *register_list[high];
 			registe_ptr->IP = adr;
 		}
-		else if (code_ptr[registe_ptr->IP + 1] == 6) {//Á¢¼´ÊýÌø×ª
+		else if (code_ptr[registe_ptr->IP + 1] == 6) {//ç«‹å³æ•°è·³è½¬
 			unsigned adr = *(unsigned*)(code_ptr+registe_ptr->IP + 2);
 			registe_ptr->IP = adr + registe_ptr->CS;
 
@@ -542,16 +542,16 @@ int do_jnz() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐJH
+*æ‰§è¡ŒJH
 */
 int do_jh() {
 	if (registe_ptr->flag[1] == 1) {
-		if (code_ptr[registe_ptr->IP + 1] == 5) {//¼Ä´æÆ÷Ìø×ª
+		if (code_ptr[registe_ptr->IP + 1] == 5) {//å¯„å­˜å™¨è·³è½¬
 			uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 			unsigned adr = *register_list[high];
 			registe_ptr->IP = adr;
 		}
-		else if (code_ptr[registe_ptr->IP + 1] == 6) {//Á¢¼´ÊýÌø×ª
+		else if (code_ptr[registe_ptr->IP + 1] == 6) {//ç«‹å³æ•°è·³è½¬
 			unsigned adr = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
 			registe_ptr->IP = adr + registe_ptr->CS;
 
@@ -561,16 +561,16 @@ int do_jh() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐJL
+*æ‰§è¡ŒJL
 */
 int do_jl() {
 	if (registe_ptr->flag[1] == 0) {
-		if (code_ptr[registe_ptr->IP + 1] == 5) {//¼Ä´æÆ÷Ìø×ª
+		if (code_ptr[registe_ptr->IP + 1] == 5) {//å¯„å­˜å™¨è·³è½¬
 			uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 			unsigned adr = *register_list[high];
 			registe_ptr->IP = adr;
 		}
-		else if (code_ptr[registe_ptr->IP + 1] == 6) {//Á¢¼´ÊýÌø×ª
+		else if (code_ptr[registe_ptr->IP + 1] == 6) {//ç«‹å³æ•°è·³è½¬
 			unsigned adr = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
 			registe_ptr->IP = adr + registe_ptr->CS;
 
@@ -580,7 +580,7 @@ int do_jl() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐINC
+*æ‰§è¡ŒINC
 */
 int do_inc(){
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 1] / 0x10;
@@ -614,7 +614,7 @@ int do_inc(){
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐDEC
+*æ‰§è¡ŒDEC
 */
 int do_dec() {
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 1] / 0x10;
@@ -648,12 +648,12 @@ int do_dec() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐCMP
+*æ‰§è¡ŒCMP
 */
 int do_cmp() {
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
-	if (code_ptr[registe_ptr->IP + 1] == '\x00') {//¼Ä´æÆ÷±È½Ï
+	if (code_ptr[registe_ptr->IP + 1] == '\x00') {//å¯„å­˜å™¨æ¯”è¾ƒ
 			uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 			if (low == 0) {
 				char*Ra = (char *)register_list[high];
@@ -677,7 +677,7 @@ int do_cmp() {
 			}
 			else throw(LVM_EXECUTE_ERROR);
 	}
-	else if (code_ptr[registe_ptr->IP + 1] == '\x01') {//Á¢¼´Êý±È½Ï
+	else if (code_ptr[registe_ptr->IP + 1] == '\x01') {//ç«‹å³æ•°æ¯”è¾ƒ
 		unsigned i = code_ptr[registe_ptr->IP + 3];
 		set_flag(*register_list[high] - i);
 	}
@@ -685,12 +685,12 @@ int do_cmp() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐADD
+*æ‰§è¡ŒADD
 */
 int do_add() {
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
-	if (code_ptr[registe_ptr->IP + 1]==0)//0ÐÍÃüÁî
+	if (code_ptr[registe_ptr->IP + 1]==0)//0åž‹å‘½ä»¤
 	{
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
@@ -714,24 +714,24 @@ int do_add() {
 			set_flag(*Ra);
 		}else throw(LVM_EXECUTE_ERROR);
 	}
-	else if (code_ptr[registe_ptr->IP + 1] == 1) {//1ÐÍÃüÁî
-		if (low == 0)//µÍÎ»ÔËËã
+	else if (code_ptr[registe_ptr->IP + 1] == 1) {//1åž‹å‘½ä»¤
+		if (low == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr+registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr+registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			char *R = (char *)register_list[high];
 			*R += temp;
 			set_flag(*R);
 		}
-		else if (low == 1)//¸ßÎ»ÔËËã
+		else if (low == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			int16_t *R = (int16_t *)register_list[high];
 			*R += temp;
 			set_flag(*R);
 		}
-		else if (low == 2)//È«ÔËËã
+		else if (low == 2)//å…¨è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			unsigned *R = (unsigned *)register_list[high];
 			*R += temp;
 			set_flag(*R);
@@ -743,12 +743,12 @@ int do_add() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐSUB
+*æ‰§è¡ŒSUB
 */
 int do_sub() {
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
-	if (code_ptr[registe_ptr->IP + 1] == 0)//0ÐÍÃüÁî
+	if (code_ptr[registe_ptr->IP + 1] == 0)//0åž‹å‘½ä»¤
 	{
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
@@ -773,24 +773,24 @@ int do_sub() {
 		}
 		else throw(LVM_EXECUTE_ERROR);
 	}
-	else if (code_ptr[registe_ptr->IP + 1] == 1) {//1ÐÍÃüÁî
-		if (low == 0)//µÍÎ»ÔËËã
+	else if (code_ptr[registe_ptr->IP + 1] == 1) {//1åž‹å‘½ä»¤
+		if (low == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			char *R = (char *)register_list[high];
 			*R -= temp;
 			set_flag(*R);
 		}
-		else if (low == 1)//¸ßÎ»ÔËËã
+		else if (low == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			int16_t *R = (int16_t *)register_list[high];
 			*R -= temp;
 			set_flag(*R);
 		}
-		else if (low == 2)//È«ÔËËã
+		else if (low == 2)//å…¨è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			unsigned *R = (unsigned *)register_list[high];
 			*R -= temp;
 			set_flag(*R);
@@ -802,12 +802,12 @@ int do_sub() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐXOR
+*æ‰§è¡ŒXOR
 */
 int do_xor() {
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
-	if (code_ptr[registe_ptr->IP + 1] == 0)//0ÐÍÃüÁî
+	if (code_ptr[registe_ptr->IP + 1] == 0)//0åž‹å‘½ä»¤
 	{
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
@@ -832,24 +832,24 @@ int do_xor() {
 		}
 		else throw(LVM_EXECUTE_ERROR);
 	}
-	else if (code_ptr[registe_ptr->IP + 1] == 1) {//1ÐÍÃüÁî
-		if (low == 0)//µÍÎ»ÔËËã
+	else if (code_ptr[registe_ptr->IP + 1] == 1) {//1åž‹å‘½ä»¤
+		if (low == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			char *R = (char *)register_list[high];
 			*R ^= temp;
 			set_flag(*R);
 		}
-		else if (low == 1)//¸ßÎ»ÔËËã
+		else if (low == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			int16_t *R = (int16_t *)register_list[high];
 			*R ^= temp;
 			set_flag(*R);
 		}
-		else if (low == 2)//È«ÔËËã
+		else if (low == 2)//å…¨è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			unsigned *R = (unsigned *)register_list[high];
 			*R ^= temp;
 			set_flag(*R);
@@ -861,12 +861,12 @@ int do_xor() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐAND
+*æ‰§è¡ŒAND
 */
 int do_and() {
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
-	if (code_ptr[registe_ptr->IP + 1] == 0)//0ÐÍÃüÁî
+	if (code_ptr[registe_ptr->IP + 1] == 0)//0åž‹å‘½ä»¤
 	{
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
@@ -891,24 +891,24 @@ int do_and() {
 		}
 		else throw(LVM_EXECUTE_ERROR);
 	}
-	else if (code_ptr[registe_ptr->IP + 1] == 1) {//1ÐÍÃüÁî
-		if (low == 0)//µÍÎ»ÔËËã
+	else if (code_ptr[registe_ptr->IP + 1] == 1) {//1åž‹å‘½ä»¤
+		if (low == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			char *R = (char *)register_list[high];
 			*R &= temp;
 			set_flag(*R);
 		}
-		else if (low == 1)//¸ßÎ»ÔËËã
+		else if (low == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			int16_t *R = (int16_t *)register_list[high];
 			*R &= temp;
 			set_flag(*R);
 		}
-		else if (low == 2)//È«ÔËËã
+		else if (low == 2)//å…¨è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			unsigned *R = (unsigned *)register_list[high];
 			*R &= temp;
 			set_flag(*R);
@@ -920,12 +920,12 @@ int do_and() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐOR
+*æ‰§è¡ŒOR
 */
 int do_or() {
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 	uint8_t low = (uint8_t)code_ptr[registe_ptr->IP + 2] % 0x10;
-	if (code_ptr[registe_ptr->IP + 1] == 0)//0ÐÍÃüÁî
+	if (code_ptr[registe_ptr->IP + 1] == 0)//0åž‹å‘½ä»¤
 	{
 		uint8_t highb = (uint8_t)code_ptr[registe_ptr->IP + 3] / 0x10;
 		if (low == 0) {
@@ -950,24 +950,24 @@ int do_or() {
 		}
 		else throw(LVM_EXECUTE_ERROR);
 	}
-	else if (code_ptr[registe_ptr->IP + 1] == 1) {//1ÐÍÃüÁî
-		if (low == 0)//µÍÎ»ÔËËã
+	else if (code_ptr[registe_ptr->IP + 1] == 1) {//1åž‹å‘½ä»¤
+		if (low == 0)//ä½Žä½è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			char *R = (char *)register_list[high];
 			*R |= temp;
 			set_flag(*R);
 		}
-		else if (low == 1)//¸ßÎ»ÔËËã
+		else if (low == 1)//é«˜ä½è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			int16_t *R = (int16_t *)register_list[high];
 			*R |= temp;
 			set_flag(*R);
 		}
-		else if (low == 2)//È«ÔËËã
+		else if (low == 2)//å…¨è¿ç®—
 		{
-			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//»ñµÃÁ¢¼´Êý
+			unsigned temp = *(unsigned*)(code_ptr + registe_ptr->IP + 2 + 1);//èŽ·å¾—ç«‹å³æ•°
 			unsigned *R = (unsigned *)register_list[high];
 			*R |= temp;
 			set_flag(*R);
@@ -979,7 +979,7 @@ int do_or() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐNOT
+*æ‰§è¡ŒNOT
 */
 int do_not(){
 	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 1] / 0x10;
@@ -1005,50 +1005,50 @@ int do_not(){
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐNOP
+*æ‰§è¡ŒNOP
 */
 int do_nop() {
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐCALL
+*æ‰§è¡ŒCALL
 */
 int do_call() {
 	int ins_len;
 	ins_len = get_ins_len(code_ptr[registe_ptr->IP], code_ptr[registe_ptr->IP + 1]);
-	registe_ptr->SP += 4;//Õ»Ö¸ÕëÔö¼Ó
-	if (code_ptr[registe_ptr->IP + 1] == 5) {//¼Ä´æÆ÷Ñ¹Õ»
+	registe_ptr->SP += 4;//æ ˆæŒ‡é’ˆå¢žåŠ 
+	if (code_ptr[registe_ptr->IP + 1] == 5) {//å¯„å­˜å™¨åŽ‹æ ˆ
 		uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 		unsigned num = *register_list[high];
-		*(unsigned*)(stack_ptr + registe_ptr->SP) = registe_ptr->IP+ins_len;//·µ»ØµØÖ·Ñ¹Õ»
-		registe_ptr->IP = num;//ÐÞ¸Ä
+		*(unsigned*)(stack_ptr + registe_ptr->SP) = registe_ptr->IP+ins_len;//è¿”å›žåœ°å€åŽ‹æ ˆ
+		registe_ptr->IP = num;//ä¿®æ”¹
 	}
-	else if (code_ptr[registe_ptr->IP + 1] == 6) {//Á¢¼´ÊýÑ¹Õ»
+	else if (code_ptr[registe_ptr->IP + 1] == 6) {//ç«‹å³æ•°åŽ‹æ ˆ
 		unsigned num = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
 		unsigned temp = registe_ptr->IP + ins_len;
 		*(unsigned*)((unsigned char*)stack_ptr + registe_ptr->SP) = temp;
-		registe_ptr->IP = num + registe_ptr->CS;//ÐÞ¸Ä
+		registe_ptr->IP = num + registe_ptr->CS;//ä¿®æ”¹
 	}
 	else throw(LVM_EXECUTE_ERROR);
 	
 	return LVM_SUCCESS;
 }
 /*
-*Ö´ÐÐRET
+*æ‰§è¡ŒRET
 */
 int do_ret() {
-	if (code_ptr[registe_ptr->IP + 1] == 5) {//¼Ä´æÆ÷¶ÁÊý
+	if (code_ptr[registe_ptr->IP + 1] == 5) {//å¯„å­˜å™¨è¯»æ•°
 		uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 		unsigned num = *register_list[high];
 		unsigned ret = *(unsigned*)(stack_ptr+registe_ptr->SP);
 		registe_ptr->SP = registe_ptr->SP-4;
-		registe_ptr->IP = ret; // ÐÞ¸Ä
+		registe_ptr->IP = ret; // ä¿®æ”¹
 	}
-	else if (code_ptr[registe_ptr->IP + 1] == 6) {//Á¢¼´Êý¶ÁÊý
+	else if (code_ptr[registe_ptr->IP + 1] == 6) {//ç«‹å³æ•°è¯»æ•°
 		unsigned num = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
 		unsigned ret = *(unsigned*)(stack_ptr+registe_ptr->SP-num);
 		registe_ptr->SP = registe_ptr->SP- (num+4);
-		registe_ptr->IP = ret ;//ÐÞ¸Ä
+		registe_ptr->IP = ret ;//ä¿®æ”¹
 	}
 	else throw(LVM_EXECUTE_ERROR);
 
@@ -1061,25 +1061,25 @@ int do_jit_in(){
 	}
 	else return LVM_SUCCESS;
 #else
-	printf("²»ÊÇwindowsÏµÍ³ÔÝ²»Ö§³Öjit")
-	return;
+	printf("ä¸æ˜¯windowsç³»ç»Ÿæš‚ä¸æ”¯æŒjit");
+	return LVM_FAILD;
 #endif // _WIN32
 	return LVM_SUCCESS;
 }
 int exectue_ins() {
 	int ins_len;
-	ins_len=get_ins_len(code_ptr[registe_ptr->IP], code_ptr[registe_ptr->IP + 1]);//»ñÈ¡Ö¸Áî³¤¶È ÎªµØÖ·Ö¸ÕëµÝÔö×ö×¼±¸
+	ins_len=get_ins_len(code_ptr[registe_ptr->IP], code_ptr[registe_ptr->IP + 1]);//èŽ·å–æŒ‡ä»¤é•¿åº¦ ä¸ºåœ°å€æŒ‡é’ˆé€’å¢žåšå‡†å¤‡
 	unsigned tempIP = registe_ptr->IP;
 	if (ins_len > 0)
 	{
-		if (registe_ptr->R6 == registe_ptr->IP || registe_ptr->R7 == registe_ptr->IP)//ÏÝÈëµ÷ÊÔ×´Ì¬
+		if (registe_ptr->R6 == registe_ptr->IP || registe_ptr->R7 == registe_ptr->IP)//é™·å…¥è°ƒè¯•çŠ¶æ€
 		{
 			lvm_debug(ins_len);
 		}
 		else do_ins();
 	}
 	else throw(LVM_EXECUTE_ERROR);
-	if (tempIP == registe_ptr->IP)//¼ì²éÊÇ·ñ·¢ÉúÌø×ª
+	if (tempIP == registe_ptr->IP)//æ£€æŸ¥æ˜¯å¦å‘ç”Ÿè·³è½¬
 	{
 		registe_ptr->IP += ins_len;
 	}

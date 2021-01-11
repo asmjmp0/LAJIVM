@@ -3,13 +3,13 @@
 #include<iostream>
 #include"init.h"
 int _ins_len(char c) {
-	uint8_t high = (uint8_t)c / 0x10;//»ñÈ¡²Ù×÷ÀàĞÍ¸ßÎ»
+	uint8_t high = (uint8_t)c / 0x10;//è·å–æ“ä½œç±»å‹é«˜ä½
 	uint8_t low = (uint8_t)c % 0x10;
 	if (!uasm_flag) {
-		if (high == 0) {//²Ù×İÊı¾İ¶Î
+		if (high == 0) {//æ“çºµæ•°æ®æ®µ
 			registe_ptr->flag[14] = 0;
 		}
-		else if (high == 1) {//²Ù×İÕ»¶Î
+		else if (high == 1) {//æ“çºµæ ˆæ®µ
 			registe_ptr->flag[14] = 1;
 		}
 		else if (high == 2);
@@ -56,7 +56,7 @@ int _ins_len(char c) {
 	return -1;
 }
 /*
-*»ñÈ¡Ö¸Áî³¤¶È
+*è·å–æŒ‡ä»¤é•¿åº¦
 */
 int get_ins_len(char f, char s) {
 	uint8_t f1 = (uint8_t)f;

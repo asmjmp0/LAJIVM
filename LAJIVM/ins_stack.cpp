@@ -3,13 +3,13 @@
 #include"ExecuteInstruction.h"
 #include<iostream>
 int do_push() {
-	registe_ptr->SP += 4;//Õ»Ö¸ÕëÔö¼Ó
-	if (code_ptr[registe_ptr->IP + 1] == 5) {//¼Ä´æÆ÷Ñ¹Õ»
+	registe_ptr->SP += 4;//æ ˆæŒ‡é’ˆå¢žåŠ 
+	if (code_ptr[registe_ptr->IP + 1] == 5) {//å¯„å­˜å™¨åŽ‹æ ˆ
 		uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 2] / 0x10;
 		unsigned num = *register_list[high];
 		*(unsigned*)(stack_ptr + registe_ptr->SP) = num;
 	}
-	else if (code_ptr[registe_ptr->IP + 1] == 6) {//Á¢¼´ÊýÑ¹Õ»
+	else if (code_ptr[registe_ptr->IP + 1] == 6) {//ç«‹å³æ•°åŽ‹æ ˆ
 		unsigned num = *(unsigned*)(code_ptr + registe_ptr->IP + 2);
 		*(unsigned*)(stack_ptr + registe_ptr->SP) = num;
 	}
@@ -18,9 +18,9 @@ int do_push() {
 }
 int do_pop() {
 	
-	unsigned num = *(unsigned*)(stack_ptr + registe_ptr->SP);//»ñÈ¡Õ»¶¥Öµ
-	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 1] / 0x10;//»ñÈ¡¼Ä´æ±àºÅ
-	*register_list[high] = num;//¼Ä´æÆ÷¸³Öµ
+	unsigned num = *(unsigned*)(stack_ptr + registe_ptr->SP);//èŽ·å–æ ˆé¡¶å€¼
+	uint8_t high = (uint8_t)code_ptr[registe_ptr->IP + 1] / 0x10;//èŽ·å–å¯„å­˜ç¼–å·
+	*register_list[high] = num;//å¯„å­˜å™¨èµ‹å€¼
 
 	registe_ptr->SP -= 4;
 	return LVM_SUCCESS;

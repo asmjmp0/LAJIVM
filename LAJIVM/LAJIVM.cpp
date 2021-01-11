@@ -5,34 +5,56 @@
 #include"bin_read.h"
 #include"ExecuteInstruction.h"
 bool is_debug = false;
+
+int doit(std::string r_str){
+    try { write_all(r_str); }
+    catch (int e){
+        printf("æ‰“å¼€äºŒè¿›åˆ¶æ–‡ä»¶å¤±è´¥ %08X\n",e);
+        return -1;
+    }
+    printf("æ‰§è¡ŒäºŒè¿›åˆ¶æ–‡ä»¶>>>>>>>>>>\n");
+    try{
+        if(is_debug)registe_ptr->R6 = registe_ptr->CS;
+        registe_ptr->IP = registe_ptr->IP + registe_ptr->CS;
+        while (registe_ptr->IP<=m_code_length+registe_ptr->CS)
+            exectue_ins();
+        return 0;
+    }
+    catch (int e)
+    {
+        printf("è¿è¡Œè¿‡ç¨‹ä¸­å‡ºé”™ %08X\n",e);
+        return -1;
+    }
+}
+
 int main(int argc, char **argv) {
 Begin:
 	std::string str;
 	std::string r_str;
 	try { init_all(); }
 	catch (int e) {
-		printf("³õÊ¼»¯Ê§°Ü %08X\n",e);
-		goto End;
+		printf("åˆå§‹åŒ–å¤±è´¥ %08X\n",e);
+		return doit(r_str);
 	}
 	if (argc == 2) {
 		r_str = argv[1];
-		goto DOIT;
+        return  doit(r_str);
 	}else if(argc == 3)
 	{
 		std::string temp = argv[1];
 		if (temp == "d") {
 			is_debug = true;
 			r_str = argv[2];
-			goto DOIT;
+            return doit(r_str);
 		}else{
-			printf("ÃüÁîÐÐ²ÎÊý´íÎó\n");
-			exit(1);
+			printf("å‘½ä»¤è¡Œå‚æ•°é”™è¯¯\n");
+            return 1;
 		}
 	}
 	int path_len = strlen(argv[0]);
 	int stack_offset{ 0 };
 
-	printf("ÐéÄâ»ú³õÊ¼»¯Íê³ÉÇëÊäÈë¶þ½øÖÆÎÄ¼þÂ·¾¶,ÊäÈëctrl+zÍË³ö£º\n");
+	printf("è™šæ‹Ÿæœºåˆå§‹åŒ–å®Œæˆè¯·è¾“å…¥äºŒè¿›åˆ¶æ–‡ä»¶è·¯å¾„,è¾“å…¥ctrl+zé€€å‡ºï¼š\n");
 	if (!std::getline(std::cin,str)) exit(0);
 	if (*str.begin() == 'd') {
 		auto temp = str.find(' ', 1);
@@ -43,25 +65,5 @@ Begin:
 		else r_str = str;
 	}
 	else r_str = str;
-	DOIT:
-	try { write_all(r_str); }
-	catch (int e){
-		printf("´ò¿ª¶þ½øÖÆÎÄ¼þÊ§°Ü %08X\n",e);
-		goto End;
-	}
-	printf("Ö´ÐÐ¶þ½øÖÆÎÄ¼þ>>>>>>>>>>\n");
-	try{
-		if(is_debug)registe_ptr->R6 = registe_ptr->CS;
-		registe_ptr->IP = registe_ptr->IP + registe_ptr->CS;
-		while (registe_ptr->IP<=m_code_length+registe_ptr->CS) 
-			exectue_ins();
-		goto Begin;
-	}
-	catch (int e)
-	{
-		printf("ÔËÐÐ¹ý³ÌÖÐ³ö´í %08X\n",e);
-		goto End;
-	}
-End:
-	return 0;
+    return doit(r_str);
 }

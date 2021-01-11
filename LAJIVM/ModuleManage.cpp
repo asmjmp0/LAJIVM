@@ -21,7 +21,7 @@ void init_module_manager() {
 	module_head->funclist = nullptr;
 }
 bool load_module( unsigned cs_seg, char* name,  unsigned char id, LibFuncList* lib = nullptr, unsigned ds_seg=-1) {
-	/*´´½¨ÐÂ½Úµã²¢Ð´Èë²ÎÊý*/
+	/*åˆ›å»ºæ–°èŠ‚ç‚¹å¹¶å†™å…¥å‚æ•°*/
 	ModuleStruct *new_module = new ModuleStruct;
 	new_module->cs_seg = cs_seg;
 	new_module->ds_seg = ds_seg;
@@ -30,7 +30,7 @@ bool load_module( unsigned cs_seg, char* name,  unsigned char id, LibFuncList* l
 	new_module->id = id;
 	if (new_module->id == -1) return false;
 
-	/*°Ñ½Úµã¼Óµ½×îºó*/
+	/*æŠŠèŠ‚ç‚¹åŠ åˆ°æœ€åŽ*/
 	ModuleStruct *final_node = module_head;
 	while (final_node->next) final_node = final_node->next;
 	final_node->next = new_module;
@@ -39,21 +39,21 @@ bool load_module( unsigned cs_seg, char* name,  unsigned char id, LibFuncList* l
 
 	return true;
 }
-bool kill_module(unsigned char id) {//É¾³ýÒ»¸öÄ£¿é
+bool kill_module(unsigned char id) {//åˆ é™¤ä¸€ä¸ªæ¨¡å—
 	if (!idlist[id]) return false;
 	else
 	{
-		/*ÕÒµ½½Úµã*/
+		/*æ‰¾åˆ°èŠ‚ç‚¹*/
 		ModuleStruct *being_kill_mod=module_head;
 		while (being_kill_mod->id != id) being_kill_mod = being_kill_mod->next;
 		ModuleStruct *forword = being_kill_mod->forword;
-		/*È¡ÏÂ½Úµã*/
-		if (being_kill_mod->next) {//next²»Îª¿Õ
+		/*å–ä¸‹èŠ‚ç‚¹*/
+		if (being_kill_mod->next) {//nextä¸ä¸ºç©º
 			forword->next = being_kill_mod->next;
 			being_kill_mod->next->forword = forword;
 		} else forword->next = nullptr;
 		
-		/*ÊÍ·Å×ÊÔ´*/
+		/*é‡Šæ”¾èµ„æº*/
 		free_memory(being_kill_mod->cs_seg, CodeSegType);
 		free_memory(being_kill_mod->ds_seg, DataSegType);
 

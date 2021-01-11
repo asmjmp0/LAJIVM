@@ -21,10 +21,10 @@ bool get_jit_file() {
 	if(Directory=="") in.open( FileName + ".jit", std::ifstream::in);
 	else in.open(Directory+"\\"+FileName+".jit", std::ifstream::in);
 	if (in.is_open()) {
-		in.seekg(0, std::ios::end);//移到文件尾部
-		int shcode_size = in.tellg();//获取文件大小
+		in.seekg(0, std::ios::end);//绉诲埌鏂囦欢灏鹃儴
+		int shcode_size = in.tellg();//鑾峰彇鏂囦欢澶у皬
 		shcode_origin = new char[shcode_size];
-		in.seekg(0, std::ios::beg);//移到文件头部
+		in.seekg(0, std::ios::beg);//绉诲埌鏂囦欢澶撮儴
 		in.read(shcode_origin, shcode_size);
 		in.close();
 		len = *(unsigned*)(shcode_origin + 3);
@@ -43,7 +43,7 @@ void push_register() {
 	r2 = registe_ptr->R2;
 	r3 = registe_ptr->R3;
 	r4 = registe_ptr->R4;
-	r5 = (unsigned)data_ptr;
+	r5 = (unsigned long )data_ptr;
 	ip = registe_ptr->IP;
 }
 void pop_register() {

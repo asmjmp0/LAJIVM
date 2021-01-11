@@ -24,8 +24,8 @@ bool write_end_out(std::string);
 int string_to_hex(std::string);
 #endif // !LJASM_H
 /*
-JIT¸ñÊ½
-JIT±êÊ¶·û 3byte
+JITæ ¼å¼
+JITæ ‡è¯†ç¬¦ 3byte
 shellcode len 4byte ----3
 shellcode index 4byte -----7
 shellcode type 1byte ------11

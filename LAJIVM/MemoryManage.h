@@ -1,7 +1,7 @@
 #ifndef MEMORYMANAGE_H
 #define MEMORYMANAGE_H
-//Ö÷´æ¹ÜÀí
-//Ë«ÏòÁ´±í
+//ä¸»å­˜ç®¡ç†
+//åŒå‘é“¾è¡¨
 struct MemoryNode
 {
 	unsigned char mid;
@@ -10,14 +10,14 @@ struct MemoryNode
 	MemoryNode *forword;
 	MemoryNode *next;
 };
-/*ºê¶¨Òå*/
+/*å®å®šä¹‰*/
 #define DataSegType 0
 #define CodeSegType 1
 /*type
-0±íÊ¾Êı¾İ
-1±íÊ¾´úÂë
+0è¡¨ç¤ºæ•°æ®
+1è¡¨ç¤ºä»£ç 
 */
-//Êı¾İ¿éºÍ´úÂë¿éµÄ½ÚµãÍ·Ö¸Õë
+//æ•°æ®å—å’Œä»£ç å—çš„èŠ‚ç‚¹å¤´æŒ‡é’ˆ
 extern MemoryNode *code_free_memory_head;
 extern MemoryNode *data_free_memory_head;
 extern MemoryNode *code_used_memory_head;

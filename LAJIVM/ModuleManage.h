@@ -10,11 +10,11 @@ struct LibFuncList
 };
 struct ModuleStruct
 {
-	unsigned char id; //Ä£¿éid
-	char *name; //Ãû×Ö×î´ó12¸ö×Ö½Ú
-	unsigned ds_seg; //Êı¾İ¶Î
-	unsigned cs_seg; //´úÂë¶Î
-	LibFuncList * funclist; //ÊÇ·ñÎªlib Èç¹û²»ÊÇÔò´ËÏîÎªnull
+	unsigned char id; //æ¨¡å—id
+	char *name; //åå­—æœ€å¤§12ä¸ªå­—èŠ‚
+	unsigned ds_seg; //æ•°æ®æ®µ
+	unsigned cs_seg; //ä»£ç æ®µ
+	LibFuncList * funclist; //æ˜¯å¦ä¸ºlib å¦‚æœä¸æ˜¯åˆ™æ­¤é¡¹ä¸ºnull
 	ModuleStruct* forword;
 	ModuleStruct* next;
 };

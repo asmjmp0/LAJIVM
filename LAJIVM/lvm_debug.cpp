@@ -8,7 +8,7 @@ bool debug_flag{ false };
 bool uasm_flag{ false };
 void lvm_debug_u_print(char a, char b);
 /*
-*µ÷ÊÔÑ¡Ïî
+*è°ƒè¯•é€‰é¡¹
 */
 void lvm_debug_n(int ins_len) {
 	registe_ptr->R6 = registe_ptr->IP;
@@ -25,17 +25,17 @@ void lvm_debug_e() {
 }
 void lvm_debug_c() {
 	registe_ptr->flag[15] = 0;
-	registe_ptr->R6 = (unsigned)-1;//µ¥²½¶Ïµã¹Ø±Õ
+	registe_ptr->R6 = (unsigned)-1;//å•æ­¥æ–­ç‚¹å…³é—­
 	do_ins();
 }
 void lvm_debug_u() {
 	uasm_flag = true;
-	unsigned temp = registe_ptr->IP;//±£´æµ±Ç°IP Îª·´»ã±à×ö×¼±¸
+	unsigned temp = registe_ptr->IP;//ä¿å­˜å½“å‰IP ä¸ºåæ±‡ç¼–åšå‡†å¤‡
 	while (registe_ptr->IP != m_code_length+registe_ptr->CS)
 	{
 		printf("%08X   ", registe_ptr->IP);
 		int ins_len;
-		ins_len = get_ins_len(code_ptr[registe_ptr->IP], code_ptr[registe_ptr->IP + 1]);//»ñÈ¡Ö¸Áî³¤¶È ÎªµØÖ·Ö¸ÕëµİÔö×ö×¼±¸
+		ins_len = get_ins_len(code_ptr[registe_ptr->IP], code_ptr[registe_ptr->IP + 1]);//è·å–æŒ‡ä»¤é•¿åº¦ ä¸ºåœ°å€æŒ‡é’ˆé€’å¢åšå‡†å¤‡
 		lvm_debug_u_print(code_ptr[registe_ptr->IP], code_ptr[registe_ptr->IP + 1]);
 		registe_ptr->IP += ins_len;
 	}
@@ -72,7 +72,7 @@ void lvm_debug_d_s(char * ptr,std::string str,size_t temp) {
 	std::stringstream ss;
 	ss.str("");
 	unsigned data_num{ 0 };
-	if (data_adr.substr(0, 2) == "0x")//16½øÖÆ×Ö·û´®
+	if (data_adr.substr(0, 2) == "0x")//16è¿›åˆ¶å­—ç¬¦ä¸²
 	{
 		ss << std::hex << data_adr.substr(2);
 		ss >> data_num;
@@ -88,7 +88,7 @@ void lvm_debug_d_s(char * ptr,std::string str,size_t temp) {
 		printf("%08X	", data_num + m);
 		for (int h = 0; h< 16; h++)
 		{
-			printf_s("%02X ", (unsigned char *)ptr[data_num + m]);
+			printf("%02X ", (unsigned char *)ptr[data_num + m]);
 			++m;
 		}
 		int p = m - 16;
@@ -104,7 +104,7 @@ void lvm_debug_d_s(char * ptr,std::string str,size_t temp) {
 void lvm_debug(int ins_len) {
 
 	if (debug_flag != true) {
-		printf("------------------------µ÷ÊÔÄ£Ê½------------------------\n");
+		printf("------------------------è°ƒè¯•æ¨¡å¼------------------------\n");
 	}
 	debug_flag = true;
 	printf("IP--------->%08X\n", registe_ptr->IP);
@@ -114,16 +114,16 @@ FI:
 YC:
 	std::getline(std::cin, str);
 	if (str.empty()) goto YC;
-	if (str == "n")//µ¥²½
+	if (str == "n")//å•æ­¥
 	{
 		lvm_debug_n(ins_len);
 		return;
 	}
-	else if (str == "e") {//ÍË³öµ÷ÊÔ
+	else if (str == "e") {//é€€å‡ºè°ƒè¯•
 		lvm_debug_e();
 		return;
 	}
-	else if (str == "c") {//ÔËĞĞ³ÌĞò
+	else if (str == "c") {//è¿è¡Œç¨‹åº
 		lvm_debug_c();
 		return;
 	}
@@ -132,10 +132,10 @@ YC:
 		goto FI;
 
 	}
-	else if (str == "p")//´òÓ¡µ÷ÊÔĞÅÏ¢
+	else if (str == "p")//æ‰“å°è°ƒè¯•ä¿¡æ¯
 	{
 		lvm_debug_p();
-		goto FI;//·µ»Ø¶¥¶Ë
+		goto FI;//è¿”å›é¡¶ç«¯
 	}
 	else if (*str.begin() == 'b') {
 		auto temp = str.find(' ', 1);
@@ -144,7 +144,7 @@ YC:
 			std::stringstream ss;
 			ss.str("");
 			unsigned break_num{ 0 };
-			if (break_adr.substr(0, 2) == "0x")//16½øÖÆ×Ö·û´®
+			if (break_adr.substr(0, 2) == "0x")//16è¿›åˆ¶å­—ç¬¦ä¸²
 			{
 				ss << std::hex << break_adr.substr(2);
 				ss >> break_num;
@@ -160,7 +160,7 @@ YC:
 		}
 		else
 		{
-			printf("ÇëÊäÈëÕıÈ·µÄ¸ñÊ½\n");
+			printf("è¯·è¾“å…¥æ­£ç¡®çš„æ ¼å¼\n");
 			goto FI;
 		}
 	}
@@ -173,7 +173,7 @@ YC:
 		}
 		else
 		{
-			printf("ÇëÊäÈëÕıÈ·µÄ¸ñÊ½\n");
+			printf("è¯·è¾“å…¥æ­£ç¡®çš„æ ¼å¼\n");
 			goto FI;
 		}
 	}else if(str[0] == 's' && str[1] == 'b')
@@ -185,12 +185,12 @@ YC:
 		}
 		else
 		{
-			printf("ÇëÊäÈëÕıÈ·µÄ¸ñÊ½\n");
+			printf("è¯·è¾“å…¥æ­£ç¡®çš„æ ¼å¼\n");
 			goto FI;
 		}
 	}
 	else {
-		printf("ÇëÊäÈëÕıÈ·µÄÖ¸Áî\n");
+		printf("è¯·è¾“å…¥æ­£ç¡®çš„æŒ‡ä»¤\n");
 		goto FI;
 	}
 
@@ -281,7 +281,7 @@ void lvm_debug_u_print(char a, char b) {
 		throw(LVM_EXECUTE_ERROR);
 	}
 	}
-	uint8_t high = (uint8_t)b / 0x10;//»ñÈ¡²Ù×÷ÀàĞÍ¸ßÎ»
+	uint8_t high = (uint8_t)b / 0x10;//è·å–æ“ä½œç±»å‹é«˜ä½
 	uint8_t low = (uint8_t)b % 0x10;
 	switch (low)
 	{

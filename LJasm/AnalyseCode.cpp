@@ -3,25 +3,25 @@
 #include"JITcomp.h"
 #include<cctype>
 #include<sstream>
-std::regex reg0("^R([0-9]{1,2})([LH]?)$");//Æ¥Åä0 1 2 12 13 ĞÍÊ½ÃüÁî
-std::regex reg1("^(0X)?([0-9a-fA-F]*)$");//Æ¥ÅäÁ¢¼´Êı
-std::regex reg2("^\\[R([0-9]{1,2})\\]$");//Æ¥Åä[R]
-std::regex reg1x("^S\\[R([0-9]{1,2})\\]$");//Æ¥ÅäS[R]
-std::regex reg7("^\\[R([0-9]{1,2})([\\+-])(0X)?([0-9]*)\\]$");//Æ¥Åä[R+i]
-std::regex reg17("^S\\[R([0-9]{1,2})([\\+-])(0X)?([0-9]*)\\]$");//Æ¥Åäs[R+i]
-std::regex reg9("^\\[R([0-9]{1,2})\\+R([0-9]{1,2})\\]$");//Æ¥Åä[R+R]
-std::regex reg19("^S\\[R([0-9]{1,2})\\+R([0-9]{1,2})\\]$");//Æ¥Åäs[R+R]
-std::regex reglabel("^([a-zA-Z_][a-zA-Z0-9_]+):$");//Æ¥Åä±êÇ©
-std::regex reglabel2("^([a-zA-Z_][a-zA-Z0-9_]+)$");//Æ¥Åä±êÇ©
+std::regex reg0("^R([0-9]{1,2})([LH]?)$");//åŒ¹é…0 1 2 12 13 å‹å¼å‘½ä»¤
+std::regex reg1("^(0X)?([0-9a-fA-F]*)$");//åŒ¹é…ç«‹å³æ•°
+std::regex reg2("^\\[R([0-9]{1,2})\\]$");//åŒ¹é…[R]
+std::regex reg1x("^S\\[R([0-9]{1,2})\\]$");//åŒ¹é…S[R]
+std::regex reg7("^\\[R([0-9]{1,2})([\\+-])(0X)?([0-9]*)\\]$");//åŒ¹é…[R+i]
+std::regex reg17("^S\\[R([0-9]{1,2})([\\+-])(0X)?([0-9]*)\\]$");//åŒ¹é…s[R+i]
+std::regex reg9("^\\[R([0-9]{1,2})\\+R([0-9]{1,2})\\]$");//åŒ¹é…[R+R]
+std::regex reg19("^S\\[R([0-9]{1,2})\\+R([0-9]{1,2})\\]$");//åŒ¹é…s[R+R]
+std::regex reglabel("^([a-zA-Z_][a-zA-Z0-9_]+):$");//åŒ¹é…æ ‡ç­¾
+std::regex reglabel2("^([a-zA-Z_][a-zA-Z0-9_]+)$");//åŒ¹é…æ ‡ç­¾
 unsigned immed_to_unsgned(std::string is16, std::string str){
-	if (is16 == "0X") {//Îª16½øÖÆÊı
+	if (is16 == "0X") {//ä¸º16è¿›åˆ¶æ•°
 		int data_num{ -1 };
 		std::stringstream ss;
 		ss << std::hex << str;
 		ss >> data_num;
 		return (unsigned)data_num;
 	}
-	else if (is16 == "") {//10½øÖÆÊı
+	else if (is16 == "") {//10è¿›åˆ¶æ•°
 		int data_num{ -1 };
 		std::stringstream ss;
 		ss << str;
@@ -66,20 +66,20 @@ void string_replace(std::string &strBig, const std::string &strsrc, const std::s
 		pos += dstlen;
 	}
 }
-void Macro_str(std::string &str)//Ô¤±àÒë²Ù×÷ Ìæ»»
+void Macro_str(std::string &str)//é¢„ç¼–è¯‘æ“ä½œ æ›¿æ¢
 {
 	string_replace(str, "SP", "R8");
 	string_replace(str, "BP", "R9");
 }
 int Analyse_code(std::string str) {//mov R0L,0 ;123456789
 	unsigned comment_index{ str.find(';') };
-	str = str.substr(0, comment_index);//³ıÈ¥×¢ÊÍ
-	for (auto &c:str) c=toupper(c);//È«²¿×ª´óĞ´
+	str = str.substr(0, comment_index);//é™¤å»æ³¨é‡Š
+	for (auto &c:str) c=toupper(c);//å…¨éƒ¨è½¬å¤§å†™
 	unsigned blank_index{ str.find_first_of(' ') };
-	std::smatch opmatch;//opµÄÆ¥Åä
-	std::string op_str = str.substr(0, blank_index);//»ñÈ¡Ö¸Áî×Ö·û´®
-	std::string ins_str = str.substr(++blank_index, str.length()-blank_index);//»ñÈ¡²Ù×÷Ö¸Áî×Ö·û´®
-	Macro_str(ins_str);//ºêÌæ»»
+	std::smatch opmatch;//opçš„åŒ¹é…
+	std::string op_str = str.substr(0, blank_index);//è·å–æŒ‡ä»¤å­—ç¬¦ä¸²
+	std::string ins_str = str.substr(++blank_index, str.length()-blank_index);//è·å–æ“ä½œæŒ‡ä»¤å­—ç¬¦ä¸²
+	Macro_str(ins_str);//å®æ›¿æ¢
 	if (op_str == "MOV") Analyse_mov(ins_str);
 	else if(op_str == "ADD") Analyse_add(ins_str);
 	else if (op_str == "NOP") {
@@ -107,20 +107,20 @@ int Analyse_code(std::string str) {//mov R0L,0 ;123456789
 	else if (op_str == "RET") Analyse_ret(ins_str);
 	else if (op_str == "JITIN") Analyse_jit_in();
 	else if (op_str == "JITOUT") Analyse_jit_out();
-	else if (std::regex_match(trim(op_str),opmatch,reglabel) ) {//Æ¥Åä±êÇ©
+	else if (std::regex_match(trim(op_str),opmatch,reglabel) ) {//åŒ¹é…æ ‡ç­¾
 		if (is_label_define(trim(op_str), label_index) == -1)
 		{
 			label_s[label_index].name = opmatch[1];
 			label_s[label_index].now_bin_length = bin_length - data_long;
 			++label_index;
 		}else {
-			std::cout << "ÖØ¸´¶¨ÒåµÄ±êÇ©" << std::endl;
+			std::cout << "é‡å¤å®šä¹‰çš„æ ‡ç­¾" << std::endl;
 			throw(now_index);
 		}
 	}
 	else
 	{
-		std::cout << "Î´¶¨ÒåµÄÖ¸ÁîÀàĞÍ" << std::endl;
+		std::cout << "æœªå®šä¹‰çš„æŒ‡ä»¤ç±»å‹" << std::endl;
 		throw(now_index);
 	}
 	return 0;
@@ -134,16 +134,16 @@ int Analyse_mov(std::string str) {
 	std::smatch amatch;
 	std::smatch bmatch;
 	bool f1=std::regex_match(a_str, amatch, reg0);
-	if (f1) {//Æ¥Åä0 1 2 12  ĞÍÊ½ÃüÁî³É¹¦
+	if (f1) {//åŒ¹é…0 1 2 12  å‹å¼å‘½ä»¤æˆåŠŸ
 		bool ftemp = std::regex_match(b_str, bmatch, reg0);
-		if (ftemp) {//Æ¥Åä0ĞÍ³É¹¦ mov R,R  ---->0
+		if (ftemp) {//åŒ¹é…0å‹æˆåŠŸ mov R,R  ---->0
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_MOV;
 			++bin_length;
 			out_ptr[bin_length] = 0x20;
@@ -153,7 +153,7 @@ int Analyse_mov(std::string str) {
 			out_ptr[bin_length] = b;
 			++bin_length;
 			return 0;
-		}else if(std::regex_match(b_str, bmatch, reg1))//Æ¥Åä1ĞÍ³É¹¦ mov R,i   ----->1
+		}else if(std::regex_match(b_str, bmatch, reg1))//åŒ¹é…1å‹æˆåŠŸ mov R,i   ----->1
 		{
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
@@ -168,7 +168,7 @@ int Analyse_mov(std::string str) {
 			*(unsigned *)(out_ptr + bin_length) = i;
 			bin_length += 4;
 			return 0;
-		}else if(std::regex_match(b_str, bmatch, reg2))//Æ¥Åä2ĞÍ³É¹¦ mov R,[R] ----->2
+		}else if(std::regex_match(b_str, bmatch, reg2))//åŒ¹é…2å‹æˆåŠŸ mov R,[R] ----->2
 		{
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
@@ -176,7 +176,7 @@ int Analyse_mov(std::string str) {
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_MOV;
 			++bin_length;
 			out_ptr[bin_length] = 0x22;
@@ -187,14 +187,14 @@ int Analyse_mov(std::string str) {
 			++bin_length;
 			return 0;
 		}
-		else if (std::regex_match(b_str, bmatch, reg1x)) {//Æ¥Åä12ĞÍ³É¹¦ mov R,s[R] ----->12
+		else if (std::regex_match(b_str, bmatch, reg1x)) {//åŒ¹é…12å‹æˆåŠŸ mov R,s[R] ----->12
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_MOV;
 			++bin_length;
 			out_ptr[bin_length] = 0x12;
@@ -205,7 +205,7 @@ int Analyse_mov(std::string str) {
 			++bin_length;
 			return 0;
 		}
-		else if (std::regex_match(b_str, bmatch, reg7)) {//Æ¥Åä7ĞÍ³É¹¦ mov R,[R+i] ----->7
+		else if (std::regex_match(b_str, bmatch, reg7)) {//åŒ¹é…7å‹æˆåŠŸ mov R,[R+i] ----->7
 				uint8_t a0 = registernum_to_num(amatch[1]);
 				uint8_t a1 = lowhigh_to_num(amatch[2]);
 				uint8_t a = a0 * 0x10 | a1;
@@ -226,7 +226,7 @@ int Analyse_mov(std::string str) {
 				else *(int16_t*)(out_ptr + bin_length) = (int16_t)i;
 				bin_length += 2;
 		}
-		else if (std::regex_match(b_str, bmatch, reg17)) {//Æ¥Åä17ĞÍ³É¹¦ mov R,s[R+i] ----->7
+		else if (std::regex_match(b_str, bmatch, reg17)) {//åŒ¹é…17å‹æˆåŠŸ mov R,s[R+i] ----->7
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
@@ -247,7 +247,7 @@ int Analyse_mov(std::string str) {
 			else *(int16_t*)(out_ptr + bin_length) = (int16_t)i;
 			bin_length += 2;
 		}
-		else if (std::regex_match(b_str, bmatch, reg9)) {//Æ¥Åä0xAĞÍ³É¹¦ mov R,[R+R] ----->0xa
+		else if (std::regex_match(b_str, bmatch, reg9)) {//åŒ¹é…0xAå‹æˆåŠŸ mov R,[R+R] ----->0xa
 			uint8_t a0 = registernum_to_num(bmatch[1]);
 			uint8_t a = a0 * 0x10 | 0x2;
 			uint8_t b0 = registernum_to_num(bmatch[2]);
@@ -269,15 +269,15 @@ int Analyse_mov(std::string str) {
 		}
 		else throw (now_index);
 	}
-	else if (std::regex_match(a_str, amatch, reg2)){//Æ¥Åä3 9ĞÍ
-		if (std::regex_match(b_str, bmatch, reg0)) {//Æ¥Åä3ĞÍ³É¹¦ mov [R],R----->3
+	else if (std::regex_match(a_str, amatch, reg2)){//åŒ¹é…3 9å‹
+		if (std::regex_match(b_str, bmatch, reg0)) {//åŒ¹é…3å‹æˆåŠŸ mov [R],R----->3
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_MOV;
 			++bin_length;
 			out_ptr[bin_length] = 0x03;
@@ -288,9 +288,9 @@ int Analyse_mov(std::string str) {
 			++bin_length;
 			return 0;
 		}else throw (now_index);
-	}else if(std::regex_match(a_str, amatch, reg7))//Æ¥Åä8 18ĞÍ
+	}else if(std::regex_match(a_str, amatch, reg7))//åŒ¹é…8 18å‹
 	{
-		if (std::regex_match(b_str, bmatch, reg0)) {//Æ¥Åä8ĞÍ³É¹¦ [R+i],R----->08
+		if (std::regex_match(b_str, bmatch, reg0)) {//åŒ¹é…8å‹æˆåŠŸ [R+i],R----->08
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a = a0 * 0x10 | 0x2;
 			unsigned i = immed_to_unsgned(amatch[3], amatch[4]);
@@ -315,7 +315,7 @@ int Analyse_mov(std::string str) {
 		else throw (now_index);
 	}
 	else if (std::regex_match(a_str, amatch, reg17)) {
-		if (std::regex_match(b_str, bmatch, reg0)) {//Æ¥Åä18ĞÍ³É¹¦ s[R+i],R----->18
+		if (std::regex_match(b_str, bmatch, reg0)) {//åŒ¹é…18å‹æˆåŠŸ s[R+i],R----->18
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a = a0 * 0x10 | 0x2;
 			unsigned i = immed_to_unsgned(amatch[3], amatch[4]);
@@ -338,8 +338,8 @@ int Analyse_mov(std::string str) {
 			return 0;
 		}else throw (now_index);
 	}
-	else if (std::regex_match(a_str, amatch, reg9)) {//Æ¥Åä9ĞÍ
-		if (std::regex_match(b_str, bmatch, reg0)) {//Æ¥Åä9ĞÍ³É¹¦ mov [R+R],R----->09
+	else if (std::regex_match(a_str, amatch, reg9)) {//åŒ¹é…9å‹
+		if (std::regex_match(b_str, bmatch, reg0)) {//åŒ¹é…9å‹æˆåŠŸ mov [R+R],R----->09
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a = a0 * 0x10 | 0x2;
 			uint8_t b0 = registernum_to_num(amatch[2]);
@@ -360,8 +360,8 @@ int Analyse_mov(std::string str) {
 			return 0;
 		}
 	}
-	else if (std::regex_match(a_str, amatch, reg19)) {//Æ¥Åä19ĞÍ
-		if (std::regex_match(b_str, bmatch, reg0)) {//Æ¥Åä19ĞÍ³É¹¦ mov s[R+R],R----->19
+	else if (std::regex_match(a_str, amatch, reg19)) {//åŒ¹é…19å‹
+		if (std::regex_match(b_str, bmatch, reg0)) {//åŒ¹é…19å‹æˆåŠŸ mov s[R+R],R----->19
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a = a0 * 0x10 | 0x2;
 			uint8_t b0 = registernum_to_num(amatch[2]);
@@ -394,16 +394,16 @@ int Analyse_add(std::string str) {
 	std::smatch amatch;
 	std::smatch bmatch;
 	bool f1 = std::regex_match(a_str, amatch, reg0);
-	if (f1) {//Æ¥Åä0 1 2 12  ĞÍÊ½ÃüÁî³É¹¦
+	if (f1) {//åŒ¹é…0 1 2 12  å‹å¼å‘½ä»¤æˆåŠŸ
 		bool ftemp = std::regex_match(b_str, bmatch, reg0);
-		if (ftemp) {//Æ¥Åä0ĞÍ³É¹¦ mov R,R  ---->0
+		if (ftemp) {//åŒ¹é…0å‹æˆåŠŸ mov R,R  ---->0
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_ADD;
 			++bin_length;
 			out_ptr[bin_length] = 0x0;
@@ -415,7 +415,7 @@ int Analyse_add(std::string str) {
 			//test_out_ptr(bin_length);
 			return 0;
 		}
-		else if (std::regex_match(b_str, bmatch, reg1))//Æ¥Åä1ĞÍ³É¹¦ mov R,i   ----->1
+		else if (std::regex_match(b_str, bmatch, reg1))//åŒ¹é…1å‹æˆåŠŸ mov R,i   ----->1
 		{
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
@@ -445,16 +445,16 @@ int Analyse_lea(std::string str) {
 	trim(a_str);
 	trim(b_str);
 	bool f1 = std::regex_match(a_str, amatch, reg0);
-	if (f1) {//Æ¥Åä0 1 2 12  ĞÍÊ½ÃüÁî³É¹¦
+	if (f1) {//åŒ¹é…0 1 2 12  å‹å¼å‘½ä»¤æˆåŠŸ
 		bool ftemp = std::regex_match(b_str, bmatch, reg0);
-		if (ftemp) {//Æ¥Åä0ĞÍ³É¹¦ lea R,R  ---->0
+		if (ftemp) {//åŒ¹é…0å‹æˆåŠŸ lea R,R  ---->0
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_LEA;
 			++bin_length;
 			out_ptr[bin_length] = 0x0;
@@ -466,7 +466,7 @@ int Analyse_lea(std::string str) {
 			//test_out_ptr(bin_length);
 			return 0;
 		}
-		else if (std::regex_match(b_str, bmatch, reg1))//Æ¥Åä1ĞÍ³É¹¦ lea R,i   ----->1
+		else if (std::regex_match(b_str, bmatch, reg1))//åŒ¹é…1å‹æˆåŠŸ lea R,i   ----->1
 		{
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
@@ -490,7 +490,7 @@ int Analyse_lea(std::string str) {
 int Analyse_int(std::string str){
 	trim(str);
 	std::smatch bmatch;
-	if (std::regex_match(str, bmatch, reg1))//Æ¥Åä1ĞÍ³É¹¦ mov R,i   ----->1
+	if (std::regex_match(str, bmatch, reg1))//åŒ¹é…1å‹æˆåŠŸ mov R,i   ----->1
 	{
 		unsigned i = immed_to_unsgned(bmatch[1], bmatch[2]);
 		out_ptr[bin_length] = INS_INT;
@@ -510,15 +510,15 @@ int Analyse_cmp(std::string str) {
 	trim(b_str);
 	std::smatch amatch;
 	std::smatch bmatch;
-	if (std::regex_match(a_str, amatch, reg0)) {//Æ¥Åä0 1ĞÍ
-		if (std::regex_match(b_str, bmatch, reg0)) {//Æ¥Åä0ĞÍ³É¹¦
+	if (std::regex_match(a_str, amatch, reg0)) {//åŒ¹é…0 1å‹
+		if (std::regex_match(b_str, bmatch, reg0)) {//åŒ¹é…0å‹æˆåŠŸ
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_CMP;
 			++bin_length;
 			out_ptr[bin_length] = 0x0;
@@ -529,7 +529,7 @@ int Analyse_cmp(std::string str) {
 			++bin_length;
 			return 0;
 		}
-		else if (std::regex_match(b_str, bmatch, reg1)) {//Æ¥Åä1ĞÍ³É¹¦
+		else if (std::regex_match(b_str, bmatch, reg1)) {//åŒ¹é…1å‹æˆåŠŸ
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
@@ -552,7 +552,7 @@ int Analyse_cmp(std::string str) {
 int Analyse_jmp(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg1))//Æ¥Åä6ĞÍ³É¹¦ 06ĞÍ ¸úÁ¢¼´Êı
+	if (std::regex_match(str, match, reg1))//åŒ¹é…6å‹æˆåŠŸ 06å‹ è·Ÿç«‹å³æ•°
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
 		out_ptr[bin_length] = INS_JMP;
@@ -563,7 +563,7 @@ int Analyse_jmp(std::string str) {
 		bin_length += 4;
 		return 0;
 	}
-	else if (std::regex_match(str, match, reg0)) {//Æ¥Åä5ĞÍ³É¹¦ 05ĞÍ ¸ú¼Ä´æÆ÷
+	else if (std::regex_match(str, match, reg0)) {//åŒ¹é…5å‹æˆåŠŸ 05å‹ è·Ÿå¯„å­˜å™¨
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a = a0 * 0x10 | 0x2;
 		out_ptr[bin_length] = INS_JMP;
@@ -573,7 +573,7 @@ int Analyse_jmp(std::string str) {
 		out_ptr[bin_length] = a;
 		++bin_length;
 		return 0;
-	}else if (std::regex_match(str, match, reglabel2)) {//Æ¥ÅäÎª±êÇ©
+	}else if (std::regex_match(str, match, reglabel2)) {//åŒ¹é…ä¸ºæ ‡ç­¾
 	    write_label_d[write_label_index].name = str;
 		write_label_d[write_label_index].op = INS_JMP;
 		write_label_d[write_label_index].bin_to_write = bin_length;
@@ -586,7 +586,7 @@ int Analyse_jmp(std::string str) {
 int Analyse_jnz(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg1))//Æ¥Åä6ĞÍ³É¹¦ 06ĞÍ ¸úÁ¢¼´Êı
+	if (std::regex_match(str, match, reg1))//åŒ¹é…6å‹æˆåŠŸ 06å‹ è·Ÿç«‹å³æ•°
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
 		out_ptr[bin_length] = INS_JNZ;
@@ -597,7 +597,7 @@ int Analyse_jnz(std::string str) {
 		bin_length+=4;
 		return 0;
 	}
-	else if (std::regex_match(str, match, reg0)) {//Æ¥Åä5ĞÍ³É¹¦ 05ĞÍ ¸ú¼Ä´æÆ÷
+	else if (std::regex_match(str, match, reg0)) {//åŒ¹é…5å‹æˆåŠŸ 05å‹ è·Ÿå¯„å­˜å™¨
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a = a0 * 0x10 | 0x2;
 		out_ptr[bin_length] = INS_JNZ;
@@ -607,7 +607,7 @@ int Analyse_jnz(std::string str) {
 		out_ptr[bin_length] = a;
 		++bin_length;
 		return 0;
-	}else if (std::regex_match(str, match, reglabel2)) {//Æ¥ÅäÎª±êÇ©
+	}else if (std::regex_match(str, match, reglabel2)) {//åŒ¹é…ä¸ºæ ‡ç­¾
 		write_label_d[write_label_index].name = str;
 		write_label_d[write_label_index].op = INS_JNZ;
 		write_label_d[write_label_index].bin_to_write = bin_length;
@@ -620,7 +620,7 @@ int Analyse_jnz(std::string str) {
 int Analyse_jz(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg1))//Æ¥Åä6ĞÍ³É¹¦ 06ĞÍ ¸úÁ¢¼´Êı
+	if (std::regex_match(str, match, reg1))//åŒ¹é…6å‹æˆåŠŸ 06å‹ è·Ÿç«‹å³æ•°
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
 		out_ptr[bin_length] = INS_JZ;
@@ -631,7 +631,7 @@ int Analyse_jz(std::string str) {
 		bin_length += 4;
 		return 0;
 	}
-	else if (std::regex_match(str, match, reg0)) {//Æ¥Åä5ĞÍ³É¹¦ 05ĞÍ ¸ú¼Ä´æÆ÷
+	else if (std::regex_match(str, match, reg0)) {//åŒ¹é…5å‹æˆåŠŸ 05å‹ è·Ÿå¯„å­˜å™¨
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a = a0 * 0x10 | 0x2;
 		out_ptr[bin_length] = INS_JZ;
@@ -641,7 +641,7 @@ int Analyse_jz(std::string str) {
 		out_ptr[bin_length] = a;
 		++bin_length;
 		return 0;
-	}else if (std::regex_match(str, match, reglabel2)) {//Æ¥ÅäÎª±êÇ©
+	}else if (std::regex_match(str, match, reglabel2)) {//åŒ¹é…ä¸ºæ ‡ç­¾
 		write_label_d[write_label_index].name = str;
 		write_label_d[write_label_index].op = INS_JZ;
 		write_label_d[write_label_index].bin_to_write = bin_length;
@@ -654,7 +654,7 @@ int Analyse_jz(std::string str) {
 int Analyse_jl(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg1))//Æ¥Åä6ĞÍ³É¹¦ 06ĞÍ ¸úÁ¢¼´Êı
+	if (std::regex_match(str, match, reg1))//åŒ¹é…6å‹æˆåŠŸ 06å‹ è·Ÿç«‹å³æ•°
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
 		out_ptr[bin_length] = INS_JL;
@@ -665,7 +665,7 @@ int Analyse_jl(std::string str) {
 		bin_length += 4;
 		return 0;
 	}
-	else if (std::regex_match(str, match, reg0)) {//Æ¥Åä5ĞÍ³É¹¦ 05ĞÍ ¸ú¼Ä´æÆ÷
+	else if (std::regex_match(str, match, reg0)) {//åŒ¹é…5å‹æˆåŠŸ 05å‹ è·Ÿå¯„å­˜å™¨
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a = a0 * 0x10 | 0x2;
 		out_ptr[bin_length] = INS_JH;
@@ -675,7 +675,7 @@ int Analyse_jl(std::string str) {
 		out_ptr[bin_length] = a;
 		++bin_length;
 		return 0;
-	}else if (std::regex_match(str, match, reglabel2)) {//Æ¥ÅäÎª±êÇ©
+	}else if (std::regex_match(str, match, reglabel2)) {//åŒ¹é…ä¸ºæ ‡ç­¾
 		write_label_d[write_label_index].name = str;
 		write_label_d[write_label_index].op = INS_JL;
 		write_label_d[write_label_index].bin_to_write = bin_length;
@@ -688,7 +688,7 @@ int Analyse_jl(std::string str) {
 int Analyse_jh(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg1))//Æ¥Åä6ĞÍ³É¹¦ 06ĞÍ ¸úÁ¢¼´Êı
+	if (std::regex_match(str, match, reg1))//åŒ¹é…6å‹æˆåŠŸ 06å‹ è·Ÿç«‹å³æ•°
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
 		out_ptr[bin_length] = INS_JH;
@@ -699,7 +699,7 @@ int Analyse_jh(std::string str) {
 		bin_length += 4;
 		return 0;
 	}
-	else if (std::regex_match(str, match, reg0)) {//Æ¥Åä5ĞÍ³É¹¦ 05ĞÍ ¸ú¼Ä´æÆ÷
+	else if (std::regex_match(str, match, reg0)) {//åŒ¹é…5å‹æˆåŠŸ 05å‹ è·Ÿå¯„å­˜å™¨
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a = a0 * 0x10 | 0x2;
 		out_ptr[bin_length] = INS_JH;
@@ -709,7 +709,7 @@ int Analyse_jh(std::string str) {
 		out_ptr[bin_length] = a;
 		++bin_length;
 		return 0;
-	}else if (std::regex_match(str, match, reglabel2)) {//Æ¥ÅäÎª±êÇ©
+	}else if (std::regex_match(str, match, reglabel2)) {//åŒ¹é…ä¸ºæ ‡ç­¾
 		write_label_d[write_label_index].name = str;
 		write_label_d[write_label_index].op = INS_JH;
 		write_label_d[write_label_index].bin_to_write = bin_length;
@@ -722,7 +722,7 @@ int Analyse_jh(std::string str) {
 int Analyse_inc(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg0))//Æ¥Åä0ĞÍ³É¹¦ mov R,R   ----->0
+	if (std::regex_match(str, match, reg0))//åŒ¹é…0å‹æˆåŠŸ mov R,R   ----->0
 	{
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a1 = lowhigh_to_num(match[2]);
@@ -740,7 +740,7 @@ int Analyse_inc(std::string str) {
 int Analyse_dec(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg0))//Æ¥Åä0ĞÍ³É¹¦ mov R,R   ----->0
+	if (std::regex_match(str, match, reg0))//åŒ¹é…0å‹æˆåŠŸ mov R,R   ----->0
 	{
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a1 = lowhigh_to_num(match[2]);
@@ -757,7 +757,7 @@ int Analyse_dec(std::string str) {
 int Analyse_not(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg0))//Æ¥Åä0ĞÍ³É¹¦ mov R,R   ----->0
+	if (std::regex_match(str, match, reg0))//åŒ¹é…0å‹æˆåŠŸ mov R,R   ----->0
 	{
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a1 = lowhigh_to_num(match[2]);
@@ -779,15 +779,15 @@ int Analyse_sub(std::string str) {
 	trim(b_str);
 	std::smatch amatch;
 	std::smatch bmatch;
-	if (std::regex_match(a_str, amatch, reg0)) {//Æ¥Åä0 1ĞÍ
-		if (std::regex_match(b_str, bmatch, reg0)) {//Æ¥Åä0ĞÍ³É¹¦
+	if (std::regex_match(a_str, amatch, reg0)) {//åŒ¹é…0 1å‹
+		if (std::regex_match(b_str, bmatch, reg0)) {//åŒ¹é…0å‹æˆåŠŸ
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_SUB;
 			++bin_length;
 			out_ptr[bin_length] = 0x0;
@@ -798,7 +798,7 @@ int Analyse_sub(std::string str) {
 			++bin_length;
 			return 0;
 		}
-		else if (std::regex_match(b_str, bmatch, reg1)) {//Æ¥Åä1ĞÍ³É¹¦
+		else if (std::regex_match(b_str, bmatch, reg1)) {//åŒ¹é…1å‹æˆåŠŸ
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
@@ -826,15 +826,15 @@ int Analyse_xor(std::string str) {
 	trim(b_str);
 	std::smatch amatch;
 	std::smatch bmatch;
-	if (std::regex_match(a_str, amatch, reg0)) {//Æ¥Åä0 1ĞÍ
-		if (std::regex_match(b_str, bmatch, reg0)) {//Æ¥Åä0ĞÍ³É¹¦
+	if (std::regex_match(a_str, amatch, reg0)) {//åŒ¹é…0 1å‹
+		if (std::regex_match(b_str, bmatch, reg0)) {//åŒ¹é…0å‹æˆåŠŸ
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_XOR;
 			++bin_length;
 			out_ptr[bin_length] = 0x0;
@@ -845,7 +845,7 @@ int Analyse_xor(std::string str) {
 			++bin_length;
 			return 0;
 		}
-		else if (std::regex_match(b_str, bmatch, reg1)) {//Æ¥Åä1ĞÍ³É¹¦
+		else if (std::regex_match(b_str, bmatch, reg1)) {//åŒ¹é…1å‹æˆåŠŸ
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
@@ -873,15 +873,15 @@ int Analyse_and(std::string str) {
 	trim(b_str);
 	std::smatch amatch;
 	std::smatch bmatch;
-	if (std::regex_match(a_str, amatch, reg0)) {//Æ¥Åä0 1ĞÍ
-		if (std::regex_match(b_str, bmatch, reg0)) {//Æ¥Åä0ĞÍ³É¹¦
+	if (std::regex_match(a_str, amatch, reg0)) {//åŒ¹é…0 1å‹
+		if (std::regex_match(b_str, bmatch, reg0)) {//åŒ¹é…0å‹æˆåŠŸ
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_AND;
 			++bin_length;
 			out_ptr[bin_length] = 0x0;
@@ -892,7 +892,7 @@ int Analyse_and(std::string str) {
 			++bin_length;
 			return 0;
 		}
-		else if (std::regex_match(b_str, bmatch, reg1)) {//Æ¥Åä1ĞÍ³É¹¦
+		else if (std::regex_match(b_str, bmatch, reg1)) {//åŒ¹é…1å‹æˆåŠŸ
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
@@ -920,15 +920,15 @@ int Analyse_or(std::string str) {
 	trim(b_str);
 	std::smatch amatch;
 	std::smatch bmatch;
-	if (std::regex_match(a_str, amatch, reg0)) {//Æ¥Åä0 1ĞÍ
-		if (std::regex_match(b_str, bmatch, reg0)) {//Æ¥Åä0ĞÍ³É¹¦
+	if (std::regex_match(a_str, amatch, reg0)) {//åŒ¹é…0 1å‹
+		if (std::regex_match(b_str, bmatch, reg0)) {//åŒ¹é…0å‹æˆåŠŸ
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
 			uint8_t b0 = registernum_to_num(bmatch[1]);
 			uint8_t b1 = lowhigh_to_num(bmatch[2]);
 			uint8_t b = b0 * 0x10 | b1;
-			/*Ğ´Èëout_ptr*/
+			/*å†™å…¥out_ptr*/
 			out_ptr[bin_length] = INS_OR;
 			++bin_length;
 			out_ptr[bin_length] = 0x0;
@@ -939,7 +939,7 @@ int Analyse_or(std::string str) {
 			++bin_length;
 			return 0;
 		}
-		else if (std::regex_match(b_str, bmatch, reg1)) {//Æ¥Åä1ĞÍ³É¹¦
+		else if (std::regex_match(b_str, bmatch, reg1)) {//åŒ¹é…1å‹æˆåŠŸ
 			uint8_t a0 = registernum_to_num(amatch[1]);
 			uint8_t a1 = lowhigh_to_num(amatch[2]);
 			uint8_t a = a0 * 0x10 | a1;
@@ -962,7 +962,7 @@ int Analyse_or(std::string str) {
 int Analyse_push(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg1))//Æ¥Åä6ĞÍ³É¹¦ 06ĞÍ ¸úÁ¢¼´Êı
+	if (std::regex_match(str, match, reg1))//åŒ¹é…6å‹æˆåŠŸ 06å‹ è·Ÿç«‹å³æ•°
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
 		out_ptr[bin_length] = INS_PUSH;
@@ -973,7 +973,7 @@ int Analyse_push(std::string str) {
 		bin_length += 4;
 		return 0;
 	}
-	else if (std::regex_match(str, match, reg0)) {//Æ¥Åä5ĞÍ³É¹¦ 05ĞÍ ¸ú¼Ä´æÆ÷
+	else if (std::regex_match(str, match, reg0)) {//åŒ¹é…5å‹æˆåŠŸ 05å‹ è·Ÿå¯„å­˜å™¨
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a = a0 * 0x10 | 0x2;
 		out_ptr[bin_length] = INS_PUSH;
@@ -990,7 +990,7 @@ int Analyse_push(std::string str) {
 int Analyse_pop(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg0))//Æ¥Åä0ĞÍ³É¹¦ mov R,R   ----->0
+	if (std::regex_match(str, match, reg0))//åŒ¹é…0å‹æˆåŠŸ mov R,R   ----->0
 	{
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a1 = lowhigh_to_num(match[2]);
@@ -1008,7 +1008,7 @@ int Analyse_pop(std::string str) {
 int Analyse_call(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg1))//Æ¥Åä6ĞÍ³É¹¦ 06ĞÍ ¸úÁ¢¼´Êı
+	if (std::regex_match(str, match, reg1))//åŒ¹é…6å‹æˆåŠŸ 06å‹ è·Ÿç«‹å³æ•°
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
 		out_ptr[bin_length] = INS_CALL;
@@ -1019,7 +1019,7 @@ int Analyse_call(std::string str) {
 		bin_length += 4;
 		return 0;
 	}
-	else if (std::regex_match(str, match, reg0)) {//Æ¥Åä5ĞÍ³É¹¦ 05ĞÍ ¸ú¼Ä´æÆ÷
+	else if (std::regex_match(str, match, reg0)) {//åŒ¹é…5å‹æˆåŠŸ 05å‹ è·Ÿå¯„å­˜å™¨
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a = a0 * 0x10 | 0x2;
 		out_ptr[bin_length] = INS_CALL;
@@ -1030,7 +1030,7 @@ int Analyse_call(std::string str) {
 		++bin_length;
 		return 0;
 	}
-	else if (std::regex_match(str, match, reglabel2)) {//Æ¥ÅäÎª±êÇ©
+	else if (std::regex_match(str, match, reglabel2)) {//åŒ¹é…ä¸ºæ ‡ç­¾
 		write_label_d[write_label_index].name = str;
 		write_label_d[write_label_index].op = INS_CALL;
 		write_label_d[write_label_index].bin_to_write = bin_length;
@@ -1044,7 +1044,7 @@ int Analyse_call(std::string str) {
 int Analyse_ret(std::string str) {
 	trim(str);
 	std::smatch match;
-	if (std::regex_match(str, match, reg1))//Æ¥Åä6ĞÍ³É¹¦ 06ĞÍ ¸úÁ¢¼´Êı
+	if (std::regex_match(str, match, reg1))//åŒ¹é…6å‹æˆåŠŸ 06å‹ è·Ÿç«‹å³æ•°
 	{
 		unsigned i = immed_to_unsgned(match[1], match[2]);
 		out_ptr[bin_length] = INS_RET;
@@ -1055,7 +1055,7 @@ int Analyse_ret(std::string str) {
 		bin_length += 4;
 		return 0;
 	}
-	else if (std::regex_match(str, match, reg0)) {//Æ¥Åä5ĞÍ³É¹¦ 05ĞÍ ¸ú¼Ä´æÆ÷
+	else if (std::regex_match(str, match, reg0)) {//åŒ¹é…5å‹æˆåŠŸ 05å‹ è·Ÿå¯„å­˜å™¨
 		uint8_t a0 = registernum_to_num(match[1]);
 		uint8_t a = a0 * 0x10 | 0x2;
 		out_ptr[bin_length] = INS_RET;
@@ -1066,7 +1066,7 @@ int Analyse_ret(std::string str) {
 		++bin_length;
 		return 0;
 	}
-	else if (std::regex_match(str, match, reglabel2)) {//Æ¥ÅäÎª±êÇ©
+	else if (std::regex_match(str, match, reglabel2)) {//åŒ¹é…ä¸ºæ ‡ç­¾
 		write_label_d[write_label_index].name = str;
 		write_label_d[write_label_index].op = INS_RET;
 		write_label_d[write_label_index].bin_to_write = bin_length;

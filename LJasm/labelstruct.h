@@ -2,12 +2,12 @@
 #define LABELSTRUCT_H
 #include<string>
 #pragma pack(1)
-struct label_struct //±êÇ©½á¹¹Ìå
+struct label_struct //æ ‡ç­¾ç»“æ„ä½“
 {
 	std::string name;
 	int now_bin_length;
 };
-struct write_label_data //Ìø×ªÖĞĞ´Èë±êÇ©½á¹¹Ìå
+struct write_label_data //è·³è½¬ä¸­å†™å…¥æ ‡ç­¾ç»“æ„ä½“
 {
 	std::string name;
 	uint8_t op;

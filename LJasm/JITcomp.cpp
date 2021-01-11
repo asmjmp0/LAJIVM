@@ -27,19 +27,19 @@ int Analyse_jit_in() {
 int Analyse_jit_out() {
 	jit_bin_end = bin_length - data_long;
 	if (jit_begin == 0) {
-		std::cout << "Î´ÕÒµ½JIT¿ªÊ¼µã" << std::endl;
+		std::cout << "æœªæ‰¾åˆ°JITå¼€å§‹ç‚¹" << std::endl;
 		exit(-1);
 	}
 	jit_end = now_index;
-	std::cout << "JIT±àÒë" << std::endl;
+	std::cout << "JITç¼–è¯‘" << std::endl;
 	jit_str_init();
 	jit_create_jit_file();
 	return 0;
 }
 void jit_create_jit_file() {
-	/*TODO:ÀûÓÃasm.exeÉú³É¶þ½øÖÆÎÄ¼þ²¢»ñÈ¡shellcode*/
-	/*Éú³É»ã±àÎÄ¼þ*/
-	std::regex reg("(.*\\\\)?(.*)\\..*$");//»ñÈ¡ÎÄ¼þÃû×Ö
+	/*TODO:åˆ©ç”¨asm.exeç”ŸæˆäºŒè¿›åˆ¶æ–‡ä»¶å¹¶èŽ·å–shellcode*/
+	/*ç”Ÿæˆæ±‡ç¼–æ–‡ä»¶*/
+	std::regex reg("(.*\\\\)?(.*)\\..*$");//èŽ·å–æ–‡ä»¶åå­—
 	std::smatch match;
 	char *shcode_origin{nullptr};
 	std::regex_match(file_name, match, reg);
@@ -47,31 +47,31 @@ void jit_create_jit_file() {
 	std::ofstream out_file(match[2].str()+".asm", std::ios::out | std::ios::binary);
 	out_file.write(asm_str.c_str(),asm_str.length());
 	out_file.close();
-	/*±àÒë»ã±àÎÄ¼þ*/
+	/*ç¼–è¯‘æ±‡ç¼–æ–‡ä»¶*/
 	std::string cmd = +"asm.exe /c ";
 	cmd += match[2].str() + ".asm";
 	system(cmd.c_str());
-	/*¶ÁÈ¡»ã±àÎÄ¼þ*/
+	/*è¯»å–æ±‡ç¼–æ–‡ä»¶*/
 	std::ifstream in;
 	in.open(match[2].str()+".obj", std::ifstream::in);
-	//±àÒëÊ§°Ü
+	//ç¼–è¯‘å¤±è´¥
 	if (!in.is_open()) {
-		std::cout << "JITÉú³É»úÆ÷ÂëÊ§°Ü" << std::endl;
+		std::cout << "JITç”Ÿæˆæœºå™¨ç å¤±è´¥" << std::endl;
 		exit(-1);
 	}
 	else {
-		/*»ñÈ¡»úÆ÷Âë*/
+		/*èŽ·å–æœºå™¨ç */
 		int info_size = 16;
-		in.seekg(0, std::ios::end);//ÒÆµ½ÎÄ¼þÎ²²¿
-		int shcode_size = in.tellg();//»ñÈ¡ÎÄ¼þ´óÐ¡
+		in.seekg(0, std::ios::end);//ç§»åˆ°æ–‡ä»¶å°¾éƒ¨
+		int shcode_size = in.tellg();//èŽ·å–æ–‡ä»¶å¤§å°
 		shcode_origin = new char[shcode_size];
-		in.seekg(0, std::ios::beg);//ÒÆµ½ÎÄ¼þÍ·²¿
+		in.seekg(0, std::ios::beg);//ç§»åˆ°æ–‡ä»¶å¤´éƒ¨
 		in.read(shcode_origin, shcode_size);
 		in.close();
 		unsigned shcode_len = *(unsigned*)(shcode_origin + 0x24);
 		unsigned shcode_index = *(unsigned*)(shcode_origin + 0x28);
 		char *jit_out = new char[info_size + shcode_len];
-		/*¹¹ÔìjitÎÄ¼þ*/
+		/*æž„é€ jitæ–‡ä»¶*/
 		jit_out[0] = 'J';
 		jit_out[1] = 'I';
 		jit_out[2] = 'T';
@@ -80,27 +80,27 @@ void jit_create_jit_file() {
 		jit_out[11] = jit_type;
 		*(unsigned*)(jit_out + 12) = jit_bin_end;
 		memcpy(jit_out + info_size, shcode_origin + shcode_index, shcode_len);
-		/*Ð´ÈëÎÄ¼þ*/
+		/*å†™å…¥æ–‡ä»¶*/
 		std::ofstream out(match[2].str()+".jit", std::ios::out | std::ios::binary);
 		if (out.is_open()) {
 			out.write(jit_out, (shcode_len + info_size));
 			out.close();
 		}
-		/*É¾³ýÁÙÊ±ÎÄ¼þ*/
+		/*åˆ é™¤ä¸´æ—¶æ–‡ä»¶*/
 		remove((match[2].str() + ".asm").c_str());
 		remove((match[2].str() + ".obj").c_str());
 	}
 }
 void jit_macro_change(std::string &str) {
-	/*Ìæ»»ÐéÄâ»ú»ã±àÎªx86Ô­Éú»ã±à*/
-	//¼ì²éÊÇ·ñ´æÔÚ r6,r7
+	/*æ›¿æ¢è™šæ‹Ÿæœºæ±‡ç¼–ä¸ºx86åŽŸç”Ÿæ±‡ç¼–*/
+	//æ£€æŸ¥æ˜¯å¦å­˜åœ¨ r6,r7
 	if (str.find("RET") != std::string::npos) jit_type = 1;
 	if (str.find("R6") != std::string::npos || str.find("R7") != std::string::npos) {
-		std::cout << "JIT²»Ö§³Ö¶ÔR6,R7²Ù×÷" << std::endl;
+		std::cout << "JITä¸æ”¯æŒå¯¹R6,R7æ“ä½œ" << std::endl;
 		exit(-1);
 	}
 	int change_count = 0;
-	//Ìæ»»È«ÀàÐÍ
+	//æ›¿æ¢å…¨ç±»åž‹
 	size_t r_index = std::string::npos;
 
 	for (int i = 0; i < 6; i++)
@@ -148,15 +148,15 @@ void jit_macro_change(std::string &str) {
 
 }
 void jit_str_init(){
-	/*»ñÈ¡ÐèÒªjit±àÒëµÄ´úÂë
-	²¢ÇÒºêÌæ»»¼Ä´æÆ÷Ãû³Æ*/
+	/*èŽ·å–éœ€è¦jitç¼–è¯‘çš„ä»£ç 
+	å¹¶ä¸”å®æ›¿æ¢å¯„å­˜å™¨åç§°*/
 	for (int i = jit_begin+1; i < jit_end; i++)
 	{
 		std::string str= origin_str[i];
 		unsigned comment_index{ str.find(';') };
-		 str = str.substr(0, comment_index);//³ýÈ¥×¢ÊÍ
-		 for (auto &c : str) c = toupper(c);//È«²¿×ª´óÐ´
-		/*ºêÌæ»»*/
+		 str = str.substr(0, comment_index);//é™¤åŽ»æ³¨é‡Š
+		 for (auto &c : str) c = toupper(c);//å…¨éƒ¨è½¬å¤§å†™
+		/*å®æ›¿æ¢*/
 		 jit_macro_change(str);
 		asm_str += str+'\n';
 	}

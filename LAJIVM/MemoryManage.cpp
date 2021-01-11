@@ -31,7 +31,7 @@ void init_memory_manager() {
 	clear_node(code_used_memory_head);
 	clear_node(data_used_memory_head);
 
-	/*´´½¨¿ÕÏÐµÄÊý¾Ý¶Î½Úµã*/
+	/*åˆ›å»ºç©ºé—²çš„æ•°æ®æ®µèŠ‚ç‚¹*/
 	MemoryNode* first_free = new MemoryNode;
 	first_free->address = 0;
 	first_free->size = 0xffff;
@@ -39,7 +39,7 @@ void init_memory_manager() {
 	first_free->next = nullptr;
 	data_free_memory_head->next = first_free;
 
-	/*´´½¨¿ÕÏÐµÄ´úÂë¶Î¶Î½Úµã*/
+	/*åˆ›å»ºç©ºé—²çš„ä»£ç æ®µæ®µèŠ‚ç‚¹*/
 	first_free = new MemoryNode;
 	first_free->address = 0;
 	first_free->size = 0xffff;
@@ -72,7 +72,7 @@ unsigned get_memory(unsigned len, int type,unsigned char mid) {
 	init_get_head(type, free_head, used_head);
 	MemoryNode* p = find_memory(len,free_head);
 	if (p != nullptr) {
-		/*´´½¨ÐÂµÄ½Úµã²¢°Ñ½Úµã²åÈëÊ¹ÓÃµÄ×îºó*/
+		/*åˆ›å»ºæ–°çš„èŠ‚ç‚¹å¹¶æŠŠèŠ‚ç‚¹æ’å…¥ä½¿ç”¨çš„æœ€åŽ*/
 		unsigned adr = p->address;
 		MemoryNode* new_used = new MemoryNode;
 		new_used->address = p->address;
@@ -82,8 +82,8 @@ unsigned get_memory(unsigned len, int type,unsigned char mid) {
 		used_node->next = new_used;
 		new_used->forword = used_node;
 		new_used->next = nullptr;
-		/*¿ÕÏÐ¿éµØÖ·¼Ó ´óÐ¡¼õÐ¡*/
-		if (p->size == len) { //´óÐ¡ÏàµÈÔòÈ¡ÏÂ½Úµã
+		/*ç©ºé—²å—åœ°å€åŠ  å¤§å°å‡å°*/
+		if (p->size == len) { //å¤§å°ç›¸ç­‰åˆ™å–ä¸‹èŠ‚ç‚¹
 			MemoryNode *p_forword = p->forword;
 			MemoryNode *p_next = p->next;
 			p_forword->next = p_next;
@@ -101,7 +101,7 @@ bool free_memory(unsigned adr,int type) {
 	init_get_head(type, free_head, used_head);
 	MemoryNode * used = used_head;
 	unsigned adr_size;
-	while (used) //»ñÈ¡Ê¹ÓÃµÄÁ´±í
+	while (used) //èŽ·å–ä½¿ç”¨çš„é“¾è¡¨
 	{
 		if (used->address == adr) break;
 		else used = used->next;
@@ -110,14 +110,14 @@ bool free_memory(unsigned adr,int type) {
 	else
 	{
 		adr_size = used->size;
-		/*´ÓÊ¹ÓÃÁ´±íÖÐÈ¡ÏÂ*/
+		/*ä»Žä½¿ç”¨é“¾è¡¨ä¸­å–ä¸‹*/
 		MemoryNode *forword = used->forword;
 		MemoryNode *next = used->next;
 		forword->next = used->next;
 		if (next) next->forword = forword;
 		delete(used);
 
-		/*¼ÓÈëÎ´Ê¹ÓÃµÄ½Úµã²ÉÓÃÍ·²åÈë*/
+		/*åŠ å…¥æœªä½¿ç”¨çš„èŠ‚ç‚¹é‡‡ç”¨å¤´æ’å…¥*/
 
 		MemoryNode *data_first = free_head->next;
 		MemoryNode *new_free = new MemoryNode;
