@@ -72,10 +72,10 @@ void Macro_str(std::string &str)//预编译操作 替换
 	string_replace(str, "BP", "R9");
 }
 int Analyse_code(std::string str) {//mov R0L,0 ;123456789
-	unsigned comment_index{ str.find(';') };
+	unsigned comment_index{ static_cast<unsigned int>(str.find(';')) };
 	str = str.substr(0, comment_index);//除去注释
 	for (auto &c:str) c=toupper(c);//全部转大写
-	unsigned blank_index{ str.find_first_of(' ') };
+	unsigned blank_index{ static_cast<unsigned int>(str.find_first_of(' ')) };
 	std::smatch opmatch;//op的匹配
 	std::string op_str = str.substr(0, blank_index);//获取指令字符串
 	std::string ins_str = str.substr(++blank_index, str.length()-blank_index);//获取操作指令字符串
@@ -126,7 +126,7 @@ int Analyse_code(std::string str) {//mov R0L,0 ;123456789
 	return 0;
 }
 int Analyse_mov(std::string str) {
-	unsigned slip_index{ str.find(',') };
+	unsigned slip_index{ static_cast<unsigned int>(str.find(',')) };
 	std::string a_str{ str.substr(0,slip_index) };
 	std::string b_str{ str.substr(++slip_index,str.length()-slip_index) };
 	trim(a_str);
@@ -386,7 +386,7 @@ int Analyse_mov(std::string str) {
 	return 0;
 }
 int Analyse_add(std::string str) {
-	unsigned slip_index{ str.find(',') };
+	unsigned slip_index{ static_cast<unsigned int>(str.find(',')) };
 	std::string a_str{ str.substr(0,slip_index) };
 	std::string b_str{ str.substr(++slip_index,str.length() - slip_index) };
 	trim(a_str);
@@ -437,7 +437,7 @@ int Analyse_add(std::string str) {
 	return 0;
 }
 int Analyse_lea(std::string str) {
-	unsigned slip_index{ str.find(',') };
+	unsigned slip_index{ static_cast<unsigned int>(str.find(',')) };
 	std::string a_str{ str.substr(0,slip_index) };
 	std::string b_str{ str.substr(++slip_index,str.length() - slip_index) };
 	std::smatch amatch;
@@ -503,7 +503,7 @@ int Analyse_int(std::string str){
 
 }
 int Analyse_cmp(std::string str) {
-	unsigned slip_index{ str.find(',') };
+	unsigned slip_index{ static_cast<unsigned int>(str.find(',')) };
 	std::string a_str{ str.substr(0,slip_index) };
 	std::string b_str{ str.substr(++slip_index,str.length() - slip_index) };
 	trim(a_str);
@@ -772,7 +772,7 @@ int Analyse_not(std::string str) {
 	return 0;
 }
 int Analyse_sub(std::string str) {
-	unsigned slip_index{ str.find(',') };
+	unsigned slip_index{ static_cast<unsigned int>(str.find(',')) };
 	std::string a_str{ str.substr(0,slip_index) };
 	std::string b_str{ str.substr(++slip_index,str.length() - slip_index) };
 	trim(a_str);
@@ -819,7 +819,7 @@ int Analyse_sub(std::string str) {
 	return 0;
 }
 int Analyse_xor(std::string str) {
-	unsigned slip_index{ str.find(',') };
+	unsigned slip_index{ static_cast<unsigned int>(str.find(',')) };
 	std::string a_str{ str.substr(0,slip_index) };
 	std::string b_str{ str.substr(++slip_index,str.length() - slip_index) };
 	trim(a_str);
@@ -866,7 +866,7 @@ int Analyse_xor(std::string str) {
 	return 0;
 }
 int Analyse_and(std::string str) {
-	unsigned slip_index{ str.find(',') };
+	unsigned slip_index{ static_cast<unsigned int>(str.find(',')) };
 	std::string a_str{ str.substr(0,slip_index) };
 	std::string b_str{ str.substr(++slip_index,str.length() - slip_index) };
 	trim(a_str);
@@ -913,7 +913,7 @@ int Analyse_and(std::string str) {
 	return 0;
 }
 int Analyse_or(std::string str) {
-	unsigned slip_index{ str.find(',') };
+	unsigned slip_index{ static_cast<unsigned int>(str.find(',')) };
 	std::string a_str{ str.substr(0,slip_index) };
 	std::string b_str{ str.substr(++slip_index,str.length() - slip_index) };
 	trim(a_str);

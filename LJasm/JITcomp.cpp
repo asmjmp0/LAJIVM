@@ -4,7 +4,9 @@
 #include<regex>
 #include<fstream>
 #include<ios>
+#ifdef _WIN32
 #include<Windows.h>
+#endif
 
 
 int jit_begin=0;
@@ -153,7 +155,7 @@ void jit_str_init(){
 	for (int i = jit_begin+1; i < jit_end; i++)
 	{
 		std::string str= origin_str[i];
-		unsigned comment_index{ str.find(';') };
+		unsigned comment_index{ static_cast<unsigned int>(str.find(';')) };
 		 str = str.substr(0, comment_index);//除去注释
 		 for (auto &c : str) c = toupper(c);//全部转大写
 		/*宏替换*/

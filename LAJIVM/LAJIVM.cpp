@@ -34,7 +34,7 @@ Begin:
 	try { init_all(); }
 	catch (int e) {
 		printf("初始化失败 %08X\n",e);
-		return doit(r_str);
+		return -1;
 	}
 	if (argc == 2) {
 		r_str = argv[1];
@@ -51,8 +51,6 @@ Begin:
             return 1;
 		}
 	}
-	int path_len = strlen(argv[0]);
-	int stack_offset{ 0 };
 
 	printf("虚拟机初始化完成请输入二进制文件路径,输入ctrl+z退出：\n");
 	if (!std::getline(std::cin,str)) exit(0);
