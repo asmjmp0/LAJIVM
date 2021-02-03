@@ -1,7 +1,5 @@
 #include<iostream>
-#include<sstream>
 #include"init.h"
-#include"ErrorList.h"
 #include"bin_read.h"
 #include"ExecuteInstruction.h"
 bool is_debug = false;

@@ -7,7 +7,7 @@ struct MemoryNode
 	unsigned char mid;
 	unsigned address;
 	unsigned size;
-	MemoryNode *forword;
+	MemoryNode *forward;
 	MemoryNode *next;
 };
 /*宏定义*/

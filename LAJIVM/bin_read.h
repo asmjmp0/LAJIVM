@@ -1,7 +1,8 @@
 #ifndef BIN_READ_H
 #define BIN_READ_H
 #include"init.h"
-#include<string>
+#include <string>
+#include <cstring>
 extern char origin_bin[0xffff];
 extern unsigned char file_chara;
 extern std::string FileName;

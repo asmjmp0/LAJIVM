@@ -16,7 +16,7 @@ void init_module_manager() {
 	module_head->name = nullptr;
 	module_head->cs_seg = 0;
 	module_head->ds_seg = 0;
-	module_head->forword = nullptr;
+	module_head->forward = nullptr;
 	module_head->next = nullptr;
 	module_head->funclist = nullptr;
 }
@@ -34,7 +34,7 @@ bool load_module( unsigned cs_seg, char* name,  unsigned char id, LibFuncList* l
 	ModuleStruct *final_node = module_head;
 	while (final_node->next) final_node = final_node->next;
 	final_node->next = new_module;
-	new_module->forword = final_node;
+	new_module->forward = final_node;
 	new_module->next = nullptr;
 
 	return true;
@@ -46,11 +46,11 @@ bool kill_module(unsigned char id) {//删除一个模块
 		/*找到节点*/
 		ModuleStruct *being_kill_mod=module_head;
 		while (being_kill_mod->id != id) being_kill_mod = being_kill_mod->next;
-		ModuleStruct *forword = being_kill_mod->forword;
+		ModuleStruct *forword = being_kill_mod->forward;
 		/*取下节点*/
 		if (being_kill_mod->next) {//next不为空
 			forword->next = being_kill_mod->next;
-			being_kill_mod->next->forword = forword;
+			being_kill_mod->next->forward = forword;
 		} else forword->next = nullptr;
 		
 		/*释放资源*/

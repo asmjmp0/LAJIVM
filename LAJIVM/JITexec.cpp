@@ -3,9 +3,15 @@
 #include<fstream>
 #include<ios>
 #ifdef _WIN32
-#include<Windows.h>
-#include<iostream>
+    #include<Windows.h>
+    #include<iostream>
 #endif // _WIN32
+#ifdef __APPLE__
+    #include <TargetConditionals.h>
+    #if (defined(TARGET_OS_OSX)) and (defined(TARGET_CPU_ARM64))
+        #include <sys/mman.h>
+    #endif
+#endif
 
 
 typedef void(*shell)(void);

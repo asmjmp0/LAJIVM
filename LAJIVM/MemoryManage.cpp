@@ -16,7 +16,7 @@ void init_get_head(int type, MemoryNode *&free, MemoryNode *&used) {
 }
 void clear_node(MemoryNode * node) {
 	node->address = 0;
-	node->forword = nullptr;
+	node->forward = nullptr;
 	node->next = nullptr;
 	node->size = 0;
 	node->mid = -1;
@@ -35,7 +35,7 @@ void init_memory_manager() {
 	MemoryNode* first_free = new MemoryNode;
 	first_free->address = 0;
 	first_free->size = 0xffff;
-	first_free->forword = data_free_memory_head;
+	first_free->forward = data_free_memory_head;
 	first_free->next = nullptr;
 	data_free_memory_head->next = first_free;
 
@@ -43,7 +43,7 @@ void init_memory_manager() {
 	first_free = new MemoryNode;
 	first_free->address = 0;
 	first_free->size = 0xffff;
-	first_free->forword = code_free_memory_head;
+	first_free->forward = code_free_memory_head;
 	first_free->next = nullptr;
 	code_free_memory_head->next = first_free;
 
@@ -80,14 +80,14 @@ unsigned get_memory(unsigned len, int type,unsigned char mid) {
 		new_used->mid = mid;
 		MemoryNode* used_node = find_last_node(used_head);
 		used_node->next = new_used;
-		new_used->forword = used_node;
+		new_used->forward = used_node;
 		new_used->next = nullptr;
 		/*空闲块地址加 大小减小*/
 		if (p->size == len) { //大小相等则取下节点
-			MemoryNode *p_forword = p->forword;
+			MemoryNode *p_forword = p->forward;
 			MemoryNode *p_next = p->next;
 			p_forword->next = p_next;
-			p_next->forword = p_forword;
+			p_next->forward = p_forword;
 		}
 		else {
 			p->address += len;
@@ -111,10 +111,10 @@ bool free_memory(unsigned adr,int type) {
 	{
 		adr_size = used->size;
 		/*从使用链表中取下*/
-		MemoryNode *forword = used->forword;
+		MemoryNode *forword = used->forward;
 		MemoryNode *next = used->next;
 		forword->next = used->next;
-		if (next) next->forword = forword;
+		if (next) next->forward = forword;
 		delete(used);
 
 		/*加入未使用的节点采用头插入*/
@@ -123,10 +123,10 @@ bool free_memory(unsigned adr,int type) {
 		MemoryNode *new_free = new MemoryNode;
 		new_free->address = adr;
 		new_free->size = adr_size;
-		new_free->forword = free_head;
+		new_free->forward = free_head;
 		new_free->next = data_first;
 		free_head->next = new_free;
-		data_first->forword = new_free;
+		data_first->forward = new_free;
 
 		return true;
 	}

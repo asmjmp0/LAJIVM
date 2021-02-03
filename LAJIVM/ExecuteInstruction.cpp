@@ -2,13 +2,7 @@
 #include"ErrorList.h"
 #include"init.h"
 #include"LenInstruction.h"
-#include"MemoryManage.h"
-#include"ModuleManage.h"
-#include"JITexec.h"
-#include<iostream>
 #include<string>
-#include<ios>
-#include<sstream>
 #include<time.h>
 /*
 *高位表示寄存器类型
@@ -467,7 +461,11 @@ int do_int() {
 	case LVM_EXIT: {
 		if (is_clock) {
 			clock_end = clock();
+#ifdef _WIN32
 			printf("\nRunning Time：%dms\n", clock_end-clock_begin);
+#elif __APPLE__
+            printf("\nRunning Time：%dms\n", (clock_end-clock_begin)/1000);
+#endif
 		}
 		exit(0);
 	}
@@ -1061,7 +1059,7 @@ int do_jit_in(){
 	}
 	else return LVM_SUCCESS;
 #else
-	printf("不是windows系统暂不支持jit");
+	printf("不是windows系统暂不支持jit\n");
 	return LVM_FAILD;
 #endif // _WIN32
 	return LVM_SUCCESS;

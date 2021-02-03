@@ -3,6 +3,7 @@
 #include"MemoryManage.h"
 #include"ModuleManage.h"
 #include<iostream>
+#include <cstring>
 vm_register* registe_ptr;
 char* code_ptr;
 char * data_ptr;
