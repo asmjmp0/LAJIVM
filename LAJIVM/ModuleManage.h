@@ -10,7 +10,7 @@ struct LibFuncList
 };
 struct ModuleStruct
 {
-	signed char id; //模块id
+	unsigned char id; //模块id
 	char *name; //名字最大12个字节
 	unsigned ds_seg; //数据段
 	unsigned cs_seg; //代码段
@@ -19,6 +19,7 @@ struct ModuleStruct
 	ModuleStruct* next;
 };
 extern ModuleStruct *module_head;
+extern unsigned char current_module_id;
 extern bool idlist[MAX_MODULE_NUM];
 void init_module_manager();
 bool load_module(unsigned cs_seg ,char* name, unsigned char id,LibFuncList* lib, unsigned ds_seg);

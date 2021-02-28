@@ -1,5 +1,6 @@
 #ifndef EXECUTEINSTRUCTION_H
 #define EXECUTEINSTRUCTION_H
+#include "ModuleManage.h"
 /******************FUNCTION_NUM******************/
 #define LVM_CLOCK 0x2
 #define LVM_PRINT 0x10

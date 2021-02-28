@@ -3,6 +3,7 @@
 #include<iostream>
 ModuleStruct *module_head=nullptr;
 bool idlist[MAX_MODULE_NUM] = { false };
+unsigned char current_module_id = -1;
 unsigned new_module_id() {
 	for (unsigned i = 0; i < 0xff; ++i) if (!idlist[i]) {
 		idlist[i] = true;
@@ -37,6 +38,8 @@ bool load_module( unsigned cs_seg, char* name,  unsigned char id, LibFuncList* l
 	new_module->forward = final_node;
 	new_module->next = nullptr;
 
+	current_module_id = 0;
+
 	return true;
 }
 bool kill_module(unsigned char id) {//删除一个模块
@@ -60,11 +63,13 @@ bool kill_module(unsigned char id) {//删除一个模块
 		MemoryNode *data_used = data_used_memory_head;
 		while (data_used)
 		{
-			if (data_used->mid = id) free_memory(data_used->address,DataSegType);
+            data_used->mid = id;
+            if (data_used->mid) free_memory(data_used->address, DataSegType);
 			data_used = data_used->next;
 		}
 		if (!being_kill_mod->funclist) delete(being_kill_mod->funclist);
 		delete(being_kill_mod);
+		idlist[id] = false;
 		return true;
 	}
 }

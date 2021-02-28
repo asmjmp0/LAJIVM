@@ -467,6 +467,7 @@ int do_int() {
             printf("\nRunning Time：%dms\n", (clock_end-clock_begin)/1000);
 #endif
 		}
+		kill_module(current_module_id);
 		exit(0);
 	}
 	case LVM_SCAN: {
