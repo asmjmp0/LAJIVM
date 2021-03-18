@@ -1,7 +1,7 @@
-#include"ExecuteInstruction.h"
-#include"ErrorList.h"
-#include"init.h"
-#include"LenInstruction.h"
+#include"headers/ExecuteInstruction.h"
+#include"headers/ErrorList.h"
+#include"headers/init.h"
+#include"headers/LenInstruction.h"
 #include<string>
 #include<time.h>
 /*

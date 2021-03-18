@@ -1,7 +1,7 @@
-#include "ErrorList.h"
-#include "init.h"
-#include"MemoryManage.h"
-#include"ModuleManage.h"
+#include "headers/ErrorList.h"
+#include "headers/init.h"
+#include"headers/MemoryManage.h"
+#include"headers/ModuleManage.h"
 #include<iostream>
 #include <cstring>
 vm_register* registe_ptr;

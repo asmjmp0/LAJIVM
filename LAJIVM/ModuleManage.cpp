@@ -1,5 +1,5 @@
-#include"ModuleManage.h"
-#include"MemoryManage.h"
+#include"headers/ModuleManage.h"
+#include"headers/MemoryManage.h"
 #include<iostream>
 ModuleStruct *module_head=nullptr;
 bool idlist[MAX_MODULE_NUM] = { false };

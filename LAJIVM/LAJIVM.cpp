@@ -1,7 +1,7 @@
 #include<iostream>
-#include"init.h"
-#include"bin_read.h"
-#include"ExecuteInstruction.h"
+#include"headers/init.h"
+#include"headers/bin_read.h"
+#include"headers/ExecuteInstruction.h"
 bool is_debug = false;
 
 int doit(std::string r_str){

@@ -1,9 +1,9 @@
 #include<iostream>
 #include<sstream>
-#include"ExecuteInstruction.h"
-#include"ErrorList.h"
-#include"LenInstruction.h"
-#include"init.h"
+#include"headers/ExecuteInstruction.h"
+#include"headers/ErrorList.h"
+#include"headers/LenInstruction.h"
+#include"headers/init.h"
 bool debug_flag{ false };
 bool uasm_flag{ false };
 void lvm_debug_u_print(char a, char b);
@@ -26,6 +26,7 @@ void lvm_debug_e() {
 void lvm_debug_c() {
 	registe_ptr->flag[15] = 0;
 	registe_ptr->R6 = (unsigned)-1;//单步断点关闭
+
 	do_ins();
 }
 void lvm_debug_u() {

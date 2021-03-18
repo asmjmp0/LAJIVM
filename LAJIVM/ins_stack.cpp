@@ -1,6 +1,6 @@
-#include"init.h"
-#include"ErrorList.h"
-#include"ExecuteInstruction.h"
+#include"headers/init.h"
+#include"headers/ErrorList.h"
+#include"headers/ExecuteInstruction.h"
 #include<iostream>
 int do_push() {
 	registe_ptr->SP += 4;//栈指针增加

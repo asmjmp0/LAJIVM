@@ -1,9 +1,9 @@
-#include"bin_read.h"
-#include"ErrorList.h"
-#include"BinType.h"
-#include"MemoryManage.h"
-#include"ModuleManage.h"
-#include"init.h"
+#include"headers/bin_read.h"
+#include"headers/ErrorList.h"
+#include"headers/BinType.h"
+#include"headers/MemoryManage.h"
+#include"headers/ModuleManage.h"
+#include"headers/init.h"
 #include<fstream>
 #include<ios>
 #include<iostream>

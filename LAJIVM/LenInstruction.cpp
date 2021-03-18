@@ -1,7 +1,7 @@
-#include"LenInstruction.h"
-#include"ErrorList.h"
+#include"headers/LenInstruction.h"
+#include"headers/ErrorList.h"
 #include<iostream>
-#include"init.h"
+#include"headers/init.h"
 int _ins_len(char c) {
 	uint8_t high = (uint8_t)c / 0x10;//获取操作类型高位
 	uint8_t low = (uint8_t)c % 0x10;
@@ -53,7 +53,6 @@ int _ins_len(char c) {
 	}
 	}
 	throw(LVM_EXECUTE_ERROR);
-	return -1;
 }
 /*
 *获取指令长度
@@ -66,31 +65,25 @@ int get_ins_len(char f, char s) {
 		if (s <= '\x44')
 			return	2 + _ins_len(s);
 		else throw(LVM_EXECUTE_ERROR);
-		break;
 	}
 	case INS_LEA: {
 		if (s <= '\x44')
 			return	2 + _ins_len(s);
 		else throw(LVM_EXECUTE_ERROR);
-		break;
 	}
 	case INS_INT: {
 		//
 		return 2;
-		break;
 	}
 	case INS_JMP:case INS_JZ:case INS_JNZ:case INS_JH:case INS_JL: {
 		return 2 + _ins_len(s);
-		break;
 	}
 	case INS_INC:case INS_DEC: {
 		return 2;
-		break;
 	}
 	case INS_CMP: {
 		if (s <= '\x42') return	2 + _ins_len(s);
 		else throw(LVM_EXECUTE_ERROR);
-		break;
 	}
 	case INS_ADD: case INS_SUB:case INS_XOR:case INS_AND:case INS_OR: {
 		if (s <= '\x42')
@@ -112,15 +105,12 @@ int get_ins_len(char f, char s) {
 	}
 	case INS_CALL: {
 		return 2 + _ins_len(s);
-		break;
 	}
 	case INS_RET: {
 		return 2 + _ins_len(s);
-		break;
 	}
 	case INS_JIT_IN: {
 		return 1;
-		break;
 	}
 	default: {
 		break;
@@ -128,5 +118,4 @@ int get_ins_len(char f, char s) {
 
 	}
 	throw(LVM_EXECUTE_ERROR);
-	return -1;
 }
