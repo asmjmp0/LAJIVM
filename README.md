@@ -29,3 +29,28 @@ make
 ```
 ### ljasm
 同编译lajivm运行时
+
+### 使用静态库
+```
+.
+├── CMakeLists.txt
+├── build
+├── headers -> headers of lajivm
+├── lib
+│   └── liblajivm_static.a
+├── src
+│   └── test.cc 
+└── staticExport
+    └── staticExport.h -> header of export
+```
+
+#### CMakeLists.txt
+```cmake
+cmake_minimum_required(VERSION 3.17)
+set(CMAKE_CXX_STANDARD 14)
+project(test)
+aux_source_directory(./src src)
+LINK_DIRECTORIES(./lib)
+add_executable(test ${src})
+TARGET_LINK_LIBRARIES(test liblajivm_static.a)
+```
