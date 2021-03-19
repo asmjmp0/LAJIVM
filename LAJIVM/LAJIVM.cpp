@@ -2,7 +2,6 @@
 #include"headers/init.h"
 #include"headers/bin_read.h"
 #include"headers/ExecuteInstruction.h"
-#include "staticExport/staticExport.h"
 bool is_debug = false;
 
 int doit(std::string r_str){
@@ -17,7 +16,6 @@ int doit(std::string r_str){
         registe_ptr->IP = registe_ptr->IP + registe_ptr->CS;
         while (registe_ptr->IP<m_code_length+registe_ptr->CS)
             exectue_ins();
-        printf("%d\n",ret_value);
         return 0;
     }
     catch (int e)
