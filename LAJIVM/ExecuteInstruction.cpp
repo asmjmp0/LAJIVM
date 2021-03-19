@@ -4,6 +4,7 @@
 #include"headers/LenInstruction.h"
 #include<string>
 #include<time.h>
+#include "staticExport/staticExport.h"
 /*
 *高位表示寄存器类型
 *地位表示操作寄存器的长度
@@ -457,6 +458,14 @@ int do_int() {
 		temp = printf("%d", *(unsigned*)(data_ptr + registe_ptr->R3));
 		registe_ptr->R0 = temp;
 		break;
+	}
+	case LVM_SETRET:{
+	    ret_value = registe_ptr->R1;
+        break;
+	}
+	case LVM_SETRETPOINTER:{
+	    ret_value_pointer = (void*)(data_ptr+registe_ptr->R1);
+        break;
 	}
 	case LVM_EXIT: {
 		if (is_clock) {

@@ -1,4 +1,5 @@
 #include"headers/MemoryManage.h"
+#define EXPORT
 #include<stdio.h>
 MemoryNode * data_used_memory_head = nullptr;
 MemoryNode *data_free_memory_head = nullptr;
@@ -66,7 +67,7 @@ MemoryNode* find_last_node(MemoryNode* head) {
 	while (temp->next) temp = temp->next;
 	return temp;
 }
-unsigned get_memory(unsigned len, int type,unsigned char mid) {
+EXPORT unsigned get_memory(unsigned len, int type,unsigned char mid) {
 	MemoryNode *used_head = nullptr,*free_head = nullptr;
 	if (!len) return-1;
 	init_get_head(type, free_head, used_head);
@@ -96,7 +97,7 @@ unsigned get_memory(unsigned len, int type,unsigned char mid) {
 		return adr;
 	}else return -1;
 }
-bool free_memory(unsigned adr,int type) {
+EXPORT bool free_memory(unsigned adr,int type) {
 	MemoryNode *used_head=nullptr, *free_head = nullptr;
 	init_get_head(type, free_head, used_head);
 	MemoryNode * used = used_head;

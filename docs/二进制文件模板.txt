@@ -1,0 +1,5 @@
+内存结构
+LAJIVM\xff----->7字节
+DATA:hello world!\n\0 ---->5+14=19字节
+nice!\n\0---->6字节
+CODE:

@@ -4,8 +4,10 @@
 /******************FUNCTION_NUM******************/
 #define LVM_CLOCK 0x2
 #define LVM_PRINT 0x10
-#define LVM_PRINTD 0x12
 #define LVM_SCAN 0x11
+#define LVM_PRINTD 0x12
+#define LVM_SETRET 0x30
+#define LVM_SETRETPOINTER 0x31
 #define LVM_EXIT 0x40
 /**********************INS*********************/
 #define INS_PUSH 0x10

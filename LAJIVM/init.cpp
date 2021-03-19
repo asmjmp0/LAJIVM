@@ -10,6 +10,9 @@ char * data_ptr;
 char * stack_ptr;
 unsigned* register_list[REG_NUM]{0};//寄存器数组
 int(*ins_list[0xff])() {0};//指令数组
+//初始化返回实体机变量
+unsigned int ret_value = 0;
+void* ret_value_pointer = nullptr;
 vm_register* init_register() {
 	int temp{ sizeof(vm_register) };
 	vm_register *ptr{ nullptr };
