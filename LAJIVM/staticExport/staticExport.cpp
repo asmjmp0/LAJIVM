@@ -3,6 +3,7 @@
 //
 #include "staticExport.h"
 #include <iostream>
+#include <cstdarg>
 
 void init_vm(){
     init_all();
