@@ -46,6 +46,11 @@ void init_vmcode(char* shellcode){
    printf("%s\n",(char *)str);
    str = base64_decode(str);
    printf("%s",(char *)str);
+//   unsigned char * base64_data = base64_decode((unsigned char *)origin_bin);
+//   size_t base64_data_len = strlen((char *)origin_bin);
+//   file_size = (base64_data_len/4)*3;
+//   memcpy(origin_bin,base64_data,file_size);
+
 }
 
 void do_vm_code(char* shellcode){

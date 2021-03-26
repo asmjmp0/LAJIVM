@@ -6,6 +6,7 @@
 #include<fstream>
 #include<regex>
 #include<ios>
+#include "base64.h"
 std::vector<std::string>  origin_str{};
 std::string file_name;
 int bin_length{ 0 };
@@ -13,6 +14,7 @@ int asm_length{ 0 };
 int now_index{ 0 };
 int blank_row{ 0 };
 int data_long{ 0 };
+int out_type {0};
 label_struct *label_s;
 write_label_data *write_label_d;
 int label_index{ 0 };
@@ -153,7 +155,16 @@ bool write_end_out(std::string str) {
 	std::smatch match;
 	if (std::regex_match(str, match, reg)) {
 		std::ofstream out_file(match[2], std::ios::out | std::ios::binary);
-		out_file.write((char*)out_ptr, bin_length);
+        switch (out_type) {
+            case 0:
+                out_file.write((char*)out_ptr, bin_length);
+                break;
+            case 1:
+                unsigned char* out_str = base64_encode((unsigned char*)out_ptr,bin_length);
+                out_file.write((char*)out_str,strlen((char *)out_str));
+                break;
+        }
+
 		out_file.close();
 		return true;
 	}
@@ -163,7 +174,17 @@ int main(int argc, char **argv) {
 	char *path{nullptr};
 	int wrong_data{0};
 	int wrong_code{ 0 };
-	if (argc > 1) path = argv[1];
+	if (argc == 2) path = argv[1];
+    else if (argc == 3){
+        char* cmd=argv[1];
+        if (!strcmp("base64",cmd)){
+            out_type = 1;
+        } else{
+            std::cout << "输入参数错误" << std::endl;
+            exit(-1);
+        }
+        path = argv[2];
+    }
 	else {
 		std::cout << "请在命令行中加入文件路径" << std::endl;
 		exit(-1);
