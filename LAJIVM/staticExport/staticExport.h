@@ -13,6 +13,6 @@ extern void *ret_value_pointer;
 void init_vm();
 
 //执行指令
-void* execute_code(char*,int,...);
+void* execute_code(char*,...);
 
 #endif //LAJIVM_STATICEXPORT_H
