@@ -33,15 +33,19 @@ void* execute_code(char* shellcode,...){
         arg_arr[arg_len] = arg;
         ++arg_len;
     }
-    printf("\n");
     va_end(arg_ptr); //结束
 
     init_vmcode(shellcode);
     do_vm_code(shellcode);
+    return nullptr;
 }
 
 void init_vmcode(char* shellcode){
-
+    //todo:完成vm初始化
+   unsigned char* str = base64_encode((unsigned char*)"1234\0001234",9);
+   printf("%s\n",(char *)str);
+   str = base64_decode(str);
+   printf("%s",(char *)str);
 }
 
 void do_vm_code(char* shellcode){
