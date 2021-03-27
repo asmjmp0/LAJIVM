@@ -61,3 +61,8 @@ cd ./LAJIVM
 cd ./staic_lib_test
 ./build_and_test.sh
 ```
+```c
+fib_index:32
+fib_value:2178309
+time taken:617.291016ms
+```
