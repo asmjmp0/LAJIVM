@@ -6,6 +6,11 @@
 #define LAJIVM_STATICEXPORT_H
 #include "../headers/init.h"
 #include "../headers/base64.h"
+#include "../headers/init.h"
+#include "../headers/MemoryManage.h"
+#include "../headers/BinType.h"
+#include "../headers/ErrorList.h"
+#include "../headers/bin_read.h"
 
 extern unsigned int ret_value;
 extern void *ret_value_pointer;

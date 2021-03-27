@@ -7,11 +7,13 @@ extern char origin_bin[0xffff];
 extern unsigned char file_chara;
 extern std::string FileName;
 extern std::string Directory;
+extern unsigned d_adr;
+extern unsigned c_adr;
 int read_bin(std::string str);
 int write_to_data();
 int write_to_code();
-bool bincmp(int8_t *, int8_t *, int);
-int find_str(int8_t*, int8_t*,int ,int);
+bool bincmp(char *, char *, int);
+int find_str(char *, char *,int ,int);
 void write_all(std::string str = bin_path);
 #endif // !BIN_READ_H
 

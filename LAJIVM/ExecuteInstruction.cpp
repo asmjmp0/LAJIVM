@@ -461,11 +461,11 @@ int do_int() {
 	}
 	case LVM_SETRET:{
 	    ret_value = registe_ptr->R1;
-        break;
+        throw LVM_RET_HOST;
 	}
 	case LVM_SETRETPOINTER:{
 	    ret_value_pointer = (void*)(data_ptr+registe_ptr->R1);
-        break;
+        throw LVM_RET_HOST;
 	}
 	case LVM_EXIT: {
 		if (is_clock) {

@@ -2,6 +2,7 @@
 #define ERRORLIST_H
 
 #define LVM_SUCCESS 1
+#define LVM_RET_HOST 2
 #define LVM_DATA_GET_ERROR 0xe0
 #define LVM_CODE_GET_ERROR 0xe1
 #define LVM_CODE_SEGEMENT_ERROR 0xf0
