@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.10)
 aux_source_directory(. src)
 if(FLAG_STATIC STREQUAL "TRUE")
 project(TAG_STATIC)

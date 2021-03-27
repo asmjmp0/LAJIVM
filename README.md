@@ -54,3 +54,10 @@ LINK_DIRECTORIES(./lib)
 add_executable(test ${src})
 TARGET_LINK_LIBRARIES(test liblajivm_static.a)
 ```
+#### 测试静态库代码 
+```shell
+cd ./LAJIVM
+./build_static.sh
+cd ./staic_lib_test
+./build_and_test.sh
+```
