@@ -10,25 +10,30 @@
 
 ### 编译运行
 
-#### lajivm
+### lajivm
 编译运行时
 ```shell
-cd LAJIVM
-mkdir build
+mkdir "build"
 cd build
 cmake ..
-make
+cmake --build . --target lajivm
 ```
 编译静态库
 ```shell
-cd LAJIVM
-mkdir build
+mkdir "build"
 cd build
-cmake .. -DFLAG_STATIC="TRUE" -DOUT_DIR="the path of the static library"
-make
+cmake ..
+cmake --build . --target lajivm_static
+
+"the static library is in ./static_lib_test/lib" 
 ```
 ### ljasm
-同编译lajivm运行时
+```shell
+mkdir "build"
+cd build
+cmake ..
+cmake --build . --target ljasm
+```
 
 ### 使用静态库
 ```
@@ -56,14 +61,10 @@ TARGET_LINK_LIBRARIES(test liblajivm_static.a)
 ```
 #### 测试静态库代码 
 ```shell
-cd ./LAJIVM
-./build_static.sh
-cd ./staic_lib_test
-mkdir build
+mkdir "build"
 cd build
 cmake ..
-make
-./test
+cmake --build . --target test
 ```
 ```c
 fib_index:32
