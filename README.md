@@ -59,7 +59,11 @@ TARGET_LINK_LIBRARIES(test liblajivm_static.a)
 cd ./LAJIVM
 ./build_static.sh
 cd ./staic_lib_test
-./build_and_test.sh
+mkdir build
+cd build
+cmake ..
+make
+./test
 ```
 ```c
 fib_index:32
