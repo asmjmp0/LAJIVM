@@ -14,7 +14,7 @@ size_t vm_code_size;
 extern unsigned m_code_length;
 unsigned char my_mid;
 void init_vmcode(char*);
-void do_vm_code(char*);
+void do_vm_code();
 
 void init_vm(){
     init_all();
@@ -39,7 +39,7 @@ void* execute_code(char* shellcode,...){
     va_end(arg_ptr); //结束
 
     init_vmcode(shellcode);
-    do_vm_code(shellcode);
+    do_vm_code();
     return nullptr;
 }
 static int load_data_vm() {
@@ -107,7 +107,14 @@ void init_vmcode(char* shellcode){
    load_index = 0;
 }
 
-void do_vm_code(char* shellcode){
+static inline void clean_register(){
+    for (int i=0; i<REG_NUM; ++i)
+        *(register_list[i])=0;
+    registe_ptr->R6 = unsigned(-1);
+    registe_ptr->R7 = unsigned(-1);
+}
+
+void do_vm_code(){
     for (int i=0; i<arg_len; ++i){
         *(register_list[i]) = (unsigned )arg_arr[i];
     }
@@ -118,6 +125,7 @@ void do_vm_code(char* shellcode){
     } catch (int e) {
         if(e == 2) {
             kill_module(current_module_id);
+            clean_register();
             return;
         }
         else{
