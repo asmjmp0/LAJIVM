@@ -4,14 +4,17 @@
 #include "../staticExport/staticExport.h"
 int main(int argc,char** argv){
     init_vm();
-    int fib_index = 20;
+    int num = 20;
     clock_t begin = clock();
+    //此代码1～num求和
+    execute_code((char *)"TEFKSVZN/0RBVEE6Q09ERTpQIBICMRIgAAISMgESAAAAAEIGBAAAAFAgEgJQIQAwAAAA4CEBAQEBAQE=",1,num);
+    printf("num:%d ret_value:%d\n",num,ret_value);
+
     //此代码为斐波拉契数列递归计算
     execute_code((char *)"TEFKSVZN/0RBVEE6MTIzNENPREU6YAYfAAAAUCEyAAAAAFADMgJQIBICUCEAMAAAAOAhXzIBAgAAAABCBjIAAABhBgAAAAAQBRIQBSIQBTIyAQIBAAAAQQaTAAAAMgECAgAAAEEG"
-                         "kwAAAFAgMgIhAQIBAAAAYAYfAAAAUCASAlAgAjIhAQICAAAAYAYfAAAAUCAiAlAgAhIgAAIiETIRIhESYQYAAAAAUCECAQAAABEyESIREmEGAAAAAF8BAQEBAQE=",1,fib_index);
-    execute_code((char *)"TEFKSVZN/0RBVEE6MTIzNENPREU6YAYfAAAAUCEyAAAAAFADMgJQIBICUCEAMAAAAOAhXzIBAgAAAABCBjIAAABhBgAAAAAQBRIQBSIQBTIyAQIBAAAAQQaTAAAAMgECAgAAAEEG"
-                         "kwAAAFAgMgIhAQIBAAAAYAYfAAAAUCASAlAgAjIhAQICAAAAYAYfAAAAUCAiAlAgAhIgAAIiETIRIhESYQYAAAAAUCECAQAAABEyESIREmEGAAAAAF8BAQEBAQE=",1,fib_index);
+                         "kwAAAFAgMgIhAQIBAAAAYAYfAAAAUCASAlAgAjIhAQICAAAAYAYfAAAAUCAiAlAgAhIgAAIiETIRIhESYQYAAAAAUCECAQAAABEyESIREmEGAAAAAF8BAQEBAQE=",1,num);
+    
+    printf("num:%d ret_value:%d\n",num,ret_value);
     clock_t end = clock();
-    printf("fib_index:%d\nfib_value:%d\n",fib_index,ret_value);
     printf("time taken:%fms\n",((float)(end-begin))/1000);
 }
