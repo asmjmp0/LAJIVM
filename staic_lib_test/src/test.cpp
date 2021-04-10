@@ -18,23 +18,27 @@ int fib(int x){
 }
 int main(int argc,char** argv){
     init_vm();
-    int num = 20;
+    int num = 32;
     system("uname -a");
     clock_t begin = clock();
     //此代码1～num求和
     printf("1～20求和\n");
     execute_code((char *)"TEFKSVZN/0RBVEE6Q09ERTpQIBICMRIgAAISMgESAAAAAEIGBAAAAFAgEgJQIQAwAAAA4CEBAQEBAQE=",1,num);
-    assert(ret_value == sum(num));
     printf("num:%d ret_value:%d\n",num,ret_value);
+    clock_t sum_begin = clock();
+    assert(ret_value == sum(num));
+    clock_t sum_end = clock();
     clock_t middle = clock();
-    printf("time taken:%fms\n",((float)(middle-begin))/1000);
+    printf("time taken:%fms,%fms\n",((float)(sum_end-sum_begin))/1000,((float)(middle-begin))/1000);
 
     //此代码为斐波拉契数列递归计算
     printf("斐波拉契数列第20项\n");
     execute_code((char *)"TEFKSVZN/0RBVEE6MTIzNENPREU6YAYfAAAAUCEyAAAAAFADMgJQIBICUCEAMAAAAOAhXzIBAgAAAABCBjIAAABhBgAAAAAQBRIQBSIQBTIyAQIBAAAAQQaTAAAAMgECAgAAAEEG"
                          "kwAAAFAgMgIhAQIBAAAAYAYfAAAAUCASAlAgAjIhAQICAAAAYAYfAAAAUCAiAlAgAhIgAAIiETIRIhESYQYAAAAAUCECAQAAABEyESIREmEGAAAAAF8BAQEBAQE=",1,num);
-    assert(ret_value == fib(num));
     printf("num:%d ret_value:%d\n",num,ret_value);
+    clock_t fib_begin = clock();
+    assert(ret_value == fib(num));
+    clock_t fib_end = clock();
     clock_t end = clock();
-    printf("time taken:%fms\n",((float)(end-middle))/1000);
+    printf("time taken:%fms,%fms\n",((float)(fib_end-fib_begin))/1000,((float)(end-middle))/1000);
 }

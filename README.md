@@ -15,14 +15,14 @@
 ```shell
 mkdir "build"
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --target lajivm
 ```
 编译静态库
 ```shell
 mkdir "build"
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --target lajivm_static
 
 "the static library is in ./static_lib_test/lib" 
@@ -31,7 +31,7 @@ cmake --build . --target lajivm_static
 ```shell
 mkdir "build"
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --target ljasm
 ```
 
@@ -63,7 +63,7 @@ TARGET_LINK_LIBRARIES(test liblajivm_static.a)
 ```shell
 mkdir "build"
 cd build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --target test
 ```
 ```c
