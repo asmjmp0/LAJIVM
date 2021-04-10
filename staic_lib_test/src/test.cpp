@@ -22,7 +22,7 @@ int main(int argc,char** argv){
     int num = 32;
 #if defined(__APPLE__) || defined(__linux__)
     system("uname -a");
-#elif
+#elif defined(_WIN32)
     system("ver");
 #endif
     clock_t begin = clock();
