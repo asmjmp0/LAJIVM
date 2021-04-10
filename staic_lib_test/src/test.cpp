@@ -2,6 +2,7 @@
 // Created by jmp0 on 2021/3/27.
 //
 #include "../staticExport/staticExport.h"
+#include <unistd.h>
 //此代码1～num求和
 int sum(int num){
     int _sum = 0;
@@ -19,7 +20,11 @@ int fib(int x){
 int main(int argc,char** argv){
     init_vm();
     int num = 32;
+#if defined(__APPLE__) || defined(__linux__)
     system("uname -a");
+#elif
+    system("ver");
+#endif
     clock_t begin = clock();
     //此代码1～num求和
     printf("1～20求和\n");
