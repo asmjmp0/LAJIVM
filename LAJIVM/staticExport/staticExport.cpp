@@ -23,6 +23,7 @@ void init_vm(){
 
 void* execute_code(char* shellcode,...){
     int arg = 0;
+    arg_len = 0;
     va_list arg_ptr;
     va_start(arg_ptr,shellcode);
     int arg_count =va_arg(arg_ptr,int); //获取下一个参数
