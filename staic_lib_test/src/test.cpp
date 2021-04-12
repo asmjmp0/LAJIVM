@@ -43,7 +43,7 @@ int main(int argc,char** argv){
         num = atoi(argv[2]);
     }
 #if defined(__APPLE__) || defined(__linux__)
-    system("uname -a");
+    system("uname -srm");
 #elif defined(_WIN32)
     system("ver");
 #endif
