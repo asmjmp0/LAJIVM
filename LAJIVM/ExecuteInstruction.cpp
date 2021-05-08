@@ -5,6 +5,8 @@
 #include<string>
 #include<time.h>
 #include "staticExport/staticExport.h"
+#include "headers/JITexec.h"
+
 /*
 *高位表示寄存器类型
 *地位表示操作寄存器的长度

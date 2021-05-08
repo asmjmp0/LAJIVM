@@ -47,7 +47,7 @@ std::string GetPathOrURLShortName(std::string strFullName)
 /*
 *比较字节是否相同
 */
-bool bincmp(char * a, char *b, int len) {
+bool bincmp(char * a, const char *b, int len) {
 	bool flag{ true };
 	for (int i = 0; i < len; i++)
 	{
@@ -60,7 +60,7 @@ bool bincmp(char * a, char *b, int len) {
 *查找字符串返回长度 失败返回-1
 *因为没有时间 所以采用垃圾算法
 */
-int find_str(char* a, char* b,int lena,int lenb) {
+int find_str(char* a, const char* b,int lena,int lenb) {
 	for (int i = 0; i < lena - lenb+1; i++)
 	{
 		if (bincmp(a + i, b, lenb))

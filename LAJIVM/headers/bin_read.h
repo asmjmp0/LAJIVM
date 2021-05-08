@@ -12,8 +12,8 @@ extern unsigned c_adr;
 int read_bin(std::string str);
 int write_to_data();
 int write_to_code();
-bool bincmp(char *, char *, int);
-int find_str(char *, char *,int ,int);
+bool bincmp(char *, const char *, int);
+int find_str(char *, const char *,int ,int);
 void write_all(std::string str = bin_path);
 #endif // !BIN_READ_H
 

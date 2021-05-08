@@ -3,6 +3,7 @@
 //
 #include "../staticExport/staticExport.h"
 #include <unistd.h>
+#include <time.h>
 
 //此代码1～num求和
 
@@ -57,7 +58,11 @@ int main(int argc,char** argv){
     clock_t middle = clock();
     float sum_origin_time = ((float)(sum_end-sum_begin))/1000;
     printf("sum:%d\n",ret_value);
+#ifdef _WIN32
+    printf("%fms,%fms\n",sum_origin_time,((float)(middle-begin)) - sum_origin_time);
+#else
     printf("%fms,%fms\n",sum_origin_time,((float)(middle-begin))/1000 - sum_origin_time);
+#endif
 
     //此代码为斐波拉契数列递归计算
     execute_code((char *)"TEFKSVZN/0RBVEE6MTIzNENPREU6YAYfAAAAUCEyAAAAAFADMgJQIBICUCEAMAAAAOAhXzIBAgAAAABCBjIAAABhBgAAAAAQBRIQBSIQBTIyAQIBAAAAQQaTAAAAMgECAgAAAEEG"
@@ -68,5 +73,9 @@ int main(int argc,char** argv){
     clock_t end = clock();
     float fib_origin_time = ((float)(fib_end-fib_begin))/1000;
     printf("fib:%d\n",ret_value);
+#ifdef _WIN32
+    printf("%fms,%fms\n",fib_origin_time,((float)(end-middle)) - fib_origin_time);
+#else
     printf("%fms,%fms\n",fib_origin_time,((float)(end-middle))/1000 - fib_origin_time);
+#endif
 }

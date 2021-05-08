@@ -49,7 +49,7 @@ void push_register() {
 	r2 = registe_ptr->R2;
 	r3 = registe_ptr->R3;
 	r4 = registe_ptr->R4;
-	r5 = (unsigned long )data_ptr;
+	r5 = (unsigned long long)data_ptr;
 	ip = registe_ptr->IP;
 }
 void pop_register() {
@@ -68,7 +68,7 @@ void pop_register() {
 	}
 }
 void do_jit() {
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WIN64)
 	int protect_flag;
 	VirtualProtectEx(GetCurrentProcess(), shellcode_begin, len, PAGE_EXECUTE_READWRITE, (PDWORD)&protect_flag);
 	shell sh;
