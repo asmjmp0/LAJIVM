@@ -3,6 +3,7 @@
 //
 #include "../staticExport/staticExport.h"
 #include <unistd.h>
+
 //此代码1～num求和
 
 #ifdef __clang__

@@ -11,5 +11,5 @@ file(COPY ../LAJIVM/staticExport/staticExport.h DESTINATION "${OUT_DIR}/staticEx
 link_directories(./lib)
 include_directories(./headers)
 include_directories(./staticExport)
-add_executable(test ./src/test.cpp)
-target_link_libraries(test lajivm_static)
+add_executable(mytest ./src/test.cpp)
+target_link_libraries(mytest lajivm_static)
