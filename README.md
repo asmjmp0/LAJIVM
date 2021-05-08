@@ -64,7 +64,7 @@ TARGET_LINK_LIBRARIES(test liblajivm_static.a)
 mkdir "build"
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . --target test
+cmake --build . --target mytest
 ```
 ```c
 fib_index:32
